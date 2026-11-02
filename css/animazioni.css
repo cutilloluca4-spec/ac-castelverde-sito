@@ -1,0 +1,30 @@
+/* ==================================================================
+   A.C. Castelverde — css/animazioni.css
+   Stati iniziali delle animazioni. Le animazioni vere sono in
+   js/animazioni.js (GSAP + ScrollTrigger).
+
+   Regola: senza JavaScript, o con "riduci movimento" attivo nel
+   sistema, si vede tutto subito (la classe .js-animazioni viene messa
+   sull'<html> solo quando le animazioni sono attive).
+   ================================================================== */
+
+/* Elementi che compaiono scorrendo: attributo data-entra nell'HTML */
+.js-animazioni [data-entra] { opacity: 0; transform: translateY(36px); }
+
+/* Gruppi di elementi che compaiono uno dopo l'altro: data-entrano sul contenitore */
+.js-animazioni [data-entrano] > * { opacity: 0; transform: translateY(28px); }
+
+/* Pallone che rimbalza nel caricamento (pagina notizia) */
+@keyframes rimbalzo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.caricamento { animation: rimbalzo .8s ease-in-out infinite; }
+
+/* Pallino lampeggiante "in diretta" / "prossima partita" */
+@keyframes lampeggio { 50% { opacity: .25; } }
+.lampeggia { animation: lampeggio 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

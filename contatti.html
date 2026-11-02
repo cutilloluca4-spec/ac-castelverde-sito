@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contatti — A.C. Castelverde</title>
+<meta name="description" content="Contatti dell'A.C. Castelverde: indirizzo, telefono, email, Instagram, informazioni sulle squadre e partnership." />
+<link rel="icon" href="assets/logo/favicon-32.png" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png" />
+<meta name="theme-color" content="#ff0000" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="A.C. Castelverde" />
+<meta property="og:title" content="Contatti — A.C. Castelverde" />
+<meta property="og:description" content="Contatti dell'A.C. Castelverde: indirizzo, telefono, email, Instagram, informazioni sulle squadre e partnership." />
+<meta property="og:image" content="assets/og-image.jpg" />
+<script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
+<link rel="stylesheet" href="design-system/colori.css?v=1" />
+<script src="design-system/tema-tailwind.js?v=1"></script>
+<script src="js/vendor/tailwind-browser.js"></script>
+<link rel="stylesheet" href="css/componenti.css?v=1" />
+<link rel="stylesheet" href="css/sito.css?v=1" />
+<link rel="stylesheet" href="css/animazioni.css?v=1" />
+</head>
+<body data-pagina="contatti" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-hidden">
+
+<!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
+<div id="menu"></div>
+
+<main id="top" class="pt-[120px] overflow-x-clip">
+
+  <!-- ============ INTESTAZIONE ============ -->
+  <section class="intestazione bg-acc-grigio-chiaro">
+    <div class="relative max-w-acc mx-auto px-4 tablet:px-6 pt-14 pb-14 computer:pt-20 computer:pb-20">
+      <span class="pillola text-[15px]" data-entra>Via dei Gerani 39 · Castelverde (CR)</span>
+      <h1 class="titolo-display text-[72px] tablet:text-[112px] computer:text-[128px] mt-6 max-w-[760px]" data-entra>Con<span class="titolo-contorno">tatti</span></h1>
+      <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Informazioni sulle squadre, tesseramenti, partnership: scrivici o passa al campo.</p>
+      <img class="hidden computer:block absolute right-[7%] top-1/2 -translate-y-1/2 h-[300px] w-auto drop-shadow-acc-stemma" src="assets/logo/stemma-400.png" alt="" />
+    </div>
+  </section>
+
+  <!-- ============ RECAPITI (da CLUB.contatti in js/dati/club.js) ============ -->
+  <section class="py-14 computer:py-20">
+    <div id="recapiti" class="max-w-acc mx-auto px-4 tablet:px-6 grid gap-5 tablet:grid-cols-2 computer:grid-cols-4" data-entrano></div>
+  </section>
+
+  <!-- ============ MODULO ============ -->
+  <section id="scrivici" class="trama-grigia py-16 computer:py-24 scroll-mt-[120px]">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6 grid gap-12 computer:grid-cols-[1fr_1.3fr] items-start">
+      <div data-entra>
+        <h2 class="titolo-display text-[64px] tablet:text-[88px]">Scri<span class="titolo-contorno">vici</span></h2>
+        <p class="text-[17px] leading-relaxed mt-5 max-w-[440px]">Per chiedere informazioni su una squadra, su tesseramenti e provini o per proporre una sponsorizzazione. Ti rispondiamo il prima possibile.</p>
+        <div class="flex flex-col gap-3 mt-8">
+          <span class="pillola self-start text-[15px]">Prima squadra</span>
+          <span class="pillola self-start text-[15px]">Juniores · Allievi · Giovanissimi</span>
+          <span class="pillola pillola--rossa self-start text-[15px]">Diventa partner</span>
+        </div>
+      </div>
+
+      <!-- Il modulo invia al servizio scritto in data-indirizzo (vedi README, "Prima di pubblicare").
+           Finché data-indirizzo è vuoto mostra solo il messaggio di conferma e NON invia niente. -->
+      <form id="moduloContatti" data-indirizzo="" class="cornice angolo-rosso bg-white p-6 tablet:p-10 m-6 grid gap-5" novalidate data-entra>
+        <div class="grid gap-5 tablet:grid-cols-2">
+          <div class="campo"><label for="nome">Nome e cognome</label><input id="nome" name="nome" type="text" autocomplete="name" required /></div>
+          <div class="campo"><label for="telefono">Telefono</label><input id="telefono" name="telefono" type="tel" autocomplete="tel" /></div>
+        </div>
+        <div class="campo"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+        <div class="campo">
+          <label for="motivo">Per cosa ci scrivi</label>
+          <select id="motivo" name="motivo">
+            <option>Informazioni su una squadra</option>
+            <option>Tesseramenti e provini</option>
+            <option>Diventare partner</option>
+            <option>Altro</option>
+          </select>
+        </div>
+        <div class="campo"><label for="messaggio">Messaggio</label><textarea id="messaggio" name="messaggio" rows="5" required></textarea></div>
+        <label class="flex items-start gap-3 text-[14px] leading-snug">
+          <input type="checkbox" name="privacy" required class="mt-1 w-5 h-5 accent-[var(--color-rosso)]" />
+          <span>Ho letto l'<a href="privacy-cookie.html" class="underline">informativa privacy</a> e acconsento al trattamento dei dati per ricevere una risposta.</span>
+        </label>
+        <p id="erroreModulo" class="hidden text-[14px] font-semibold text-acc-rosso-scuro" role="alert"></p>
+        <button type="submit" class="btn btn--rosso justify-self-start">Invia il messaggio</button>
+        <div id="grazieModulo" class="hidden bg-acc-grigio-chiaro p-6" role="status">
+          <p class="titolo-display text-[36px]">Grazie!</p>
+          <p class="text-[15px] mt-2">Abbiamo ricevuto il tuo messaggio: ti rispondiamo il prima possibile.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ COME ARRIVARE ============ -->
+  <section class="py-16 computer:py-24">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6">
+      <h2 class="titolo-sezione titolo-sezione--sinistra text-[48px] tablet:text-[64px] mb-10" data-entra>Come arrivare</h2>
+      <div id="campiContatti" class="grid gap-6 max-w-[760px]" data-entrano></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Partner e footer: li disegna js/layout.js -->
+<div id="partner"></div>
+<div id="piede"></div>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/dati/club.js?v=1"></script>
+<script src="js/dati/notizie.js?v=1"></script>
+<script src="js/dati/squadre.js?v=1"></script>
+<script src="js/dati/partite.js?v=1"></script>
+<script src="js/dati/partner.js?v=1"></script>
+<script src="js/utilita.js?v=1"></script>
+<script src="js/componenti.js?v=1"></script>
+<script src="js/layout.js?v=1"></script>
+<script src="js/animazioni.js?v=1"></script>
+<script src="js/pagine/contatti.js?v=1"></script>
+</body>
+</html>

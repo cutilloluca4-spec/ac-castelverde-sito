@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calendario e risultati — A.C. Castelverde</title>
+<meta name="description" content="Calendario, risultati e classifica delle squadre dell'A.C. Castelverde." />
+<link rel="icon" href="assets/logo/favicon-32.png" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png" />
+<meta name="theme-color" content="#ff0000" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="A.C. Castelverde" />
+<meta property="og:title" content="Calendario e risultati — A.C. Castelverde" />
+<meta property="og:description" content="Calendario, risultati e classifica delle squadre dell'A.C. Castelverde." />
+<meta property="og:image" content="assets/og-image.jpg" />
+<script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
+<link rel="stylesheet" href="design-system/colori.css?v=1" />
+<script src="design-system/tema-tailwind.js?v=1"></script>
+<script src="js/vendor/tailwind-browser.js"></script>
+<link rel="stylesheet" href="css/componenti.css?v=1" />
+<link rel="stylesheet" href="css/sito.css?v=1" />
+<link rel="stylesheet" href="css/animazioni.css?v=1" />
+</head>
+<body data-pagina="calendario" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-hidden">
+
+<!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
+<div id="menu"></div>
+
+<main id="top" class="pt-[120px] overflow-x-clip">
+
+  <!-- ============ INTESTAZIONE ============ -->
+  <section class="intestazione bg-acc-grigio-chiaro">
+    <div class="relative max-w-acc mx-auto px-4 tablet:px-6 pt-14 pb-14 computer:pt-20 computer:pb-20">
+      <span class="pillola text-[15px]" data-entra>Stagione 2026/27</span>
+      <h1 class="titolo-display text-[72px] tablet:text-[112px] computer:text-[128px] mt-6 max-w-[760px]" data-entra>Calen<span class="titolo-contorno">dario</span></h1>
+      <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Prossime partite, risultati e classifica di tutte le squadre del Castelverde.</p>
+      <img class="hidden computer:block absolute right-[7%] top-1/2 -translate-y-1/2 h-[300px] w-auto drop-shadow-acc-stemma" src="assets/logo/stemma-400.png" alt="" />
+    </div>
+  </section>
+
+  <!-- ============ SCELTA DELLA SQUADRA ============ -->
+  <section class="trama-grigia py-8">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6 flex flex-wrap items-center justify-between gap-4">
+      <div id="schedeCalendario" class="schede" role="tablist" aria-label="Scegli la squadra"></div>
+      <div id="avvisoCalendario"></div>
+    </div>
+  </section>
+
+  <!-- ============ PROSSIME PARTITE ============ -->
+  <section class="py-14 computer:py-20">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6">
+      <h2 class="titolo-sezione titolo-sezione--sinistra text-[44px] tablet:text-[60px] mb-10">Prossime partite</h2>
+      <div id="prossime" class="grid gap-6 tablet:grid-cols-2 computer:grid-cols-3 [&>*]:w-auto"></div>
+      <!-- il resto del calendario, in elenco -->
+      <div id="restoCalendarioBox" class="mt-12">
+        <h3 class="titolo-display text-[32px] mb-4">Tutto il calendario</h3>
+        <ul id="restoCalendario" class="list-none p-0 m-0 bg-white px-5"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RISULTATI E CLASSIFICA ============ -->
+  <section class="bg-acc-grigio-chiaro py-14 computer:py-20">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6 grid gap-12 computer:grid-cols-[1.4fr_1fr]">
+      <div>
+        <h2 class="titolo-sezione titolo-sezione--sinistra text-[44px] tablet:text-[60px] mb-6">Risultati</h2>
+        <ul id="risultati" class="list-none p-0 m-0 bg-white px-5"></ul>
+      </div>
+      <div>
+        <h2 class="titolo-sezione titolo-sezione--sinistra text-[44px] tablet:text-[60px] mb-6">Classifica</h2>
+        <div id="classifica"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Partner e footer: li disegna js/layout.js -->
+<div id="partner"></div>
+<div id="piede"></div>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/dati/club.js?v=1"></script>
+<script src="js/dati/notizie.js?v=1"></script>
+<script src="js/dati/squadre.js?v=1"></script>
+<script src="js/dati/partite.js?v=1"></script>
+<script src="js/dati/partner.js?v=1"></script>
+<script src="js/utilita.js?v=1"></script>
+<script src="js/componenti.js?v=1"></script>
+<script src="js/layout.js?v=1"></script>
+<script src="js/animazioni.js?v=1"></script>
+<script src="js/pagine/calendario.js?v=1"></script>
+</body>
+</html>

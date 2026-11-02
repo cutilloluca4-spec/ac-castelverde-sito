@@ -1,0 +1,183 @@
+/* ==================================================================
+   A.C. Castelverde — css/componenti.css
+   I "mattoncini" del design system, ripresi dalle grafiche Instagram
+   del club e usati in tutte le pagine. Ognuno è descritto qui sotto.
+   Il resto dello stile è scritto con Tailwind direttamente nell'HTML.
+
+   Indice
+     1. Base (font, testo)
+     2. Titoli: .titolo-display, .titolo-contorno, .titolo-sezione
+     3. Pillola: .pillola (l'etichetta bianca con l'ombra delle grafiche)
+     4. Pulsanti: .btn, .btn--rosso, .btn--bianco, .btn--contorno
+     5. Cornice con angolo rosso: .cornice, .angolo-rosso
+     6. Trame e diagonali: .trama-grigia, .trama-rossa, .diagonali
+     7. Scudo generico avversario: .scudo-iniziali
+
+   Le card (notizia, partita, giocatore), la fascia del risultato, la
+   classifica e gli avvisi sono scritti con Tailwind in js/componenti.js:
+   le classi ripetute sono raccolte lì in costanti (CARD_NOTIZIA, FASCIA…).
+   ================================================================== */
+
+/* Le regole di questo file stanno nel livello "components" di Tailwind:
+   così una classe Tailwind scritta nell'HTML (es. hidden, mt-8, text-white)
+   vince sempre su quelle qui sotto. L'ordine dei livelli va dichiarato
+   uguale a quello di Tailwind. */
+@layer theme, base, components, utilities;
+
+@layer components {
+
+
+/* 1. BASE ---------------------------------------------------------- */
+html { scroll-behavior: smooth; overflow-x: clip; }
+body { font-family: var(--font-testo); }
+.font-titoli, h1, h2, h3, .titolo-display { font-family: var(--font-titoli); }
+/* DIN Condensed ha le maiuscole più basse di Barlow: un ritocco per
+   avere la stessa resa su Mac e Windows */
+h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
+
+/* 2. TITOLI -------------------------------------------------------- */
+/* Titolo enorme in maiuscolo, come "PRIMA SQUADRA" nelle grafiche */
+.titolo-display {
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: .9;
+  letter-spacing: .005em;
+}
+/* Testo solo contorno, come "FULL TIME" e "STARTING" */
+.titolo-contorno {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-nero);
+}
+.titolo-contorno--bianco { -webkit-text-stroke-color: #fff; }
+.titolo-contorno--rosso  { -webkit-text-stroke-color: var(--color-rosso); }
+
+/* Titolo di sezione con la doppia linea grigia/rossa ai lati
+   (come "PRIMA SQUADRA" nelle storie Full time) */
+.titolo-sezione {
+  display: flex; align-items: center; gap: 18px;
+  font-family: var(--font-titoli); font-weight: 700; text-transform: uppercase;
+  line-height: 1;
+}
+.titolo-sezione::before, .titolo-sezione::after {
+  content: ""; flex: 1; height: 6px; min-width: 24px;
+}
+.titolo-sezione::before { background: var(--color-grigio); }
+.titolo-sezione::after  { background: var(--color-rosso); }
+/* versione allineata a sinistra: solo la linea rossa dopo */
+.titolo-sezione--sinistra::before { display: none; }
+
+/* 3. PILLOLA ------------------------------------------------------- */
+/* L'etichetta bianca arrotondata con l'ombra ("SECONDA CATEGORIA") */
+.pillola {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: .45em 1.4em .35em;
+  background: #fff; color: var(--color-nero);
+  border-radius: 999px;
+  font-family: var(--font-titoli); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .02em; line-height: 1;
+  box-shadow: 5px 7px 12px rgba(0, 0, 0, .28);
+  white-space: nowrap;
+}
+.pillola--grigia { background: var(--color-grigio); box-shadow: 4px 6px 10px rgba(0,0,0,.22); }
+.pillola--rossa  { background: var(--color-rosso); color: #fff; }
+.pillola--piccola { font-size: 13px; padding: .5em 1.1em .4em; box-shadow: 3px 4px 8px rgba(0,0,0,.2); }
+
+/* 4. PULSANTI ------------------------------------------------------ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55em;
+  padding: 14px 26px 11px;
+  font-family: var(--font-titoli); font-weight: 700; font-size: 18px;
+  text-transform: uppercase; letter-spacing: .04em; line-height: 1;
+  text-decoration: none; border: 2px solid transparent; cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.btn--rosso   { background: var(--color-rosso); color: #fff; }
+.btn--rosso:hover { background: var(--color-rosso-scuro); }
+.btn--nero    { background: var(--color-nero); color: #fff; }
+.btn--nero:hover { background: var(--color-rosso); }
+.btn--bianco  { background: #fff; color: var(--color-nero); }
+.btn--bianco:hover { background: var(--color-rosso); color: #fff; }
+.btn--contorno { border-color: currentColor; background: transparent; }
+.btn--contorno:hover { background: var(--color-nero); border-color: var(--color-nero); color: #fff; }
+.btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--color-rosso); outline-offset: 3px; }
+
+/* Link "Vedi tutte →" accanto ai titoli */
+.link-freccia {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-titoli); font-weight: 700; font-size: 18px; text-transform: uppercase;
+  letter-spacing: .04em; color: inherit; text-decoration: none;
+}
+.link-freccia::after { content: "→"; color: var(--color-rosso); transition: transform .2s ease; }
+.link-freccia:hover::after { transform: translateX(4px); }
+
+/* 5. CORNICE CON ANGOLO ROSSO ------------------------------------- */
+/* Il riquadro con il bordo grigio spesso delle storie Instagram */
+.cornice { position: relative; outline: 10px solid var(--color-grigio); outline-offset: 14px; }
+.cornice--rossa { outline-color: var(--color-rosso); }
+/* L'angolo rosso a "L" in alto a sinistra */
+.angolo-rosso { position: relative; }
+.angolo-rosso::before {
+  content: ""; position: absolute; z-index: 2; pointer-events: none;
+  top: -14px; left: -14px; width: 72px; height: 72px;
+  border-top: 10px solid var(--color-rosso); border-left: 10px solid var(--color-rosso);
+}
+/* versione grigia in basso a destra (come nelle storie Juniores) */
+.angolo-rosso--doppio::after {
+  content: ""; position: absolute; z-index: 2; pointer-events: none;
+  bottom: -14px; right: -14px; width: 72px; height: 72px;
+  border-bottom: 10px solid var(--color-grigio-medio); border-right: 10px solid var(--color-grigio-medio);
+}
+
+/* 6. TRAME E DIAGONALI -------------------------------------------- */
+/* La trama "a graffi" delle grafiche, grigia o rossa */
+.trama-grigia {
+  background-color: var(--color-grigio);
+  background-image: url("../assets/img/texture/texture-grigia.jpg");
+  background-size: 520px auto;
+}
+.trama-rossa {
+  background-color: var(--color-rosso);
+  background-image: url("../assets/img/texture/texture-rossa.jpg");
+  background-size: 520px auto;
+}
+.trama-scura {
+  background-color: var(--color-rosso-profondo);
+  background-image: linear-gradient(rgba(110,10,10,.82), rgba(110,10,10,.82)), url("../assets/img/texture/texture-grigia.jpg");
+  background-size: auto, 520px auto;
+}
+
+/* Fasce diagonali rosse/grigie dietro una sezione (sfondo delle grafiche) */
+.diagonali { position: relative; isolation: isolate; overflow: hidden; }
+.diagonali::before, .diagonali::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+}
+.diagonali::before {   /* fascia grigia in alto a destra */
+  top: 0; right: -10%; width: 70%; height: 55%;
+  background: var(--color-grigio);
+  clip-path: polygon(35% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: .55;
+}
+.diagonali::after {    /* fascia rossa in basso */
+  left: -5%; bottom: 0; width: 110%; height: 42%;
+  background: var(--color-rosso);
+  clip-path: polygon(0 70%, 100% 0, 100% 45%, 0 100%);
+}
+@media (max-width: 899px) {   /* su smartphone la fascia resta bassa, sotto i testi */
+  .diagonali::after { height: 70px; }
+  .diagonali::before { height: 30%; }
+}
+
+/* 7. SCUDO GENERICO AVVERSARIO ------------------------------------ */
+/* Se un avversario non ha lo stemma, il sito disegna questo con le iniziali */
+.scudo-iniziali {
+  display: grid; place-items: center;
+  width: 72px; height: 72px;
+  background: var(--color-grigio-chiaro); color: var(--color-nero);
+  border: 4px solid var(--color-nero);
+  clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%);
+  font-family: var(--font-titoli); font-weight: 700; font-size: 24px; padding-bottom: 10px;
+}
+
+} /* fine @layer components */

@@ -1,0 +1,110 @@
+/* ==================================================================
+   A.C. Castelverde — css/sito.css
+   Le parti del sito che il JavaScript cambia o che si ripetono.
+   Ogni sezione corrisponde a un blocco dell'HTML con lo stesso nome
+   (cerca il nome della classe nelle pagine e in js/).
+
+   Indice
+     1. Menu in alto (.menu) e menu mobile (.menu-mobile)
+     2. Intestazione delle pagine interne (.intestazione)
+     3. Caroselli orizzontali (.scorri) e schede (.schede)
+     4. Campi del modulo contatti (.campo)
+     5. Pulsante "torna su" (.torna-su)
+
+   Qui resta solo quello che Tailwind non fa o che nell'HTML sarebbe
+   illeggibile: gli stati cambiati dal JavaScript (classi is-…), le forme
+   diagonali (clip-path) e i pezzi ripetuti in più pagine. Tutto il resto
+   (card, apertura della Home, linea del tempo, classifica, footer) è
+   scritto con Tailwind nell'HTML o in js/componenti.js.
+   ================================================================== */
+
+/* Le regole di questo file stanno nel livello "components" di Tailwind:
+   così una classe Tailwind scritta nell'HTML (es. hidden, mt-8, text-white)
+   vince sempre su quelle qui sotto. L'ordine dei livelli va dichiarato
+   uguale a quello di Tailwind. */
+@layer theme, base, components, utilities;
+
+@layer components {
+
+
+/* 1. MENU ---------------------------------------------------------- */
+.menu { transition: box-shadow .3s ease, transform .35s ease; }
+.menu.is-scorso { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.menu.is-nascosto { transform: translateY(-38px); }      /* scorrendo giù sparisce la barra nera */
+.menu__stemma { transition: height .3s ease, margin .3s ease; }
+.menu.is-scorso .menu__stemma { height: 54px; margin-bottom: 0; }
+
+/* Pulsante hamburger */
+.menu__apri span { display: block; height: 3px; background: var(--color-nero); transition: transform .3s ease, opacity .2s ease; }
+.menu__apri span + span { margin-top: 6px; }
+.menu__apri.is-aperto span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.menu__apri.is-aperto span:nth-child(2) { opacity: 0; }
+.menu__apri.is-aperto span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+.menu-mobile { transform: translateX(100%); transition: transform .4s cubic-bezier(.7,0,.2,1); }
+.menu-mobile.is-aperto { transform: none; }
+.menu-mobile a.is-attiva { color: var(--color-rosso); }
+body.menu-aperto { overflow: hidden; }
+
+/* 2. INTESTAZIONE DELLE PAGINE INTERNE --------------------------- */
+.intestazione { position: relative; overflow: hidden; isolation: isolate; }
+.intestazione::after {      /* fascia rossa diagonale a destra */
+  content: ""; position: absolute; z-index: -1; right: -8%; top: 0; bottom: 0; width: 46%;
+  background: var(--color-rosso);
+  clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%);
+}
+@media (max-width: 899px) {  /* su smartphone le fasce restano strette, a destra del testo */
+  .intestazione::after { width: 18%; right: -4%; }
+  .intestazione::before { width: 22%; right: -4%; }
+}
+.intestazione::before {     /* fascia bianca che separa grigio e rosso */
+  content: ""; position: absolute; z-index: -1; right: -8%; top: 0; bottom: 0; width: 50%;
+  background: #fff;
+  clip-path: polygon(33% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* 3. CAROSELLI ORIZZONTALI E SCHEDE ------------------------------ */
+.scorri {
+  display: grid; grid-auto-flow: column; gap: 20px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-left: 0;
+  scrollbar-width: none; padding-bottom: 6px;
+}
+.scorri::-webkit-scrollbar { display: none; }
+.scorri > * { scroll-snap-align: start; }
+.scorri:focus-visible { outline: 3px solid var(--color-rosso); outline-offset: 4px; }   /* selezionato con Tab: si scorre con le frecce */
+.scorri-frecce button {
+  width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer;
+  border: 2px solid currentColor; background: transparent; color: inherit; transition: background .2s, color .2s, opacity .2s;
+}
+.scorri-frecce button:hover { background: var(--color-rosso); border-color: var(--color-rosso); color: #fff; }
+.scorri-frecce button:disabled { opacity: .3; pointer-events: none; }
+
+/* Schede (tab) per scegliere la squadra */
+.schede { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.schede::-webkit-scrollbar { display: none; }
+.schede button, .schede a {
+  flex: none; cursor: pointer; border: 0;
+  padding: 11px 18px 8px; background: transparent; color: inherit;
+  font-family: var(--font-titoli); font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: .03em;
+  border-radius: 999px; transition: background .2s, color .2s, box-shadow .2s;
+  text-decoration: none;
+}
+.schede button:hover, .schede a:hover { background: rgba(0,0,0,.06); }
+.schede button.is-attiva, .schede a.is-attiva { background: #fff; color: var(--color-nero); box-shadow: 4px 5px 10px rgba(0,0,0,.2); }
+.schede--scure button.is-attiva, .schede--scure a.is-attiva { background: var(--color-rosso); color: #fff; }
+
+/* 4. MODULO CONTATTI -------------------------------------------- */
+.campo label { display: block; font-family: var(--font-titoli); font-weight: 700; text-transform: uppercase; font-size: 15px; letter-spacing: .03em; margin-bottom: 6px; }
+.campo input, .campo select, .campo textarea {
+  width: 100%; padding: 13px 14px; font: inherit; font-size: 16px;
+  background: #fff; border: 2px solid var(--color-grigio); border-radius: 0; transition: border-color .2s;
+}
+.campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--color-rosso); }
+
+/* 5. PULSANTE "TORNA SU" ----------------------------------------- */
+.torna-su { opacity: 0; pointer-events: none; transform: translateY(12px); transition: opacity .3s, transform .3s, background .2s; }
+.torna-su.is-visibile { opacity: 1; pointer-events: auto; transform: none; }
+.torna-su:hover { background: var(--color-nero); }
+
+} /* fine @layer components */

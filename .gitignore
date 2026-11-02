@@ -1,0 +1,20 @@
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Impostazioni personali degli editor
+.vscode/settings.json
+.idea/
+
+# Materiale di riferimento (grafiche Instagram, file del vecchio sito):
+# resta sul computer, non va su GitHub
+materiale/
+
+# Chiavi e configurazioni private: non devono MAI finire su GitHub
+.env
+*.key
+config.locale.js
+
+# File di lavoro dell'aggiornamento risultati (si rigenerano da soli)
+strumenti/__pycache__/
+strumenti/archivio/

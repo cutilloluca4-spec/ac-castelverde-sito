@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Controlli del sito — A.C. Castelverde</title>
+  <link rel="stylesheet" href="../design-system/colori.css" />
+  <script src="../design-system/tema-tailwind.js"></script>
+  <script src="../js/vendor/tailwind-browser.js"></script>
+</head>
+<body class="bg-acc-carta text-acc-inchiostro antialiased font-acc-testo">
+  <!-- Pagina dei controlli automatici: si apre con Live Server (test/index.html).
+       Carica i dati e le funzioni del sito (senza disegnare le pagine) e li prova.
+       I controlli sono in test.js. Non è collegata dal menu: serve a chi sviluppa. -->
+  <main class="max-w-3xl mx-auto px-6 py-12">
+    <p class="text-xs font-bold uppercase tracking-widest text-acc-rosso-scuro">A.C. Castelverde</p>
+    <h1 class="mt-2 mb-2 text-3xl font-bold">Controlli del sito</h1>
+    <p class="mb-6 text-sm text-acc-testo-2">Ogni riga prova una funzione o un file di dati del sito. Dopo una modifica al codice, o dopo l'aggiornamento dei risultati del lunedì, ricarica questa pagina: se compare una ❌, qualcosa si è rotto.</p>
+    <p id="riepilogo" class="p-4 font-bold">Controlli in corso…</p>
+    <div id="elenco"></div>
+  </main>
+
+  <!-- I dati e le funzioni del sito (stesso ordine delle pagine) -->
+  <script src="../js/dati/club.js"></script>
+  <script src="../js/dati/notizie.js"></script>
+  <script src="../js/dati/squadre.js"></script>
+  <script src="../js/dati/partite.js"></script>
+  <script src="../js/dati/partner.js"></script>
+  <script src="../js/dati/storia.js"></script>
+  <script src="../js/utilita.js"></script>
+  <script src="../js/componenti.js"></script>
+
+  <!-- I controlli -->
+  <script src="test.js"></script>
+</body>
+</html>

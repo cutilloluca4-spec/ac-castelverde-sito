@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dirigenza — A.C. Castelverde</title>
+<meta name="description" content="Le figure dirigenziali dell'A.C. Castelverde: presidente, vicepresidente e direttore sportivo, segreteria e responsabile del settore giovanile." />
+<link rel="icon" href="assets/logo/favicon-32.png" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png" />
+<meta name="theme-color" content="#ff0000" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="A.C. Castelverde" />
+<meta property="og:title" content="Dirigenza — A.C. Castelverde" />
+<meta property="og:description" content="Le figure dirigenziali dell'A.C. Castelverde: presidente, vicepresidente e direttore sportivo, segreteria e responsabile del settore giovanile." />
+<meta property="og:image" content="assets/og-image.jpg" />
+<script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
+<link rel="stylesheet" href="design-system/colori.css?v=1" />
+<script src="design-system/tema-tailwind.js?v=1"></script>
+<script src="js/vendor/tailwind-browser.js"></script>
+<link rel="stylesheet" href="css/componenti.css?v=1" />
+<link rel="stylesheet" href="css/sito.css?v=1" />
+<link rel="stylesheet" href="css/animazioni.css?v=1" />
+</head>
+<body data-pagina="dirigenza" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-hidden">
+
+<!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
+<div id="menu"></div>
+
+<main id="top" class="pt-[120px] overflow-x-clip">
+
+  <!-- ============ INTESTAZIONE ============ -->
+  <section class="intestazione bg-acc-grigio-chiaro">
+    <div class="relative max-w-acc mx-auto px-4 tablet:px-6 pt-14 pb-14 computer:pt-20 computer:pb-20">
+      <span class="pillola text-[15px]" data-entra>Stagione 2026/27</span>
+      <h1 class="titolo-display text-[72px] tablet:text-[112px] computer:text-[128px] mt-6 max-w-[760px]" data-entra>Diri<span class="titolo-contorno">genza</span></h1>
+      <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Le persone che guidano l'A.C. Castelverde, in campo e fuori.</p>
+      <img class="hidden computer:block absolute right-[7%] top-1/2 -translate-y-1/2 h-[300px] w-auto drop-shadow-acc-stemma" src="assets/logo/stemma-400.png" alt="" />
+    </div>
+  </section>
+
+  <!-- ============ PRESIDENTE (prima persona di CLUB.organigramma in js/dati/club.js) ============ -->
+  <section class="py-16 computer:py-24">
+    <div id="presidente" class="max-w-acc mx-auto px-4 tablet:px-6" data-entra></div>
+  </section>
+
+  <!-- ============ ALTRE FIGURE DIRIGENZIALI ============ -->
+  <section class="trama-grigia py-16 computer:py-24">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6">
+      <h2 class="titolo-sezione text-[52px] tablet:text-[80px] mb-12" data-entra>Consiglio direttivo</h2>
+      <!-- schede centrate: 1 per riga su smartphone, 2 su tablet, 3 su computer -->
+      <div id="dirigenti" class="flex flex-wrap justify-center gap-6 [&>*]:w-full tablet:[&>*]:w-[calc(50%-12px)] lg:[&>*]:w-[calc(33.333%-16px)]" data-entrano></div>
+    </div>
+  </section>
+
+  <!-- ============ STAFF DELLE SQUADRE (da SQUADRE in js/dati/squadre.js) ============ -->
+  <section class="py-16 computer:py-24">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6">
+      <h2 class="titolo-sezione titolo-sezione--sinistra text-[48px] tablet:text-[64px] mb-10" data-entra>Staff delle squadre</h2>
+      <div id="staffSquadre" class="grid gap-6 tablet:grid-cols-2 lg:grid-cols-4" data-entrano></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Partner e footer: li disegna js/layout.js -->
+<div id="partner"></div>
+<div id="piede"></div>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/dati/club.js?v=1"></script>
+<script src="js/dati/notizie.js?v=1"></script>
+<script src="js/dati/squadre.js?v=1"></script>
+<script src="js/dati/partite.js?v=1"></script>
+<script src="js/dati/partner.js?v=1"></script>
+<script src="js/utilita.js?v=1"></script>
+<script src="js/componenti.js?v=1"></script>
+<script src="js/layout.js?v=1"></script>
+<script src="js/animazioni.js?v=1"></script>
+<script src="js/pagine/dirigenza.js?v=1"></script>
+</body>
+</html>

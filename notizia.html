@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Notizia — A.C. Castelverde</title>
+<meta name="description" content="Una notizia dall'A.C. Castelverde." />
+<link rel="icon" href="assets/logo/favicon-32.png" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png" />
+<meta name="theme-color" content="#ff0000" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="A.C. Castelverde" />
+<meta property="og:title" content="Notizia — A.C. Castelverde" />
+<meta property="og:description" content="Una notizia dall'A.C. Castelverde." />
+<meta property="og:image" content="assets/og-image.jpg" />
+<script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
+<link rel="stylesheet" href="design-system/colori.css?v=1" />
+<script src="design-system/tema-tailwind.js?v=1"></script>
+<script src="js/vendor/tailwind-browser.js"></script>
+<link rel="stylesheet" href="css/componenti.css?v=1" />
+<link rel="stylesheet" href="css/sito.css?v=1" />
+<link rel="stylesheet" href="css/animazioni.css?v=1" />
+</head>
+<body data-pagina="notizie" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-hidden">
+
+<!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
+<div id="menu"></div>
+
+<main id="top" class="pt-[120px] overflow-x-clip">
+
+  <!-- ============ ARTICOLO ============
+       Il contenuto lo scrive js/pagine/notizia.js leggendo ?id= dall'indirizzo -->
+  <article id="articolo" class="bg-acc-grigio-chiaro">
+    <div class="min-h-[60vh] grid place-items-center">
+      <img class="caricamento h-16 w-auto" src="assets/logo/stemma-120.png" alt="Caricamento" />
+    </div>
+  </article>
+
+  <!-- ============ ALTRE NOTIZIE ============ -->
+  <section class="py-16 computer:py-20">
+    <div class="max-w-acc mx-auto px-4 tablet:px-6">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <h2 class="titolo-display text-[48px] tablet:text-[64px]">Altre <span class="titolo-contorno">notizie</span></h2>
+        <a href="notizie.html" class="link-freccia">Tutte le notizie</a>
+      </div>
+      <div id="altreNotizie" class="grid gap-5 tablet:grid-cols-3" data-entrano></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Partner e footer: li disegna js/layout.js -->
+<div id="partner"></div>
+<div id="piede"></div>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/dati/club.js?v=1"></script>
+<script src="js/dati/notizie.js?v=1"></script>
+<script src="js/dati/squadre.js?v=1"></script>
+<script src="js/dati/partite.js?v=1"></script>
+<script src="js/dati/partner.js?v=1"></script>
+<script src="js/utilita.js?v=1"></script>
+<script src="js/componenti.js?v=1"></script>
+<script src="js/layout.js?v=1"></script>
+<script src="js/animazioni.js?v=1"></script>
+<script src="js/pagine/notizia.js?v=1"></script>
+</body>
+</html>

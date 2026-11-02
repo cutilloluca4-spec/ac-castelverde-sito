@@ -1,0 +1,65 @@
+/* ==================================================================
+   A.C. Castelverde — design-system/colori.css
+   Colori, font e misure del sito, definiti UNA volta sola.
+   Tutto il resto del progetto li usa:
+     - nei file CSS come variabili  → var(--color-rosso)
+     - nell'HTML come classi Tailwind → text-acc-rosso, bg-acc-nero
+       (i nomi delle classi sono in tema-tailwind.js, qui accanto)
+   Per cambiare un colore in tutto il sito si cambia solo qui.
+
+   I colori vengono dallo stemma e dalle grafiche Instagram del club:
+     grigio (metà sinistra) · rosso (metà destra) · nero (bordo e torre)
+     + pannelli bianchi, etichette a pillola, angoli rossi, trama grigia.
+   ================================================================== */
+
+/* ---------- Font ----------
+   Titoli: DIN Condensed, lo stesso delle grafiche Instagram.
+   È già installato su Mac, iPhone e iPad. Su Windows e Android, dove non
+   c'è, si usa Barlow Condensed (molto simile, licenza libera OFL), con i
+   file in assets/font/: caricati dal sito stesso, non da Google Fonts,
+   quindi niente cookie esterni e funziona anche senza internet.
+   Testi: Helvetica Neue (Mac/iPhone), Arial altrove. */
+@font-face { font-family: "Barlow Condensed"; font-weight: 500; font-display: swap; src: url("../assets/font/barlow-condensed-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 600; font-display: swap; src: url("../assets/font/barlow-condensed-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap; src: url("../assets/font/barlow-condensed-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url("../assets/font/barlow-condensed-latin-800-normal.woff2") format("woff2"); }
+
+:root {
+  /* Colori dello stemma e delle grafiche */
+  --color-rosso: #ff0000;          /* rosso delle grafiche: fasce, pulsanti, accenti */
+  --color-rosso-scuro: #c80000;    /* rosso al passaggio del mouse, testi rossi piccoli */
+  --color-rosso-profondo: #8e1414; /* rosso scuro dei pannelli "Full time" */
+  --color-grigio: #d0d2d4;         /* grigio dello stemma e dei pannelli */
+  --color-grigio-chiaro: #f1f1f1;  /* fondo chiaro delle grafiche */
+  --color-grigio-medio: #a9abad;   /* grigio delle forme diagonali */
+  --color-nero: #0e0e0f;           /* testo dei titoli, footer */
+  --color-nero-2: #1a1a1c;         /* card su sfondo nero */
+  --color-nero-3: #2a2a2d;         /* bordi su sfondo nero */
+
+  /* Testi e linee */
+  --color-bianco: #ffffff;
+  --color-carta: #f6f6f6;          /* sfondo generale della pagina */
+  --color-inchiostro: #111113;     /* testo principale */
+  --color-testo-2: #6c6f73;        /* testo secondario (date, didascalie) */
+  --color-linea: #e3e4e5;          /* bordi su sfondo chiaro */
+
+  /* Risultati delle partite */
+  --color-vittoria: #1d8a4e;
+  --color-pareggio: #8a8d91;
+  --color-sconfitta: var(--color-rosso);
+
+  /* Avvisi ("testo di esempio", "bozza", dati provvisori) */
+  --color-avviso: #f0a500;
+  --color-avviso-chiaro: #fff6d9;
+
+  --font-titoli: "DIN Condensed", "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-testo: "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* Ombre ricorrenti */
+  --ombra-card: 6px 8px 16px rgba(0, 0, 0, .08);       /* card bianche su fondo chiaro */
+  --ombra-grafica: 8px 12px 24px rgba(0, 0, 0, .22);   /* grafiche Instagram in Home */
+  --ombra-stemma: 10px 16px 20px rgba(0, 0, 0, .3);    /* stemma nelle intestazioni (drop-shadow) */
+
+  --larghezza-max: 1320px;         /* larghezza massima dei contenuti */
+  --altezza-menu: 72px;            /* altezza del menu fisso in alto */
+}

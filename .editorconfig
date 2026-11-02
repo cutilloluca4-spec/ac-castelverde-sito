@@ -1,0 +1,14 @@
+# Stesso formato del codice in tutti gli editor (Visual Studio Code lo legge
+# con l'estensione EditorConfig): 2 spazi, a capo Unix, UTF-8.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
