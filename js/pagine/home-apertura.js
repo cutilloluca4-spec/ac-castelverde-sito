@@ -248,7 +248,7 @@ function preparaPallone(sezione, canvas, fermo) {
       contesto.beginPath();
       contesto.moveTo(a.x, a.y);
       contesto.lineTo(b.x, b.y);
-      contesto.strokeStyle = "rgba(255,0,0," + (vita * 0.85) + ")";
+      contesto.strokeStyle = `rgba(255,0,0,${vita * 0.85})`;
       contesto.lineWidth = raggio * 1.3 * vita * Math.min(1, b.v / 8);
       contesto.stroke();
       // graffi paralleli, come la pennellata delle grafiche
@@ -256,7 +256,7 @@ function preparaPallone(sezione, canvas, fermo) {
       contesto.moveTo(a.x + 6, a.y - 9);
       contesto.lineTo(b.x + 6, b.y - 9);
       contesto.lineWidth = 2;
-      contesto.strokeStyle = "rgba(255,0,0," + (vita * 0.5) + ")";
+      contesto.strokeStyle = `rgba(255,0,0,${vita * 0.5})`;
       contesto.stroke();
     }
   }
@@ -267,7 +267,7 @@ function preparaPallone(sezione, canvas, fermo) {
       contesto.beginPath();
       contesto.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       contesto.lineWidth = 6 * a.vita;
-      contesto.strokeStyle = "rgba(255,0,0," + Math.max(0, a.vita) + ")";
+      contesto.strokeStyle = `rgba(255,0,0,${Math.max(0, a.vita)})`;
       contesto.stroke();
     });
     anelli = anelli.filter(function (a) { return a.vita > 0; });

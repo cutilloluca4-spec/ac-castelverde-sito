@@ -19,31 +19,31 @@ function disegnaRecapiti() {
   const c = CLUB.contatti;
   const card = function (icona, titolo, valore, link, rossa) {
     const dentro =
-      '<span class="w-8 h-8 ' + (rossa ? "text-white" : "text-acc-rosso") + '">' + icona + "</span>" +
-      '<span class="titolo-display text-[22px] opacity-70">' + titolo + "</span>" +
-      '<span class="titolo-display text-[30px] break-words">' + valore + "</span>";
-    const classi = "flex flex-col gap-3 p-7 no-underline " + (rossa ? "trama-rossa text-white" : "bg-white text-acc-nero") + " shadow-acc-card transition-transform hover:-translate-y-1";
-    return link ? '<a class="' + classi + '" href="' + link + '"' + (link.indexOf("http") === 0 ? ' target="_blank" rel="noopener"' : "") + ">" + dentro + "</a>" : '<div class="' + classi + '">' + dentro + "</div>";
+      `<span class="w-8 h-8 ${rossa ? "text-white" : "text-acc-rosso"}">${icona}</span>` +
+      `<span class="titolo-display text-[22px] opacity-70">${titolo}</span>` +
+      `<span class="titolo-display text-[30px] break-words">${valore}</span>`;
+    const classi = `flex flex-col gap-3 p-7 no-underline ${rossa ? "trama-rossa text-white" : "bg-white text-acc-nero"} shadow-acc-card transition-transform hover:-translate-y-1`;
+    return link ? `<a class="${classi}" href="${link}"${link.indexOf("http") === 0 ? ' target="_blank" rel="noopener"' : ""}>${dentro}</a>` : `<div class="${classi}">${dentro}</div>`;
   };
 
   let html =
     card(ICONE.luogo, "Sede", testo(c.indirizzo) + "<br>" + testo(c.citta), c.mappa, true) +
-    card(ICONE.telefono, "Telefono", testo(c.telefono), "tel:" + c.telefonoLink) +
-    card(ICONE.posta, "Email", '<span class="font-acc-testo normal-case font-bold text-[17px] break-all">' + testo(c.email) + "</span>", "mailto:" + c.email);
-  if (CLUB.social.instagram) html += card(ICONE.instagram, "Instagram", '<span class="font-acc-testo normal-case font-bold text-[17px] break-all">' + testo(CLUB.social.instagramNome) + "</span>", CLUB.social.instagram);
+    card(ICONE.telefono, "Telefono", testo(c.telefono), `tel:${c.telefonoLink}`) +
+    card(ICONE.posta, "Email", `<span class="font-acc-testo normal-case font-bold text-[17px] break-all">${testo(c.email)}</span>`, `mailto:${c.email}`);
+  if (CLUB.social.instagram) html += card(ICONE.instagram, "Instagram", `<span class="font-acc-testo normal-case font-bold text-[17px] break-all">${testo(CLUB.social.instagramNome)}</span>`, CLUB.social.instagram);
   document.getElementById("recapiti").innerHTML = html;
 }
 
 function disegnaCampi() {
   document.getElementById("campiContatti").innerHTML = CLUB.impianti.map(function (c) {
     return (
-      '<a href="' + c.mappa + '" target="_blank" rel="noopener" class="group flex items-center gap-6 bg-acc-grigio-chiaro p-7 no-underline text-acc-nero hover:bg-acc-nero hover:text-white transition-colors">' +
-        '<span class="grid place-items-center w-16 h-16 flex-none bg-acc-rosso text-white"><span class="w-8 h-8">' + ICONE.luogo + "</span></span>" +
+      `<a href="${c.mappa}" target="_blank" rel="noopener" class="group flex items-center gap-6 bg-acc-grigio-chiaro p-7 no-underline text-acc-nero hover:bg-acc-nero hover:text-white transition-colors">` +
+        `<span class="grid place-items-center w-16 h-16 flex-none bg-acc-rosso text-white"><span class="w-8 h-8">${ICONE.luogo}</span></span>` +
         '<span class="flex flex-col gap-1">' +
-          '<span class="titolo-display text-[34px]">' + testo(c.nome) + "</span>" +
-          '<span class="text-[15px] opacity-80">' + testo(c.indirizzo) + "</span>" +
+          `<span class="titolo-display text-[34px]">${testo(c.nome)}</span>` +
+          `<span class="text-[15px] opacity-80">${testo(c.indirizzo)}</span>` +
         "</span>" +
-        '<span class="w-7 h-7 ml-auto flex-none text-acc-rosso">' + ICONE.freccia + "</span>" +
+        `<span class="w-7 h-7 ml-auto flex-none text-acc-rosso">${ICONE.freccia}</span>` +
       "</a>"
     );
   }).join("");
@@ -74,10 +74,10 @@ function preparaModulo() {
 
   // apre il programma di posta con oggetto e testo già scritti
   function apriPosta() {
-    const oggetto = "Dal sito: " + modulo.motivo.value;
+    const oggetto = `Dal sito: ${modulo.motivo.value}`;
     const testoEmail = modulo.messaggio.value + "\n\n" + modulo.nome.value +
-      (modulo.telefono.value ? "\nTel. " + modulo.telefono.value : "") + "\n" + modulo.email.value;
-    location.href = "mailto:" + CLUB.contatti.email + "?subject=" + encodeURIComponent(oggetto) + "&body=" + encodeURIComponent(testoEmail);
+      (modulo.telefono.value ? `\nTel. ${modulo.telefono.value}` : "") + "\n" + modulo.email.value;
+    location.href = `mailto:${CLUB.contatti.email}?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(testoEmail)}`;
   }
 
   modulo.addEventListener("submit", function (e) {
@@ -95,7 +95,7 @@ function preparaModulo() {
     // i dati per Web3Forms: la chiave, l'oggetto dell'email e "rispondi a" chi ha scritto
     const dati = new FormData(modulo);
     dati.append("access_key", chiave);
-    dati.append("subject", "Nuovo messaggio dal sito – " + modulo.motivo.value);
+    dati.append("subject", `Nuovo messaggio dal sito – ${modulo.motivo.value}`);
     dati.append("from_name", "Sito A.C. Castelverde");
     dati.append("replyto", modulo.email.value);
     dati.delete("privacy");

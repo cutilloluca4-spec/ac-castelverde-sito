@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let quante = NOTIZIE_PER_VOLTA;
 
   filtri.innerHTML = ["", ...CATEGORIE_NOTIZIE].map(function (c) {
-    return '<button type="button" role="tab" data-categoria="' + testo(c) + '">' + (c || "Tutte") + "</button>";
+    return `<button type="button" role="tab" data-categoria="${testo(c)}">${c || "Tutte"}</button>`;
   }).join("");
 
   function disegna() {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     categoria = b.dataset.categoria;
     quante = NOTIZIE_PER_VOLTA;
     // aggiorna l'indirizzo senza ricaricare, così il filtro si può condividere
-    history.replaceState(null, "", categoria ? "?categoria=" + encodeURIComponent(categoria) : location.pathname);
+    history.replaceState(null, "", categoria ? `?categoria=${encodeURIComponent(categoria)}` : location.pathname);
     disegna();
   });
 

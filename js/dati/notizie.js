@@ -177,13 +177,16 @@ const NOTIZIE = [
     data: "2026-09-07",
     categoria: "Società",
     titolo: "Diventa partner del Castelverde",
-    sommario: "Con Unical, Selica Costruzioni e DD Sistemi: il tuo marchio sulle grafiche, a bordo campo e sul sito.",
+    sommario: "Le aziende del territorio che sostengono la società hanno il loro marchio sul sito e sulle grafiche delle partite. C'è posto anche per te.",
     immagine: "assets/img/notizie/notizia-04.jpg",
     apertura: false,
-    esempio: true,
+    esempio: false,
     testo: [
-      "[Testo di esempio] Le aziende del territorio possono sostenere la società e i suoi ragazzi.",
-      "[Inserire le formule di sponsorizzazione e chi contattare.]"
+      "Dal 1987 l'A.C. Castelverde vive grazie alle persone e alle aziende del paese. Oggi la società porta in campo quattro squadre agonistiche, dalla Seconda Categoria agli Under 15, e decine di ragazzi che si allenano ogni settimana allo Stadio Comunale di via dei Gerani.",
+      "Sostenere il Castelverde vuol dire aiutare concretamente il settore giovanile: iscrizioni ai campionati, materiale tecnico, trasferte e la cura del campo. In cambio, il marchio dell'azienda accompagna la squadra per tutta la stagione.",
+      "Il logo dei partner compare nella sezione \"I nostri partner\" in fondo a ogni pagina di questo sito e nelle grafiche Instagram della società (Match day, Starting XI, Full time), che raccontano ogni partita della stagione.",
+      "Oggi sono con noi Unical, Reale Mutua, Selica Costruzioni, DD Sistemi, Omega Verifiche Impianti, Vancom Imballaggi, Tecnopubblica e Opel Dal Ben & Barbieri: grazie a tutti loro.",
+      "Se la tua azienda vuole unirsi, scrivici dalla pagina Contatti scegliendo \"Diventare partner\", oppure chiamaci: costruiamo insieme la formula più adatta."
     ]
   }
 ];

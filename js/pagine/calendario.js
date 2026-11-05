@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("avvisoCalendario").innerHTML = htmlAvvisoCalendario();
 
   schede.innerHTML = squadre.map(function (s) {
-    return '<button type="button" role="tab" data-squadra="' + s.id + '">' + testo(s.nome) + "</button>";
+    return `<button type="button" role="tab" data-squadra="${s.id}">${testo(s.nome)}</button>`;
   }).join("");
 
   function disegna() {
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const b = e.target.closest("button[data-squadra]");
     if (!b) return;
     scelta = b.dataset.squadra;
-    history.replaceState(null, "", "?squadra=" + scelta);
+    history.replaceState(null, "", `?squadra=${scelta}`);
     disegna();
   });
 

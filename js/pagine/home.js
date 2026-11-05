@@ -40,21 +40,21 @@ function disegnaProssimaPartita() {
   box.innerHTML =
     '<div class="grid computer:grid-cols-[auto_1.2fr_auto] items-center gap-8 computer:gap-12">' +
       '<div data-entra>' +
-        '<p class="text-[13px] font-semibold uppercase tracking-[.14em] flex items-center gap-2"><span class="lampeggia w-2.5 h-2.5 rounded-full bg-white"></span>' + testo(squadra.nome) + "</p>" +
+        `<p class="text-[13px] font-semibold uppercase tracking-[.14em] flex items-center gap-2"><span class="lampeggia w-2.5 h-2.5 rounded-full bg-white"></span>${testo(squadra.nome)}</p>` +
         '<h2 id="titoloProssima" class="titolo-display text-[56px] tablet:text-[72px] mt-2">Match <span class="titolo-contorno titolo-contorno--bianco">day</span></h2>' +
-        '<span class="pillola text-[16px] mt-3">' + testo(p.competizione) + "</span>" +
+        `<span class="pillola text-[16px] mt-3">${testo(p.competizione)}</span>` +
       "</div>" +
-      '<div class="' + FASCIA.riga + ' text-acc-nero px-4 py-6 shadow-[8px_10px_0_rgba(0,0,0,.18)]" data-entra data-ritardo=".1">' +
-        '<div class="' + FASCIA.squadra + '">' + s[0].stemma + '<span class="' + nome + '">' + testo(s[0].nome) + "</span></div>" +
+      `<div class="${FASCIA.riga} text-acc-nero px-4 py-6 shadow-[8px_10px_0_rgba(0,0,0,.18)]" data-entra data-ritardo=".1">` +
+        `<div class="${FASCIA.squadra}">${s[0].stemma}<span class="${nome}">${testo(s[0].nome)}</span></div>` +
         '<span class="font-acc-titoli font-bold text-[72px] leading-[.8]">V</span>' +
-        '<div class="' + FASCIA.squadra + '">' + s[1].stemma + '<span class="' + nome + '">' + testo(s[1].nome) + "</span></div>" +
+        `<div class="${FASCIA.squadra}">${s[1].stemma}<span class="${nome}">${testo(s[1].nome)}</span></div>` +
       "</div>" +
       '<div class="flex flex-col gap-4" data-entra data-ritardo=".2">' +
-        '<p class="titolo-display text-[32px]">' + dataLunga(p.data) + " · " + testoOra(p) + "</p>" +
-        '<p class="flex items-start gap-2 text-[14px] max-w-[300px]"><span class="w-5 h-5 flex-none">' + ICONE.luogo + "</span>" + testo(p.campo) + "</p>" +
+        `<p class="titolo-display text-[32px]">${dataLunga(p.data)} · ${testoOra(p)}</p>` +
+        `<p class="flex items-start gap-2 text-[14px] max-w-[300px]"><span class="w-5 h-5 flex-none">${ICONE.luogo}</span>${testo(p.campo)}</p>` +
         '<div id="contoRovescia" class="flex gap-5 titolo-display text-[40px]" aria-live="off"></div>' +
         '<div class="flex flex-wrap items-center gap-3">' +
-          '<a href="calendario.html?squadra=' + p.squadra + '" class="btn btn--bianco self-start">Calendario</a>' +
+          `<a href="calendario.html?squadra=${p.squadra}" class="btn btn--bianco self-start">Calendario</a>` +
           htmlAvvisoCalendario(true) +
         "</div>" +
       "</div>" +
@@ -70,7 +70,7 @@ function disegnaProssimaPartita() {
     const g = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24, m = Math.floor(diff / 6e4) % 60;
     const cella = function (n, etichetta) {
       // min-w-[2ch]: le cifre non fanno "ballare" il conto quando cambiano
-      return '<span class="flex flex-col items-center min-w-[2ch] text-center leading-none"><span class="inline-block min-w-[2ch] text-center">' + String(n).padStart(2, "0") + '</span><small class="text-[12px] font-acc-testo font-semibold uppercase tracking-[.1em] mt-1">' + etichetta + "</small></span>";
+      return `<span class="flex flex-col items-center min-w-[2ch] text-center leading-none"><span class="inline-block min-w-[2ch] text-center">${String(n).padStart(2, "0")}</span><small class="text-[12px] font-acc-testo font-semibold uppercase tracking-[.1em] mt-1">${etichetta}</small></span>`;
     };
     conto.innerHTML = cella(g, "giorni") + cella(h, "ore") + cella(m, "min");
   }
@@ -87,8 +87,8 @@ function disegnaUltimeNotizie() {
   const lista = [evidenza].concat(tutte.filter(function (n) { return n !== evidenza; })).slice(0, 5);
   box.innerHTML = lista.map(function (n, i) {
     return i === 0
-      ? '<div class="tablet:col-span-2 computer:row-span-2">' + htmlCardNotizia(n, "grande") + "</div>"
-      : "<div>" + htmlCardNotizia(n, "normale") + "</div>";
+      ? `<div class="tablet:col-span-2 computer:row-span-2">${htmlCardNotizia(n, "grande")}</div>`
+      : `<div>${htmlCardNotizia(n, "normale")}</div>`;
   }).join("");
 }
 
@@ -100,7 +100,7 @@ function disegnaPartite() {
 
   const squadre = squadreConPartite();
   schede.innerHTML = squadre.map(function (s, i) {
-    return '<button type="button" role="tab" aria-selected="' + (i === 0) + '" class="' + (i === 0 ? "is-attiva" : "") + '" data-squadra="' + s.id + '">' + testo(s.nome) + "</button>";
+    return `<button type="button" role="tab" aria-selected="${i === 0}" class="${i === 0 ? "is-attiva" : ""}" data-squadra="${s.id}">${testo(s.nome)}</button>`;
   }).join("");
 
   function mostra(id) {
@@ -114,8 +114,8 @@ function disegnaPartite() {
       const html = htmlCardPartita(p);
       return k >= da && k < da + 4 ? html : html.replace('<article class="', '<article class="max-tablet:hidden ');
     }).join("") +
-      '<a href="calendario.html?squadra=' + id + '" class="' + LARGHEZZA_CARD_PARTITA + ' flex-none flex tablet:grid items-center justify-center tablet:place-items-center tablet:content-center gap-4 bg-acc-nero text-white no-underline p-6 tablet:p-8 text-center hover:bg-acc-rosso transition-colors">' +
-        '<span class="titolo-display text-[34px] tablet:text-[44px]">Calendario<br class="hidden tablet:block"> completo</span><span class="w-8 h-8 tablet:w-10 tablet:h-10">' + ICONE.freccia + "</span>" +
+      `<a href="calendario.html?squadra=${id}" class="${LARGHEZZA_CARD_PARTITA} flex-none flex tablet:grid items-center justify-center tablet:place-items-center tablet:content-center gap-4 bg-acc-nero text-white no-underline p-6 tablet:p-8 text-center hover:bg-acc-rosso transition-colors">` +
+        `<span class="titolo-display text-[34px] tablet:text-[44px]">Calendario<br class="hidden tablet:block"> completo</span><span class="w-8 h-8 tablet:w-10 tablet:h-10">${ICONE.freccia}</span>` +
       "</a>";
     // dopo che la pagina ha finito di impaginarsi (font e immagini), così la card è allineata giusta
     function allinea() {
@@ -150,14 +150,14 @@ function disegnaSquadre() {
   document.getElementById("quattroSquadre").innerHTML = SQUADRE.map(function (s) {
     const prossima = prossimePartite(s.id)[0];
     return (
-      '<a href="squadre.html#' + s.id + '" class="' + CARD_NOTIZIA.card + '">' +
-        '<div class="' + CARD_NOTIZIA.foto + ' aspect-[4/3]"><img class="' + CARD_NOTIZIA.img + '" src="' + testo(s.immagine) + '" alt="" loading="lazy" /></div>' +
+      `<a href="squadre.html#${s.id}" class="${CARD_NOTIZIA.card}">` +
+        `<div class="${CARD_NOTIZIA.foto} aspect-[4/3]"><img class="${CARD_NOTIZIA.img}" src="${testo(s.immagine)}" alt="" loading="lazy" /></div>` +
         '<div class="flex flex-col gap-3 p-5 tablet:p-6 flex-1">' +
-          '<span class="pillola pillola--piccola self-start' + (s.id === "prima-squadra" ? " pillola--rossa" : "") + '">' + testo(s.categoria) + "</span>" +
-          '<h3 class="' + CARD_NOTIZIA.titolo + ' text-[38px] tablet:text-[44px] mt-1">' + testo(s.nome) + "</h3>" +
-          '<p class="text-[14px] text-acc-testo-2 leading-snug">' + testo(s.campionato) + "</p>" +
+          `<span class="pillola pillola--piccola self-start${s.id === "prima-squadra" ? " pillola--rossa" : ""}">${testo(s.categoria)}</span>` +
+          `<h3 class="${CARD_NOTIZIA.titolo} text-[38px] tablet:text-[44px] mt-1">${testo(s.nome)}</h3>` +
+          `<p class="text-[14px] text-acc-testo-2 leading-snug">${testo(s.campionato)}</p>` +
           (prossima
-            ? '<p class="text-[13px] font-semibold border-t border-acc-linea pt-3 mt-auto"><span class="text-acc-rosso-scuro uppercase tracking-[.08em] text-[12px] block mb-0.5">Prossima partita</span>' + dataCorta(prossima.data) + " · " + (prossima.casa ? "Castelverde - " + testo(prossima.avversario) : testo(prossima.avversario) + " - Castelverde") + "</p>"
+            ? `<p class="text-[13px] font-semibold border-t border-acc-linea pt-3 mt-auto"><span class="text-acc-rosso-scuro uppercase tracking-[.08em] text-[12px] block mb-0.5">Prossima partita</span>${dataCorta(prossima.data)} · ${prossima.casa ? "Castelverde - " + testo(prossima.avversario) : testo(prossima.avversario) + " - Castelverde"}</p>`
             : '<p class="link-freccia text-[16px] mt-auto pt-3">La squadra</p>') +
         "</div>" +
       "</a>"
@@ -175,7 +175,7 @@ function disegnaRosa() {
     return k < 6 ? html : html.replace('<article class="', '<article class="max-tablet:hidden ');
   }).join("");
   const mister = squadra.staff.find(function (p) { return p.ruolo === "Allenatore"; });
-  if (mister) document.getElementById("allenatore").innerHTML = '<span class="text-acc-testo-2">All.</span> ' + testo(mister.nome);
+  if (mister) document.getElementById("allenatore").innerHTML = `<span class="text-acc-testo-2">All.</span> ${testo(mister.nome)}`;
 }
 
 /* 07 · NUMERI ----------------------------------------------------- */
@@ -183,8 +183,8 @@ function disegnaNumeri() {
   document.getElementById("numeri").innerHTML = CLUB.numeri.map(function (n) {
     return (
       '<div class="bg-white px-6 py-8 computer:py-10">' +
-        '<p class="titolo-display text-[64px] computer:text-[84px] text-acc-rosso" data-conta="' + n.valore + '" data-suffisso="' + (n.suffisso || "") + '">' + n.valore + (n.suffisso || "") + "</p>" +
-        '<p class="text-[13px] font-semibold uppercase tracking-[.1em] mt-2">' + testo(n.etichetta) + "</p>" +
+        `<p class="titolo-display text-[64px] computer:text-[84px] text-acc-rosso" data-conta="${n.valore}" data-suffisso="${n.suffisso || ""}">${n.valore}${n.suffisso || ""}</p>` +
+        `<p class="text-[13px] font-semibold uppercase tracking-[.1em] mt-2">${testo(n.etichetta)}</p>` +
       "</div>"
     );
   }).join("");
@@ -194,6 +194,6 @@ function disegnaNumeri() {
 function disegnaSocial() {
   const box = document.getElementById("pulsantiSocial");
   let html = "";
-  if (CLUB.social.instagram) html += '<a class="btn btn--rosso" href="' + CLUB.social.instagram + '" target="_blank" rel="noopener"><span class="w-5 h-5">' + ICONE.instagram + "</span>Instagram</a>";
+  if (CLUB.social.instagram) html += `<a class="btn btn--rosso" href="${CLUB.social.instagram}" target="_blank" rel="noopener"><span class="w-5 h-5">${ICONE.instagram}</span>Instagram</a>`;
   box.innerHTML = html;
 }

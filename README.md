@@ -218,6 +218,7 @@ Prefissi per le larghezze dello schermo:
 - **Classi CSS in italiano**, schema `blocco__parte--variante`: `titolo-contorno--bianco`, `pillola--rossa`, `apertura__stemma`. Se una classe ha un nome "parlante", una parte del suo stile è in `css/` o il JavaScript la usa: cercala lì.
 - `is-…` = **stato** acceso dal JavaScript (`is-attiva`, `is-aperto`, `is-scorso`, `is-visibile`).
 - `data-…` = attributi letti dal JavaScript: `data-entra` / `data-entrano` (compaiono scorrendo), `data-conta` (numero che sale), `data-carosello` (frecce del carosello).
+- **HTML nel JavaScript con i template literal**: `` `<a class="${classe}" href="${link}">${testo(nome)}</a>` `` (le parti tra `${…}` sono i dati). Le righe lunghe sono unite con `+`, una riga per elemento, così l'HTML si legge come nelle pagine.
 - **JavaScript semplice** (niente framework, niente build), funzioni con nomi italiani che dicono cosa fanno: `disegnaApertura()`, `prossimePartite()`, `htmlCardGiocatore()`.
 - I testi che arrivano dai dati passano sempre da `testo()` (in `utilita.js`), che evita che un carattere `<` rompa la pagina.
 - Commento in cima a ogni file con cosa contiene; commento `<!-- ===== NOME ===== -->` prima di ogni sezione dell'HTML.

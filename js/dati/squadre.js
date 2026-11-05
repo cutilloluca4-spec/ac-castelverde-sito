@@ -31,7 +31,7 @@
 const RUOLI = ["Portiere", "Difensore", "Centrocampista", "Attaccante"];
 
 const ROSA_PRIMA_SQUADRA = [
-  { numero: 1,  cognome: "Milanesi",    nome: "Matteo", ruolo: "Portiere", foto: "assets/img/giocatori/milanesi.webp" },
+  { numero: 1,  cognome: "Milanesi",    nome: "Matteo", ruolo: "Portiere" },
   { numero: 2,  cognome: "Robuschi",    nome: "Davide", ruolo: "" },
   { numero: 3,  cognome: "Jawara",      nome: "Saikou", ruolo: "", foto: "assets/img/giocatori/jawara.webp" },
   { numero: 4,  cognome: "Annecchino",  nome: "Nicolò", ruolo: "" },
