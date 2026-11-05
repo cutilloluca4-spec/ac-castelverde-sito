@@ -32,7 +32,7 @@
 .menu.is-scorso { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
 .menu.is-nascosto { transform: translateY(-38px); }      /* scorrendo giù sparisce la barra nera */
 .menu__stemma { transition: height .3s ease, margin .3s ease; }
-.menu.is-scorso .menu__stemma { height: 54px; margin-bottom: 0; }
+.menu.is-scorso .menu__stemma { height: 52px !important; margin-bottom: 0 !important; }   /* !important: vince sulle classi Tailwind dello stemma */
 
 /* Pulsante hamburger */
 .menu__apri span { display: block; height: 3px; background: var(--color-nero); transition: transform .3s ease, opacity .2s ease; }
@@ -81,7 +81,9 @@ body.menu-aperto { overflow: hidden; }
 .scorri-frecce button:disabled { opacity: .3; pointer-events: none; }
 
 /* Schede (tab) per scegliere la squadra */
-.schede { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.schede { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  /* un po' di margine interno (compensato all'esterno) così l'ombra della scheda attiva non viene tagliata */
+  padding: 6px 6px 10px; margin: -6px -6px -10px; }
 .schede::-webkit-scrollbar { display: none; }
 .schede button, .schede a {
   flex: none; cursor: pointer; border: 0;
@@ -91,8 +93,17 @@ body.menu-aperto { overflow: hidden; }
   text-decoration: none;
 }
 .schede button:hover, .schede a:hover { background: rgba(0,0,0,.06); }
-.schede button.is-attiva, .schede a.is-attiva { background: #fff; color: var(--color-nero); box-shadow: 4px 5px 10px rgba(0,0,0,.2); }
-.schede--scure button.is-attiva, .schede--scure a.is-attiva { background: var(--color-rosso); color: #fff; }
+/* scheda attiva: pillola bianca con un filo di bordo e un'ombra leggera, senza "stacco" netto */
+.schede button.is-attiva, .schede a.is-attiva { background: #fff; color: var(--color-nero); box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.08); }
+
+/* MOBILE FIRST: su smartphone (sotto i 700 px) niente scorrimento orizzontale.
+   I caroselli diventano elenchi verticali (una card sotto l'altra; la rosa in 2 colonne)
+   e le schede delle squadre vanno a capo. Il carosello torna da tablet in su. */
+@media (max-width: 699px) {
+  .scorri { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); gap: 16px; overflow: visible; scroll-snap-type: none; padding-bottom: 0; }
+  .scorri--griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .schede { flex-wrap: wrap; overflow: visible; gap: 6px; }
+}
 
 /* 4. MODULO CONTATTI -------------------------------------------- */
 .campo label { display: block; font-family: var(--font-titoli); font-weight: 700; text-transform: uppercase; font-size: 15px; letter-spacing: .03em; margin-bottom: 6px; }

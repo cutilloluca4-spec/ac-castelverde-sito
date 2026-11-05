@@ -43,14 +43,16 @@ const FASCIA = {
 };
 
 // Larghezza delle card nei caroselli orizzontali
-const LARGHEZZA_CARD_PARTITA = "w-[min(82vw,360px)]";
+// (su smartphone le card stanno una sotto l'altra a tutta larghezza: niente carosello)
+const LARGHEZZA_CARD_PARTITA = "w-full tablet:w-[min(82vw,360px)]";
 
 // Colore dell'etichetta Vittoria / Pareggio / Sconfitta
 const COLORE_ESITO = { V: "bg-acc-vittoria", N: "bg-acc-pareggio", P: "bg-acc-rosso" };
 
 /* ---------- Notizie ---------- */
 
-// variante: "grande" (prima card della Home), "normale", "orizzontale"
+// variante: "grande" (prima card della Home), "normale", "orizzontale" (foto a sinistra da tablet in su).
+// Mobile first: su smartphone tutte le card sono verticali (foto sopra, testo sotto).
 function htmlCardNotizia(n, variante) {
   variante = variante || "normale";
   const indirizzo = "notizia.html?id=" + encodeURIComponent(n.id);
@@ -59,15 +61,15 @@ function htmlCardNotizia(n, variante) {
 
   return (
     '<a href="' + indirizzo + '" class="' + CARD_NOTIZIA.card + ' h-full' + (orizzontale ? " tablet:flex-row" : "") + '">' +
-      '<div class="' + CARD_NOTIZIA.foto + " aspect-[3/2]" + (grande ? " computer:aspect-auto computer:flex-1" : "") + (orizzontale ? " tablet:w-[44%] tablet:flex-none" : "") + '">' +
+      '<div class="' + CARD_NOTIZIA.foto + " aspect-[16/9] tablet:aspect-[3/2]" + (grande ? " computer:aspect-auto computer:flex-1" : "") + (orizzontale ? " tablet:w-[44%] tablet:flex-none" : "") + '">' +
         '<img class="' + CARD_NOTIZIA.img + '" src="' + testo(n.immagine) + '" alt="" loading="lazy" />' +
       "</div>" +
-      '<div class="flex flex-col gap-3 ' + (grande ? "p-6 computer:p-8" : "p-5") + '">' +
-        '<div class="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[.08em]">' +
+      '<div class="flex flex-col gap-2 tablet:gap-3 ' + (grande ? "p-5 tablet:p-6 computer:p-8" : "p-5") + '">' +
+        '<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] font-semibold uppercase tracking-[.08em]">' +
           '<span class="text-acc-rosso-scuro">' + testo(n.categoria) + "</span>" +
           '<span class="text-acc-testo-2">' + dataLunga(n.data) + "</span>" +
         "</div>" +
-        '<h3 class="' + CARD_NOTIZIA.titolo + " " + (grande ? "text-[40px] computer:text-[52px]" : "text-[28px]") + '">' + testo(n.titolo) + "</h3>" +
+        '<h3 class="' + CARD_NOTIZIA.titolo + " " + (grande ? "text-[32px] tablet:text-[40px] computer:text-[52px]" : "text-[26px] tablet:text-[28px]") + '">' + testo(n.titolo) + "</h3>" +
         (grande || orizzontale ? '<p class="text-[15px] leading-relaxed text-acc-testo-2">' + testo(n.sommario) + "</p>" : "") +
       "</div>" +
     "</a>"
@@ -115,8 +117,8 @@ function htmlCardPartita(p) {
         '<div class="flex items-start justify-between gap-3">' +
           '<p class="titolo-display text-[30px]">' + (fatta ? "Full time" : "Match day") + "</p>" +
           (fatta
-            ? '<span class="' + COLORE_ESITO[e] + ' text-white text-[11px] font-bold uppercase tracking-[.08em] px-2.5 py-1">' + ETICHETTE_ESITO[e] + "</span>"
-            : '<span class="text-[11px] font-bold uppercase tracking-[.08em] bg-white text-acc-nero px-2.5 py-1">' + (p.casa ? "In casa" : "Trasferta") + "</span>") +
+            ? '<span class="' + COLORE_ESITO[e] + ' text-white text-[12px] font-bold uppercase tracking-[.08em] px-2.5 py-1">' + ETICHETTE_ESITO[e] + "</span>"
+            : '<span class="text-[12px] font-bold uppercase tracking-[.08em] bg-white text-acc-nero px-2.5 py-1">' + (p.casa ? "In casa" : "Trasferta") + "</span>") +
         "</div>" +
         '<p class="titolo-display text-[20px] mt-1 opacity-80">' + testo(squadra ? squadra.nome : "") + "</p>" +
       "</div>" +
@@ -128,7 +130,7 @@ function htmlCardPartita(p) {
       '<div class="flex flex-col items-center gap-3 px-5 pt-5 pb-6 text-center">' +
         '<span class="pillola pillola--piccola">' + testo(p.competizione) + "</span>" +
         '<p class="titolo-display text-[22px] mt-1">' + dataCorta(p.data) + " · " + testoOra(p) + "</p>" +
-        (p.nota ? '<span class="text-[11px] font-bold uppercase tracking-[.08em] bg-acc-nero text-white px-2.5 py-1">' + testo(p.nota) + "</span>" : "") +
+        (p.nota ? '<span class="text-[12px] font-bold uppercase tracking-[.08em] bg-acc-nero text-white px-2.5 py-1">' + testo(p.nota) + "</span>" : "") +
         '<p class="text-[13px] text-acc-testo-2 leading-snug">' + testo(p.campo) + "</p>" +
         (p.marcatori ? htmlMarcatori(p) : "") +
       "</div>" +
@@ -154,14 +156,14 @@ function htmlRigaRisultato(p) {
   const s = squadreInOrdine(p);
   const e = esito(p);
   return (
-    '<li class="grid grid-cols-[auto_1fr] tablet:grid-cols-[110px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
-      '<div class="titolo-display text-[18px] leading-tight">' + dataCorta(p.data) + '<br><span class="text-acc-testo-2 text-[15px]">' + testo(p.competizione) + "</span></div>" +
+    '<li class="grid grid-cols-1 tablet:grid-cols-[110px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
+      '<div class="titolo-display text-[18px] leading-tight">' + dataCorta(p.data) + '<br class="hidden tablet:block"><span class="tablet:hidden"> · </span><span class="text-acc-testo-2 text-[15px]">' + testo(p.competizione) + "</span></div>" +
       '<div class="flex items-center gap-3 tablet:gap-4 min-w-0">' +
-        '<span class="titolo-display text-[20px] tablet:text-[24px] text-right flex-1 min-w-0">' + testo(s[0].nome) + "</span>" +
+        '<span class="titolo-display text-[19px] tablet:text-[24px] leading-none text-right flex-1 min-w-0 break-words">' + testo(s[0].nome) + "</span>" +
         '<span class="titolo-display text-[30px] bg-acc-nero text-white px-3 pt-1.5 pb-0.5 whitespace-nowrap">' + s[0].gol + " - " + s[1].gol + "</span>" +
-        '<span class="titolo-display text-[20px] tablet:text-[24px] flex-1 min-w-0">' + testo(s[1].nome) + "</span>" +
+        '<span class="titolo-display text-[19px] tablet:text-[24px] leading-none flex-1 min-w-0 break-words">' + testo(s[1].nome) + "</span>" +
       "</div>" +
-      '<span class="' + COLORE_ESITO[e] + ' col-start-2 tablet:col-start-auto justify-self-start text-white text-[11px] font-bold uppercase tracking-[.08em] px-2.5 py-1">' + ETICHETTE_ESITO[e] + "</span>" +
+      '<span class="' + COLORE_ESITO[e] + ' justify-self-start text-white text-[12px] font-bold uppercase tracking-[.08em] px-2.5 py-1">' + ETICHETTE_ESITO[e] + "</span>" +
     "</li>"
   );
 }
@@ -169,14 +171,14 @@ function htmlRigaRisultato(p) {
 // Riga compatta di una partita da giocare (resto del calendario)
 function htmlRigaCalendario(p) {
   return (
-    '<li class="grid grid-cols-[auto_1fr] tablet:grid-cols-[150px_1fr_auto] items-center gap-x-5 gap-y-1 py-4 border-t border-acc-linea">' +
-      '<div class="titolo-display text-[19px] leading-tight">' + dataCorta(p.data) + '<br><span class="text-acc-testo-2 text-[15px]">' + testoOra(p) + "</span></div>" +
+    '<li class="grid grid-cols-1 tablet:grid-cols-[150px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
+      '<div class="titolo-display text-[19px] leading-tight">' + dataCorta(p.data) + '<br class="hidden tablet:block"><span class="tablet:hidden"> · </span><span class="text-acc-testo-2 text-[15px]">' + testoOra(p) + "</span></div>" +
       '<div class="flex items-center gap-3 min-w-0">' +
         htmlStemma(p, "loro", "w-9 h-9 object-contain flex-none").replace("scudo-iniziali", "scudo-iniziali !w-9 !h-9 !text-[13px] !border-2 flex-none") +
         '<div class="min-w-0"><p class="titolo-display text-[22px] leading-none">' + (p.casa ? "Castelverde - " + testo(p.avversario) : testo(p.avversario) + " - Castelverde") + "</p>" +
         '<p class="text-[13px] text-acc-testo-2 mt-1 truncate">' + testo(p.campo) + "</p></div>" +
       "</div>" +
-      '<span class="col-start-2 tablet:col-start-auto justify-self-start text-[11px] font-bold uppercase tracking-[.08em] px-2.5 py-1 ' + (p.casa ? "bg-acc-rosso text-white" : "bg-acc-grigio-chiaro") + '">' + (p.casa ? "In casa" : "Trasferta") + " · " + testo(p.giornata) + "ª</span>" +
+      '<span class="justify-self-start text-[12px] font-bold uppercase tracking-[.08em] px-2.5 py-1 ' + (p.casa ? "bg-acc-rosso text-white" : "bg-acc-grigio-chiaro") + '">' + (p.casa ? "In casa" : "Trasferta") + " · " + testo(p.giornata) + "ª</span>" +
     "</li>"
   );
 }
@@ -187,17 +189,17 @@ function htmlCardGiocatore(g) {
   const foto = g.foto || "assets/img/segnaposto-persona.png";
   const nomeCompleto = (g.nome ? g.nome + " " : "") + g.cognome;
   return (
-    '<article class="group w-[min(64vw,260px)] flex-none flex flex-col">' +
+    '<article class="group relative w-full tablet:w-[min(64vw,260px)] flex-none flex flex-col">' +
       '<div class="relative aspect-[4/5] overflow-hidden trama-grigia">' +
-        '<span class="absolute top-2.5 left-3.5 z-1 titolo-display titolo-contorno text-[120px] leading-[.8]">' + g.numero + "</span>" +
-        (g.fascia ? '<span class="absolute top-4 right-4 z-1 grid place-items-center w-9 h-9 rounded-full bg-acc-rosso text-white titolo-display text-[18px] pt-1" title="' + (g.fascia === "C" ? "Capitano" : "Vice capitano") + '">' + g.fascia + "</span>" : "") +
-        '<img class="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain object-bottom transition-transform duration-500 ease-[ease] group-hover:-translate-y-1.5 group-hover:scale-[1.03]" src="' + testo(foto) + '" alt="" loading="lazy" />' +
+        (g.fascia ? '<span class="absolute top-2.5 right-2.5 tablet:top-4 tablet:right-4 z-1 grid place-items-center w-8 h-8 tablet:w-9 tablet:h-9 rounded-full bg-acc-rosso text-white titolo-display text-[18px] pt-1" title="' + (g.fascia === "C" ? "Capitano" : "Vice capitano") + '">' + g.fascia + "</span>" : "") +
+        '<img class="absolute inset-0 w-full h-full object-contain object-bottom transition-transform duration-500 ease-[ease] group-hover:-translate-y-1.5 group-hover:scale-[1.03]" src="' + testo(foto) + '" alt="" loading="lazy" />' +
       "</div>" +
-      '<div class="bg-white px-5 pt-4 pb-3 transition-colors duration-[250ms] ease-[ease] group-hover:bg-acc-rosso group-hover:text-white">' +
-        (g.nome ? '<p class="titolo-display text-[18px] opacity-70">' + testo(g.nome) + "</p>" : "") +
-        '<h3 class="titolo-display text-[34px]">' + testo(g.cognome) + "</h3>" +
-        '<p class="text-[12px] font-semibold uppercase tracking-[.08em] mt-1 opacity-70">' + testo(g.ruolo || "Prima squadra") + "</p>" +
-        '<span class="sr-only">Numero ' + g.numero + ", " + testo(nomeCompleto) + "</span>" +
+      '<div class="bg-white px-3 pt-3 pb-2.5 tablet:px-5 tablet:pt-4 tablet:pb-3 transition-colors duration-[250ms] ease-[ease] group-hover:bg-acc-rosso group-hover:text-white">' +
+        // il nome c'è sempre (anche vuoto) così tutte le card hanno la stessa altezza
+        '<p class="titolo-display text-[15px] tablet:text-[18px] opacity-70 min-h-[1em]">' + testo(g.nome) + "</p>" +
+        '<h3 class="titolo-display text-[24px] tablet:text-[34px] break-words">' + testo(g.cognome) + "</h3>" +
+        '<p class="text-[12px] font-semibold uppercase tracking-[.08em] mt-1 opacity-70 truncate">' + testo(g.ruolo || "Prima squadra") + "</p>" +
+        (g.numero ? '<span class="sr-only">Numero ' + g.numero + ", " + testo(nomeCompleto) + "</span>" : "") +
       "</div>" +
     "</article>"
   );
@@ -277,7 +279,8 @@ function htmlVuoto(messaggio) {
 function htmlCardDirigente(d, grande) {
   const foto = d.foto || "assets/img/segnaposto-persona.png";
   const ruoli = d.ruoli.map(function (r, i) {
-    return '<span class="pillola pillola--piccola' + (i === 0 && grande ? " pillola--rossa" : "") + '">' + testo(r) + "</span>";
+    // whitespace-normal: un ruolo lungo ("Responsabile del settore giovanile") va a capo invece di uscire dalla card
+    return '<span class="pillola pillola--piccola !whitespace-normal text-left' + (i === 0 && grande ? " pillola--rossa" : "") + '">' + testo(r) + "</span>";
   }).join("");
   const scrivi = d.email ? '<a class="btn btn--nero self-start mt-2" href="mailto:' + testo(d.email) + '"><span class="w-5 h-5">' + ICONE.posta + "</span>Scrivi</a>" : "";
 
@@ -298,12 +301,12 @@ function htmlCardDirigente(d, grande) {
   }
   return (
     '<article class="flex flex-col bg-white shadow-acc-card">' +
-      '<div class="relative aspect-[4/5] overflow-hidden trama-grigia">' +
+      '<div class="relative aspect-square tablet:aspect-[4/5] overflow-hidden trama-grigia">' +
         '<img class="absolute inset-x-0 bottom-0 w-full h-[90%] ' + (d.foto ? "object-cover object-top" : "object-contain object-bottom") + '" src="' + testo(foto) + '" alt="' + testo(d.nome) + '" loading="lazy" />' +
       "</div>" +
-      '<div class="flex flex-col items-start gap-3 p-6">' +
-        '<div class="flex flex-wrap gap-2">' + ruoli + "</div>" +
-        '<h3 class="titolo-display text-[44px] mt-1">' + testo(d.nome) + "</h3>" +
+      '<div class="flex flex-col items-start gap-2 tablet:gap-3 p-5 tablet:p-6 min-w-0">' +
+        '<div class="flex flex-wrap gap-1.5 tablet:gap-2">' + ruoli + "</div>" +
+        '<h3 class="titolo-display text-[38px] tablet:text-[44px] mt-1">' + testo(d.nome) + "</h3>" +
         scrivi +
       "</div>" +
     "</article>"

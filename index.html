@@ -29,7 +29,7 @@
 <!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
 <div id="menu"></div>
 
-<main id="top" class="pt-[120px] overflow-x-clip">
+<main id="top" class="pt-[108px] lg:pt-[120px] overflow-x-clip">
 
   <!-- ============ 01 · APERTURA (gioco: il pallone si calcia con il mouse) ============
        - canvas #campoPallone: il pallone, la sua scia rossa
@@ -38,7 +38,7 @@
        Tutto il movimento è in js/pagine/home-apertura.js, che trova gli elementi
        dai nomi apertura__… (servono solo al JavaScript: lo stile è tutto in Tailwind).
        L'animazione "rimbalzo" della freccia è in css/animazioni.css. -->
-  <section id="apertura" class="apertura cursor-pointer relative isolate overflow-hidden bg-acc-grigio-chiaro h-[calc(100svh-120px)] min-h-[520px] max-h-[920px] select-none touch-pan-y" aria-label="A.C. Castelverde, dal 1987">
+  <section id="apertura" class="apertura cursor-pointer relative isolate overflow-hidden bg-acc-grigio-chiaro h-[calc(100svh-108px)] lg:h-[calc(100svh-120px)] min-h-[480px] max-h-[920px] select-none touch-pan-y" aria-label="A.C. Castelverde, dal 1987">
     <!-- titolo principale della Home: non si vede (l'apertura è solo grafica) ma lo leggono Google e i lettori di schermo -->
     <h1 class="sr-only">A.C. Castelverde — Associazione Calcio Castelverde, dal 1987</h1>
 
@@ -77,7 +77,7 @@
         <h2 id="titoloNotizie" class="titolo-display text-[52px] tablet:text-[72px]">Ultime <span class="titolo-contorno">notizie</span></h2>
         <a href="notizie.html" class="link-freccia">Tutte le notizie</a>
       </div>
-      <div id="ultimeNotizie" class="grid gap-5 computer:grid-cols-4 computer:grid-rows-[auto_auto]" data-entrano></div>
+      <div id="ultimeNotizie" class="grid gap-3 tablet:gap-5 tablet:grid-cols-2 computer:grid-cols-4 computer:grid-rows-[auto_auto]" data-entrano></div>
     </div>
   </section>
 
@@ -116,9 +116,9 @@
           </h2>
           <p class="text-[18px] leading-relaxed max-w-[520px] mt-4 text-acc-grigio">L'attività agonistica del Castelverde: dalla Seconda Categoria agli Under 15.</p>
         </div>
-        <a href="squadre.html" class="btn btn--bianco">Tutte le squadre</a>
+        <a href="squadre.html" class="btn btn--bianco w-full tablet:w-auto">Tutte le squadre</a>
       </div>
-      <div id="quattroSquadre" class="grid gap-5 tablet:grid-cols-2 lg:grid-cols-4" data-entrano></div>
+      <div id="quattroSquadre" class="grid gap-4 tablet:gap-5 tablet:grid-cols-2 lg:grid-cols-4" data-entrano></div>
     </div>
   </section>
 
@@ -141,17 +141,18 @@
           </div>
         </div>
       </div>
-      <div id="filaGiocatori" class="scorri" tabindex="0" aria-label="Giocatori della prima squadra (si scorre con le frecce della tastiera)"></div>
+      <div id="filaGiocatori" class="scorri scorri--griglia" tabindex="0" aria-label="Giocatori della prima squadra (si scorre con le frecce della tastiera)"></div>
+      <a href="squadre.html#prima-squadra" class="btn btn--nero w-full mt-6 tablet:hidden">Vedi tutta la rosa</a>
     </div>
   </section>
 
   <!-- ============ 07 · DAL 1987 (come "Heritage" della reference) ============ -->
   <section class="py-16 computer:py-24" aria-labelledby="titoloStoria">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
-      <h2 id="titoloStoria" class="titolo-sezione text-[52px] tablet:text-[72px] mb-12" data-entra>Dal 1987</h2>
+      <h2 id="titoloStoria" class="titolo-sezione text-[40px] tablet:text-[72px] mb-8 tablet:mb-12" data-entra>Dal 1987</h2>
 
       <div class="grid gap-5 tablet:grid-cols-3" data-entrano>
-        <a href="societa.html#storia" class="group relative block overflow-hidden aspect-[3/4] text-white no-underline">
+        <a href="societa.html#storia" class="group relative block overflow-hidden aspect-[4/3] tablet:aspect-[3/4] text-white no-underline">
           <img class="absolute inset-0 w-full h-full object-cover grayscale-[.4] transition-[scale,filter] duration-[800ms,400ms] ease-[cubic-bezier(.2,.7,.2,1),ease] group-hover:scale-[1.07] group-hover:grayscale-0" src="assets/img/club/storia.jpg" alt="" loading="lazy" />
           <span class="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(14,14,15,.9))]"></span>
           <span class="absolute left-0 bottom-0 p-7 flex flex-col items-start gap-3 transition-transform duration-[400ms] ease-[ease] group-hover:-translate-y-2">
@@ -160,7 +161,7 @@
             <span class="link-freccia text-white">Scopri</span>
           </span>
         </a>
-        <a href="societa.html#impianti" class="group relative block overflow-hidden aspect-[3/4] text-white no-underline">
+        <a href="societa.html#impianti" class="group relative block overflow-hidden aspect-[4/3] tablet:aspect-[3/4] text-white no-underline">
           <img class="absolute inset-0 w-full h-full object-cover grayscale-[.4] transition-[scale,filter] duration-[800ms,400ms] ease-[cubic-bezier(.2,.7,.2,1),ease] group-hover:scale-[1.07] group-hover:grayscale-0" src="assets/img/club/campo.jpg" alt="" loading="lazy" />
           <span class="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(14,14,15,.9))]"></span>
           <span class="absolute left-0 bottom-0 p-7 flex flex-col items-start gap-3 transition-transform duration-[400ms] ease-[ease] group-hover:-translate-y-2">
@@ -169,7 +170,7 @@
             <span class="link-freccia text-white">Scopri</span>
           </span>
         </a>
-        <a href="dirigenza.html" class="group relative block overflow-hidden aspect-[3/4] text-white no-underline">
+        <a href="dirigenza.html" class="group relative block overflow-hidden aspect-[4/3] tablet:aspect-[3/4] text-white no-underline">
           <span class="absolute inset-0 trama-rossa"></span>
           <img class="absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 h-[46%] w-auto drop-shadow-[10px_16px_20px_rgba(0,0,0,.35)] transition-[scale] duration-[800ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.07]" src="assets/logo/stemma-400.png" alt="" loading="lazy" />
           <span class="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(14,14,15,.9))]"></span>

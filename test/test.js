@@ -137,7 +137,8 @@ gruppo("Squadre e staff", function () {
   SQUADRE.forEach(function (s) {
     verifica(s.nome + ": ogni persona dello staff ha ruolo e nome",
       (s.staff || []).filter(function (p) { return !p.ruolo || !p.nome; }).length, 0);
-    if (s.rosa) verifica(s.nome + ": nessun numero di maglia ripetuto", doppioni(s.rosa.map(function (g) { return g.numero; })), []);
+    if (s.rosa) verifica(s.nome + ": nessun giocatore ripetuto", doppioni(s.rosa.map(function (g) { return g.cognome + " " + g.nome; })), []);
+    if (s.rosa) verifica(s.nome + ": nessun numero di maglia ripetuto", doppioni(s.rosa.map(function (g) { return g.numero; }).filter(function (n) { return n != null; })), []);
   });
 });
 

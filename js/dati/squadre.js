@@ -11,43 +11,47 @@
      campionato  campionato della stagione
      annate      es. "2008-2009" (vuoto per la prima squadra)
      immagine    foto di squadra (vedi assets/img/LEGGIMI.md)
+     livello     (facoltativo) "Regionale" o "Provinciale": compare accanto alla categoria nella pagina Dirigenza
      descrizione 1-2 frasi
      staff       [{ ruolo, nome }]
      allenamenti es. "Martedì e giovedì, 19:30 - 21:00"
      rosa        solo per chi ha la rosa: [{ numero, nome, cognome, ruolo, fascia, foto }]
+                 numero: numero di maglia (non compare sulla card; null se non c'è)
+                 nome: nome di battesimo (presi dalle classifiche marcatori di Tuttocampo)
                  ruolo: "Portiere", "Difensore", "Centrocampista", "Attaccante" (o vuoto)
                  fascia: "C" capitano, "VC" vice capitano (facoltativo)
-                 foto: ritratto PNG con sfondo trasparente in assets/img/giocatori/
+                 foto: ritratto scontornato (WebP o PNG trasparente, 800×1000) in assets/img/giocatori/
                        (vuoto = sagoma segnaposto)
 
    La rosa della prima squadra viene dalla grafica "Starting XI"
-   (vs. Cannetese). Mancano i nomi di battesimo e i ruoli: da completare.
+   (vs. Cannetese). Mancano i ruoli.
    Staff, annate e orari: stagione 2026/27.
    ================================================================== */
 
 const RUOLI = ["Portiere", "Difensore", "Centrocampista", "Attaccante"];
 
 const ROSA_PRIMA_SQUADRA = [
-  { numero: 1,  cognome: "Milanesi",    nome: "", ruolo: "Portiere" },
-  { numero: 2,  cognome: "Robuschi",    nome: "", ruolo: "" },
-  { numero: 3,  cognome: "Jawara",      nome: "", ruolo: "" },
-  { numero: 4,  cognome: "Annecchino",  nome: "", ruolo: "" },
-  { numero: 5,  cognome: "Mazzini",     nome: "", ruolo: "", fascia: "C" },
-  { numero: 6,  cognome: "Gaboardi",    nome: "", ruolo: "" },
-  { numero: 7,  cognome: "Piazzi",      nome: "", ruolo: "" },
-  { numero: 8,  cognome: "Rossi",       nome: "", ruolo: "", fascia: "VC" },
-  { numero: 9,  cognome: "Camino",      nome: "", ruolo: "" },
-  { numero: 10, cognome: "Rozzi",       nome: "L.", ruolo: "" },
-  { numero: 11, cognome: "Galimberti",  nome: "", ruolo: "" },
-  { numero: 12, cognome: "Margariti",   nome: "", ruolo: "" },
-  { numero: 13, cognome: "Faciocchi",   nome: "", ruolo: "" },
-  { numero: 14, cognome: "Passera",     nome: "", ruolo: "" },
-  { numero: 15, cognome: "Longo",       nome: "", ruolo: "" },
-  { numero: 16, cognome: "Franzosi",    nome: "", ruolo: "" },
-  { numero: 17, cognome: "Pedroni",     nome: "", ruolo: "" },
-  { numero: 18, cognome: "Ravasi",      nome: "", ruolo: "" },
-  { numero: 19, cognome: "Alberti",     nome: "", ruolo: "" },
-  { numero: 20, cognome: "Bassanetti",  nome: "", ruolo: "" }
+  { numero: 1,  cognome: "Milanesi",    nome: "Matteo", ruolo: "Portiere", foto: "assets/img/giocatori/milanesi.webp" },
+  { numero: 2,  cognome: "Robuschi",    nome: "Davide", ruolo: "" },
+  { numero: 3,  cognome: "Jawara",      nome: "Saikou", ruolo: "", foto: "assets/img/giocatori/jawara.webp" },
+  { numero: 4,  cognome: "Annecchino",  nome: "Nicolò", ruolo: "" },
+  { numero: 5,  cognome: "Mazzini",     nome: "Liam", ruolo: "", fascia: "C" },
+  { numero: 6,  cognome: "Gaboardi",    nome: "Marco", ruolo: "" },
+  { numero: 7,  cognome: "Piazzi",      nome: "Alessandro", ruolo: "" },
+  { numero: 8,  cognome: "Rossi",       nome: "Filippo", ruolo: "", fascia: "VC" },
+  { numero: 9,  cognome: "Camino",      nome: "Jorge Luis", ruolo: "" },
+  { numero: 10, cognome: "Rozzi",       nome: "Luca", ruolo: "" },
+  { numero: 11, cognome: "Galimberti",  nome: "Giovanni", ruolo: "" },
+  { numero: 12, cognome: "Margariti",   nome: "Luca", ruolo: "" },
+  { numero: 13, cognome: "Facciocchi",  nome: "Marco", ruolo: "" },
+  { numero: 14, cognome: "Passera",     nome: "Michele", ruolo: "" },
+  { numero: 15, cognome: "Longo",       nome: "Lorenzo", ruolo: "", foto: "assets/img/giocatori/longo.webp" },
+  { numero: 16, cognome: "Franzosi",    nome: "Davide", ruolo: "", foto: "assets/img/giocatori/franzosi.webp" },
+  { numero: 17, cognome: "Pedroni",     nome: "Emanuele", ruolo: "", foto: "assets/img/giocatori/pedroni.webp" },
+  { numero: 18, cognome: "Ravasi",      nome: "Nicolò", ruolo: "", foto: "assets/img/giocatori/ravasi.webp" },
+  { numero: 19, cognome: "Alberti",     nome: "Gioele", ruolo: "", foto: "assets/img/giocatori/alberti.webp" },
+  { numero: 20, cognome: "Bassanetti",  nome: "Luca", ruolo: "", foto: "assets/img/giocatori/bassanetti.webp" },
+  { numero: null, cognome: "Bonazzoli", nome: "Giacomo", ruolo: "", foto: "assets/img/giocatori/bonazzoli.webp" }
 ];
 
 const SQUADRE = [
@@ -63,8 +67,10 @@ const SQUADRE = [
       { ruolo: "Allenatore", nome: "Salvatore Puzone" },
       { ruolo: "Vice allenatore", nome: "Domenico Settimini" },
       { ruolo: "Preparatore dei portieri", nome: "Massimo Vicardi" },
+      { ruolo: "Collaboratore tecnico", nome: "Jacopo Chiodi" },
       { ruolo: "Direttore sportivo", nome: "Luca Carnevali" },
-      { ruolo: "Dirigente accompagnatore", nome: "Giulio Scolari" },
+      { ruolo: "Dirigente", nome: "Giulio Scolari" },
+      { ruolo: "Dirigente", nome: "Francesco Muco" },
       { ruolo: "Medico", nome: "Antonio La Sala" }
     ],
     allenamenti: "Mercoledì e venerdì, 19:30 - 21:00",
@@ -75,6 +81,7 @@ const SQUADRE = [
     id: "juniores",
     nome: "Juniores",
     categoria: "Under 19",
+    livello: "Regionale",
     campionato: "Campionato Regionale Under 19",
     annate: "2007 - 2008 - 2009",
     immagine: "assets/img/squadre/juniores.jpg",
@@ -92,6 +99,7 @@ const SQUADRE = [
     id: "allievi",
     nome: "Allievi",
     categoria: "Under 17",
+    livello: "Provinciale",
     campionato: "Campionato Provinciale Cremonese Under 17",
     annate: "2010 - 2011",
     immagine: "assets/img/squadre/allievi.jpg",
@@ -99,10 +107,10 @@ const SQUADRE = [
     sponsor: "DD Sistemi",
     staff: [
       { ruolo: "Allenatore", nome: "Emiliano Zigliani" },
-      { ruolo: "Collaboratore tecnico", nome: "Luca Cutillo" },
+      { ruolo: "Vice allenatore", nome: "Luca Cutillo" },
+      { ruolo: "Collaboratore tecnico", nome: "Lorenzo Balestreri" },
       { ruolo: "Dirigente", nome: "Loris Boccaccia" },
-      { ruolo: "Addetto all'arbitro", nome: "Ernesto Zigliani" },
-      { ruolo: "Collaboratore", nome: "Lorenzo Balestreri" }
+      { ruolo: "Dirigente", nome: "Ernesto Zigliani" }
     ],
     allenamenti: "Martedì e giovedì, 18:00 - 19:30"
   },
@@ -110,6 +118,7 @@ const SQUADRE = [
     id: "giovanissimi",
     nome: "Giovanissimi",
     categoria: "Under 15",
+    livello: "Provinciale",
     campionato: "Campionato Provinciale Cremonese Under 15",
     annate: "2012 - 2013 - 2014",
     immagine: "assets/img/squadre/giovanissimi.jpg",
@@ -117,10 +126,10 @@ const SQUADRE = [
     sponsor: "Unical",
     staff: [
       { ruolo: "Allenatore", nome: "Gianluca Silla" },
-      { ruolo: "Collaboratore tecnico", nome: "Alessandro Masseroli" },
+      { ruolo: "Vice allenatore", nome: "Alessandro Masseroli" },
       { ruolo: "Preparatore dei portieri", nome: "Alessandro Guarneri" },
-      { ruolo: "Collaboratore", nome: "Alessio Superti" },
-      { ruolo: "Collaboratore", nome: "Nicola Carini" }
+      { ruolo: "Collaboratore tecnico", nome: "Nicola Carini" },
+      { ruolo: "Dirigente", nome: "Alessio Superti" }
     ],
     allenamenti: "Mercoledì e venerdì, 18:00 - 19:30"
   }

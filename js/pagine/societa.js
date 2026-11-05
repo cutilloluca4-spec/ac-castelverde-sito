@@ -30,13 +30,15 @@ function disegnaStoria() {
     return (
       '<li class="relative pl-14 computer:pl-0 computer:grid computer:grid-cols-2 computer:gap-20" data-entra>' +
         // il rombo sulla linea
-        '<span class="absolute left-1.5 top-1.5 w-[22px] h-[22px] bg-white border-4 border-acc-nero rotate-45 computer:left-1/2 computer:-ml-[11px]" aria-hidden="true"></span>' +
+        // il rombo diventa rosso quando la linea rossa lo raggiunge (classe is-raggiunto, la mette js/animazioni.js)
+        '<span class="linea-tempo__punto absolute left-1.5 top-1.5 w-[22px] h-[22px] bg-white border-4 border-acc-nero rotate-45 transition-[background-color,scale] duration-300 [&.is-raggiunto]:bg-acc-rosso [&.is-raggiunto]:scale-115 computer:left-1/2 computer:-ml-[11px]" aria-hidden="true"></span>' +
         '<div class="' + (destra ? "computer:col-start-2" : "computer:text-right") + '">' +
           '<p class="titolo-display text-[72px] computer:text-[96px] text-acc-rosso">' + testo(t.anno) + "</p>" +
           '<h3 class="titolo-display text-[34px] mt-1">' + testo(t.titolo) + "</h3>" +
           '<p class="text-[16px] leading-relaxed mt-3 text-acc-inchiostro/80">' + testo(t.testo) + "</p>" +
-          (t.immagine ? '<img class="block w-full aspect-[3/2] object-cover mt-6 cornice m-3 max-w-[calc(100%-24px)] ' + (destra ? "" : "computer:ml-auto") + '" src="' + testo(t.immagine) + '" alt="" loading="lazy" />' : "") +
-          (t.immagine && t.credito ? '<p class="text-[12px] text-acc-testo-2 mt-7 mx-3">' + testo(t.credito) + "</p>" : "") +
+          // la cornice grigia sporge di 24 px tutto intorno alla foto: mt-12 lascia sempre 24 px liberi tra il testo e la cornice
+          (t.immagine ? '<img class="block w-[calc(100%-48px)] aspect-[3/2] object-cover cornice mt-12 mb-6 mx-6 ' + (destra ? "" : "computer:ml-auto") + '" src="' + testo(t.immagine) + '" alt="" loading="lazy" />' : "") +
+          (t.immagine && t.credito ? '<p class="text-[12px] text-acc-testo-2 mt-4 mx-6">' + testo(t.credito) + "</p>" : "") +
         "</div>" +
       "</li>"
     );

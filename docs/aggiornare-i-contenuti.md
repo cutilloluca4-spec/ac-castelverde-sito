@@ -44,11 +44,11 @@ Non modificare `js/dati/partite.js` a mano: viene riscritto a ogni aggiornamento
 In `js/dati/squadre.js`, lista `ROSA_PRIMA_SQUADRA`:
 
 ```js
-{ numero: 10, cognome: "Rozzi", nome: "Luca", ruolo: "Attaccante", foto: "assets/img/giocatori/rozzi.png" },
+{ numero: 10, cognome: "Rozzi", nome: "Luca", ruolo: "Attaccante", foto: "assets/img/giocatori/rozzi.webp" },
 ```
 
 - `fascia: "C"` capitano, `"VC"` vice: compare il pallino rosso sulla card.
-- Foto: **PNG con sfondo trasparente**, mezzo busto, 800×1000 px. Senza foto compare la sagoma.
+- Foto: **scontornata (sfondo trasparente)**, mezzo busto, 800×1000 px, in WebP (più leggero) o PNG. Senza foto compare la sagoma.
 
 Staff, annate e orari di ogni squadra sono nello stesso file, dentro `SQUADRE`.
 
@@ -73,3 +73,17 @@ La prima persona della lista ha la scheda grande nella pagina Dirigenza. Foto: J
 ## Sostituire le foto segnaposto
 
 Le immagini con scritto "FOTO DA INSERIRE" riportano **il nome del file e le misure**. Basta salvare la foto vera con lo stesso nome nella stessa cartella. Elenco completo: [assets/img/LEGGIMI.md](../assets/img/LEGGIMI.md).
+
+## Modulo contatti
+
+I messaggi della pagina Contatti arrivano all'email della società tramite **Web3Forms** (gratuito). Una volta sola: su [web3forms.com](https://web3forms.com) si inserisce l'email della società, arriva una chiave, e la si incolla in `js/dati/club.js`:
+
+```js
+modulo: { chiaveWeb3Forms: "la-chiave-ricevuta-per-email" },
+```
+
+Senza chiave il pulsante "Invia" apre il programma di posta con il messaggio già compilato. C'è un campo antispam invisibile: niente captcha.
+
+## Privacy e cookie
+
+Il testo è in `privacy-cookie.html`, diviso in sezioni numerate con un indice. Va aggiornato (e cambiata la data "Ultimo aggiornamento") se cambia l'hosting, il servizio del modulo, oppure se si aggiungono statistiche, mappe o video incorporati: in quel caso serve anche il banner dei cookie. Oggi il sito non usa cookie e il banner non serve.

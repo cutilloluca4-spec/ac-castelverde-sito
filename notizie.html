@@ -26,13 +26,13 @@
 <!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
 <div id="menu"></div>
 
-<main id="top" class="pt-[120px] overflow-x-clip">
+<main id="top" class="pt-[108px] lg:pt-[120px] overflow-x-clip">
 
   <!-- ============ INTESTAZIONE ============ -->
   <section class="intestazione bg-acc-grigio-chiaro">
     <div class="relative max-w-acc mx-auto px-4 tablet:px-6 pt-14 pb-14 computer:pt-20 computer:pb-20">
       <span class="pillola text-[15px]" data-entra>Stagione 2026/27</span>
-      <h1 class="titolo-display text-[72px] tablet:text-[112px] computer:text-[128px] mt-6 max-w-[760px]" data-entra>Noti<span class="titolo-contorno">zie</span></h1>
+      <h1 class="titolo-display text-[46px] sm:text-[76px] tablet:text-[96px] computer:text-[128px] mt-6 max-w-[760px] pr-[20%] computer:pr-0" data-entra>Noti<span class="titolo-contorno">zie</span></h1>
       <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Risultati, comunicati e storie della prima squadra e del settore giovanile.</p>
       <img class="hidden computer:block absolute right-[7%] top-1/2 -translate-y-1/2 h-[300px] w-auto drop-shadow-acc-stemma" src="assets/logo/stemma-400.png" alt="" />
     </div>
@@ -44,7 +44,7 @@
       <!-- Filtri per categoria: li scrive js/pagine/notizie.js da CATEGORIE_NOTIZIE -->
       <div id="filtriNotizie" class="schede mb-10" role="tablist" aria-label="Filtra per categoria"></div>
       <h2 class="sr-only">Elenco delle notizie</h2>
-      <div id="elencoNotizie" class="grid gap-5 tablet:grid-cols-2 computer:grid-cols-3"></div>
+      <div id="elencoNotizie" class="grid gap-3 tablet:gap-5 tablet:grid-cols-2 computer:grid-cols-3"></div>
       <div class="flex justify-center mt-12">
         <button id="altreNotizie" type="button" class="btn btn--nero">Carica altre notizie</button>
       </div>

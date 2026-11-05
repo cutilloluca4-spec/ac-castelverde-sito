@@ -26,13 +26,13 @@
 <!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
 <div id="menu"></div>
 
-<main id="top" class="pt-[120px] overflow-x-clip">
+<main id="top" class="pt-[108px] lg:pt-[120px] overflow-x-clip">
 
   <!-- ============ INTESTAZIONE ============ -->
   <section class="intestazione bg-acc-grigio-chiaro">
     <div class="relative max-w-acc mx-auto px-4 tablet:px-6 pt-14 pb-14 computer:pt-20 computer:pb-20">
       <span class="pillola text-[15px]" data-entra>Associazione Calcio Castelverde A.S.D.</span>
-      <h1 class="titolo-display text-[72px] tablet:text-[112px] computer:text-[128px] mt-6 max-w-[760px]" data-entra>Never <span class="text-acc-rosso">give</span> <span class="titolo-contorno">up</span></h1>
+      <h1 class="titolo-display text-[46px] sm:text-[76px] tablet:text-[96px] computer:text-[128px] mt-6 max-w-[760px] pr-[20%] computer:pr-0" data-entra>Never <span class="text-acc-rosso">give</span> <span class="titolo-contorno">up</span></h1>
       <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Dal luglio 1987 il calcio di Castelverde. Oggi quattro squadre agonistiche, dalla Seconda Categoria agli Under 15.</p>
       <img class="hidden computer:block absolute right-[7%] top-1/2 -translate-y-1/2 h-[300px] w-auto drop-shadow-acc-stemma" src="assets/logo/stemma-400.png" alt="" />
     </div>
@@ -46,7 +46,7 @@
   <!-- ============ LA NOSTRA STORIA (linea del tempo da js/dati/storia.js) ============ -->
   <section id="storia" class="py-16 computer:py-24 scroll-mt-[120px]">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
-      <h2 class="titolo-sezione text-[52px] tablet:text-[80px] mb-14" data-entra>La nostra storia</h2>
+      <h2 class="titolo-sezione text-[40px] tablet:text-[80px] mb-10 tablet:mb-14" data-entra>La nostra storia</h2>
       <!-- linea grigia verticale (before:) e linea rossa che si riempie scorrendo
            (linea-tempo__progresso, la anima js/animazioni.js): a sinistra su smartphone, al centro da computer -->
       <div class="linea-tempo relative before:absolute before:inset-y-0 before:left-[15px] before:w-1 before:bg-acc-grigio computer:before:left-1/2 computer:before:-ml-0.5">
@@ -70,7 +70,7 @@
   <!-- ============ IMPIANTI (da CLUB.impianti in js/dati/club.js) ============ -->
   <section id="impianti" class="py-16 computer:py-24 scroll-mt-[120px]">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
-      <h2 class="titolo-sezione text-[52px] tablet:text-[80px] mb-12" data-entra>Il nostro campo</h2>
+      <h2 class="titolo-sezione text-[40px] tablet:text-[80px] mb-8 tablet:mb-12" data-entra>Il nostro campo</h2>
       <div id="elencoImpianti" class="grid gap-8 max-w-[760px]" data-entrano></div>
     </div>
   </section>

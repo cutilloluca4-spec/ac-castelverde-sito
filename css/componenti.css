@@ -30,7 +30,7 @@
 /* 1. BASE ---------------------------------------------------------- */
 html { scroll-behavior: smooth; overflow-x: clip; }
 body { font-family: var(--font-testo); }
-.font-titoli, h1, h2, h3, .titolo-display { font-family: var(--font-titoli); }
+h1, h2, h3, .titolo-display { font-family: var(--font-titoli); }
 /* DIN Condensed ha le maiuscole più basse di Barlow: un ritocco per
    avere la stessa resa su Mac e Windows */
 h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
@@ -65,6 +65,11 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 .titolo-sezione::after  { background: var(--color-rosso); }
 /* versione allineata a sinistra: solo la linea rossa dopo */
 .titolo-sezione--sinistra::before { display: none; }
+/* su smartphone le linee ai lati sono più corte, così il titolo sta su una riga */
+@media (max-width: 699px) {
+  .titolo-sezione { gap: 12px; }
+  .titolo-sezione::before, .titolo-sezione::after { min-width: 14px; height: 5px; }
+}
 
 /* 3. PILLOLA ------------------------------------------------------- */
 /* L'etichetta bianca arrotondata con l'ombra ("SECONDA CATEGORIA") */

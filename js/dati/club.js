@@ -31,11 +31,17 @@ const CLUB = {
   },
 
   social: {
-    // Il sito mostra solo i social con l'indirizzo compilato.
+    // Il club usa solo Instagram (se l'indirizzo è vuoto il link sparisce da tutto il sito)
     instagram: "https://www.instagram.com/ac_castelverde1987/",
-    instagramNome: "@ac_castelverde1987",
-    facebook: "",                // non usato: lasciare vuoto
-    facebookNome: ""
+    instagramNome: "@ac_castelverde1987"
+  },
+
+  // Modulo della pagina Contatti: i messaggi arrivano per email tramite Web3Forms
+  // (gratuito, https://web3forms.com). Si crea la chiave con l'email della società
+  // e la si incolla qui. Finché è vuota, "Invia" apre il programma di posta
+  // con il messaggio già scritto: nessun messaggio va perso.
+  modulo: {
+    chiaveWeb3Forms: ""
   },
 
   fiscale: {
@@ -69,6 +75,6 @@ const CLUB = {
     { valore: 1987, etichetta: "Anno di fondazione" },
     { valore: 4, etichetta: "Squadre agonistiche" },
     { valore: 39, etichetta: "Anni di storia" },
-    { valore: 20, etichetta: "Giocatori in prima squadra" }
+    { valore: 21, etichetta: "Giocatori in prima squadra" }
   ]
 };

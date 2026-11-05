@@ -55,7 +55,8 @@ ac-castelverde-sito/
 ├── societa.html             ← numeri, storia, il campo
 ├── dirigenza.html           ← presidente, consiglio direttivo, staff delle squadre
 ├── contatti.html            ← recapiti, modulo, come arrivare
-├── privacy-cookie.html      ← informativa (BOZZA da completare)
+├── privacy-cookie.html      ← informativa privacy e cookie
+├── 404.html                 ← "pagina non trovata" (la apre da sola GitHub Pages / Netlify)
 │
 ├── design-system/
 │   ├── colori.css           ← ⭐ colori, font e misure: unico punto da cambiare
@@ -118,7 +119,8 @@ ac-castelverde-sito/
 | `societa.html` | Numeri, linea del tempo della storia, il campo, rimando alla dirigenza | `pagine/societa.js` |
 | `dirigenza.html` | Scheda grande del presidente, altre figure dirigenziali, staff di ogni squadra | `pagine/dirigenza.js` |
 | `contatti.html` | Recapiti, modulo (`#scrivici`, `?motivo=partner`), come arrivare | `pagine/contatti.js` |
-| `privacy-cookie.html` | Informativa privacy e cookie (**bozza**) | `pagine/privacy.js` |
+| `privacy-cookie.html` | Informativa privacy e cookie (GDPR), con indice | `pagine/privacy.js` |
+| `404.html` | Pagina non trovata ("Fuorigioco") | `pagine/privacy.js` |
 
 La struttura della Home segue la reference (acmilan.com): grande apertura → partite → notizie → box in evidenza (lì lo Shop, qui le quattro squadre) → giocatori → Heritage (qui "Dal 1987") → social → partner → footer a colonne. L'apertura è un piccolo gioco: un pallone (disegnato su canvas) che si calcia con il mouse. Passandoci sopra lo si colpisce (più veloce è il movimento, più forte parte), con un clic lo si calcia verso quel punto; rimbalza sui bordi e sullo stemma, che vibra e fa un'onda rossa, e lascia una scia rossa come le pennellate delle grafiche. Se nessuno gioca, riparte da solo. Nella fascia bianca scorre "Associazione Calcio Castelverde" con le parole alternate grigio/rosso: il nastro accelera e si inclina seguendo il mouse. Lo stemma si inclina in 3D verso il mouse. Codice in `js/pagine/home-apertura.js` (commentato passo per passo), struttura in `index.html` (sezione 01).
 
@@ -215,7 +217,7 @@ Prefissi per le larghezze dello schermo:
 
 - **Classi CSS in italiano**, schema `blocco__parte--variante`: `titolo-contorno--bianco`, `pillola--rossa`, `apertura__stemma`. Se una classe ha un nome "parlante", una parte del suo stile è in `css/` o il JavaScript la usa: cercala lì.
 - `is-…` = **stato** acceso dal JavaScript (`is-attiva`, `is-aperto`, `is-scorso`, `is-visibile`).
-- `data-…` = attributi letti dal JavaScript: `data-entra` / `data-entrano` (compaiono scorrendo), `data-conta` (numero che sale), `data-carosello` (frecce del carosello), `data-indirizzo` (servizio del modulo).
+- `data-…` = attributi letti dal JavaScript: `data-entra` / `data-entrano` (compaiono scorrendo), `data-conta` (numero che sale), `data-carosello` (frecce del carosello).
 - **JavaScript semplice** (niente framework, niente build), funzioni con nomi italiani che dicono cosa fanno: `disegnaApertura()`, `prossimePartite()`, `htmlCardGiocatore()`.
 - I testi che arrivano dai dati passano sempre da `testo()` (in `utilita.js`), che evita che un carattere `<` rompa la pagina.
 - Commento in cima a ogni file con cosa contiene; commento `<!-- ===== NOME ===== -->` prima di ogni sezione dell'HTML.
@@ -236,13 +238,13 @@ Prefissi per le larghezze dello schermo:
 - [ ] **Rosa** (`js/dati/squadre.js`): mancano nomi di battesimo e ruoli dei giocatori.
 - [ ] **Contatti** (`js/dati/club.js`): telefono ed email vengono dal vecchio sito, verificare che siano attivi.
 - [ ] **Notizie** (`js/dati/notizie.js`): completare le parti `[tra parentesi]`; le notizie con `esempio: true` mostrano l'avviso "Testo di esempio".
-- [ ] **Modulo contatti** (`contatti.html`): scegliere un servizio che riceve i messaggi (es. Formspree, meglio con server in UE) e scrivere il suo indirizzo in `data-indirizzo` sul `<form>`. Finché è vuoto il modulo mostra "Grazie!" ma **non invia niente**.
-- [ ] **Privacy** (`privacy-cookie.html`): completare le parti `[tra parentesi]`, farla rileggere, togliere il riquadro "Bozza".
+- [ ] **Modulo contatti**: creare la chiave gratuita su [web3forms.com](https://web3forms.com) con l'email della società e incollarla in `js/dati/club.js` → `modulo.chiaveWeb3Forms`. Finché è vuota, "Invia" apre il programma di posta con il messaggio già scritto (non si perde niente). Fare un invio di prova.
+- [ ] **Privacy** (`privacy-cookie.html`): scrivere il nome del servizio di hosting dove indicato nel commento (sezione 2) e aggiornare la data "Ultimo aggiornamento". Farla rileggere a chi segue la privacy della società.
 - [ ] **Partner**: i loghi sono quelli originali; se si vuole che portino al sito dell'azienda, scrivere l'indirizzo in `sito:` (`js/dati/partner.js`).
 - [ ] **Controlli**: aprire `test/index.html` e verificare che sia tutto ✅; cambiare `?v=1` in tutte le pagine se CSS o JS sono cambiati dall'ultima pubblicazione.
 - [ ] **Anteprima dei link** (`og:image` in ogni pagina): con il dominio definitivo scrivere l'indirizzo completo.
 
-**Cookie**: il sito non usa cookie né statistiche e carica tutto da sé (font compresi), quindi non serve il banner. Se si aggiungono Google Analytics, mappe o video incorporati, il banner diventa necessario.
+**Cookie**: il sito non usa cookie né salva dati nel browser (niente `localStorage`), carica tutto da sé (font compresi) e Instagram e Google Maps sono semplici link, non incorporati: per le linee guida del Garante (2021) il banner non serve. Diventa necessario se si aggiungono Google Analytics, mappe o video **incorporati** nelle pagine: in quel caso aggiornare anche la sezione 6 della privacy.
 
 ---
 

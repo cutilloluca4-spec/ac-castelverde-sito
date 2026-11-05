@@ -26,45 +26,77 @@
 <!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
 <div id="menu"></div>
 
-<main id="top" class="pt-[120px] overflow-x-clip">
+<main id="top" class="pt-[108px] lg:pt-[120px] overflow-x-clip">
 
   <!-- ============ INTESTAZIONE ============ -->
   <section class="intestazione bg-acc-grigio-chiaro">
     <div class="relative max-w-acc mx-auto px-4 tablet:px-6 pt-14 pb-14 computer:pt-20 computer:pb-20">
       <span class="pillola text-[15px]" data-entra>Informativa</span>
-      <h1 class="titolo-display text-[72px] tablet:text-[112px] computer:text-[128px] mt-6 max-w-[760px]" data-entra>Privacy <span class="titolo-contorno">e cookie</span></h1>
-      <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Come trattiamo i dati personali di chi visita il sito e di chi ci scrive.</p>
+      <h1 class="titolo-display text-[46px] sm:text-[76px] tablet:text-[96px] computer:text-[128px] mt-6 max-w-[760px] pr-[20%] computer:pr-0" data-entra>Privacy <span class="titolo-contorno">e cookie</span></h1>
+      <p class="text-[18px] leading-relaxed max-w-[560px] mt-5 pr-[18%] computer:pr-0 text-acc-testo-2" data-entra>Come trattiamo i dati di chi visita il sito e di chi ci scrive, in parole semplici.</p>
       <img class="hidden computer:block absolute right-[7%] top-1/2 -translate-y-1/2 h-[300px] w-auto drop-shadow-acc-stemma" src="assets/logo/stemma-400.png" alt="" />
     </div>
   </section>
 
   <!-- ============ TESTO DELL'INFORMATIVA ============
-       ⚠ BOZZA: completare le parti [tra parentesi quadre] e farla rileggere
-       prima della pubblicazione. Poi togliere il riquadro "Bozza". -->
+       Informativa ai sensi degli artt. 13-14 del Regolamento UE 2016/679 (GDPR).
+       Da aggiornare se cambiano: hosting, servizio del modulo, oppure se si aggiungono
+       statistiche, mappe o video incorporati (in quel caso serve anche il banner cookie).
+       La riga "Ultimo aggiornamento" va cambiata a ogni modifica. -->
   <section class="py-14 computer:py-20">
-    <div class="[&_p]:mb-[1.25em] [&_p]:text-[18px] [&_p]:leading-[1.65] max-w-[780px] mx-auto px-4 tablet:px-6">
-      <div class="bg-acc-avviso-chiaro border-l-[6px] border-acc-avviso p-5 mb-10 text-[15px]"><strong>Bozza.</strong> Questo testo va completato nelle parti tra parentesi quadre e verificato prima della pubblicazione.</div>
+    <div class="[&_p]:mb-[1.1em] [&_p]:text-[17px] tablet:[&_p]:text-[18px] [&_p]:leading-[1.65] [&_li]:text-[17px] tablet:[&_li]:text-[18px] [&_li]:leading-[1.6] [&_a]:underline max-w-[780px] mx-auto px-4 tablet:px-6">
 
-      <h2 class="titolo-display text-[40px] mb-4">Titolare del trattamento</h2>
-      <p>Associazione Calcio Castelverde A.S.D., via dei Gerani 39, 26022 Castelverde (CR), C.F. e P.IVA 00964030191. Email: <a class="underline" href="mailto:info@castelverdecalcio1987.it">info@castelverdecalcio1987.it</a>.</p>
+      <p class="!text-[14px] text-acc-testo-2">Ultimo aggiornamento: 5 novembre 2026</p>
 
-      <h2 class="titolo-display text-[40px] mb-4 mt-10">Dati raccolti con il modulo contatti</h2>
-      <p>Nome, email, telefono (facoltativo) e messaggio, usati solo per rispondere alla richiesta. I dati sono trattati da [servizio usato per il modulo, es. Formspree] e conservati per [tempo di conservazione].</p>
+      <!-- indice: su telefono evita di scorrere tutto per trovare una voce -->
+      <nav class="bg-white p-5 tablet:p-6 mb-4" aria-label="Indice dell'informativa">
+        <p class="titolo-display !text-[22px] !mb-3">In questa pagina</p>
+        <ol class="list-decimal pl-5 grid gap-1 [&_li]:!text-[15px]">
+          <li><a href="#titolare">Chi tratta i dati</a></li>
+          <li><a href="#navigazione">Visitare il sito</a></li>
+          <li><a href="#modulo">Scriverci con il modulo o per email</a></li>
+          <li><a href="#tesserati">Foto e nomi di giocatori e dirigenti</a></li>
+          <li><a href="#esterni">Link a Instagram e Google Maps</a></li>
+          <li><a href="#cookie">Cookie</a></li>
+          <li><a href="#diritti">I tuoi diritti</a></li>
+          <li><a href="#crediti">Crediti fotografici</a></li>
+        </ol>
+      </nav>
 
-      <h2 class="titolo-display text-[40px] mb-4 mt-10">Foto e dati dei tesserati</h2>
-      <p>Le foto e i nomi di giocatori e dirigenti, in particolare dei minorenni del settore giovanile, sono pubblicati solo con il consenso raccolto dalla società al momento del tesseramento. [Verificare i moduli di liberatoria in uso.]</p>
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="titolare">1. Chi tratta i dati</h2>
+      <p>Il titolare del trattamento è l'<strong>Associazione Calcio Castelverde A.S.D.</strong>, via dei Gerani 39, 26022 Castelverde (CR), C.F. e P.IVA 00964030191. Per qualsiasi domanda sui tuoi dati scrivi a <a href="mailto:info@castelverdecalcio1987.it">info@castelverdecalcio1987.it</a>.</p>
 
-      <h2 class="titolo-display text-[40px] mb-4 mt-10">Cookie</h2>
-      <p>Il sito non usa cookie di profilazione né strumenti di statistica. I caratteri tipografici sono caricati dal sito stesso, senza servizi esterni. Se in futuro si aggiungono statistiche (es. Google Analytics), mappe o video incorporati, sarà necessario aggiornare questa informativa e mostrare il banner dei cookie.</p>
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="navigazione">2. Visitare il sito</h2>
+      <p>Il sito non chiede registrazioni e non usa statistiche né pubblicità. Come per qualsiasi sito, il servizio che lo ospita (hosting) registra automaticamente alcuni dati tecnici delle visite: indirizzo IP, data e ora, pagina richiesta, tipo di browser. Servono solo a far funzionare il sito e a proteggerlo da abusi (legittimo interesse, art. 6.1.f GDPR) e vengono cancellati dal fornitore dopo pochi giorni o settimane.</p>
+      <!-- Alla pubblicazione scrivere qui il nome del servizio di hosting, es.:
+           "Il sito è ospitato su GitHub Pages (GitHub Inc., Stati Uniti), che aderisce al Data Privacy Framework UE-USA." -->
+      <p>Caratteri tipografici, immagini e programmi del sito sono caricati dal sito stesso: durante la navigazione non vengono contattati servizi di terze parti.</p>
 
-      <h2 class="titolo-display text-[40px] mb-4 mt-10">Hosting</h2>
-      <p>Il sito è ospitato da [nome del servizio di hosting], che può registrare dati tecnici di navigazione (indirizzo IP, data e ora) per motivi di sicurezza.</p>
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="modulo">3. Scriverci con il modulo o per email</h2>
+      <p>Se ci scrivi dalla pagina Contatti o per email, usiamo nome, email, telefono (facoltativo) e il testo del messaggio <strong>solo per risponderti</strong> (art. 6.1.b GDPR: richiesta dell'interessato). Non li usiamo per newsletter o pubblicità e non li cediamo ad altri.</p>
+      <ul class="list-disc pl-5 mb-[1.1em] grid gap-1.5">
+        <li>I messaggi del modulo arrivano alla casella email della società tramite <strong>Web3Forms</strong>, un servizio che si limita a inoltrarli.</li>
+        <li>Teniamo i messaggi per il tempo necessario a gestire la richiesta e comunque <strong>non oltre 12 mesi</strong>, salvo che diventino parte di un rapporto con la società (per esempio un tesseramento o una sponsorizzazione).</li>
+        <li>Se il modulo non può inviare il messaggio, si apre il tuo programma di posta: in quel caso il messaggio parte dalla tua email, come una normale email.</li>
+      </ul>
 
-      <h2 class="titolo-display text-[40px] mb-4 mt-10">Crediti fotografici</h2>
-      <p>Le foto del municipio e del campanile di Castelverde (pagina Società e card "Storia" in Home) sono di Grasso83 e sono pubblicate su Wikimedia Commons con licenza <a class="underline" href="https://creativecommons.org/licenses/by-sa/3.0/deed.it" target="_blank" rel="noopener">CC BY-SA 3.0</a>. Le altre foto sono dell'A.C. Castelverde.</p>
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="tesserati">4. Foto e nomi di giocatori e dirigenti</h2>
+      <p>Nel sito compaiono nomi, ruoli e foto di giocatori, allenatori e dirigenti, e foto di squadra. Li pubblichiamo per raccontare l'attività della società, sulla base del consenso raccolto al momento del tesseramento; <strong>per i minorenni il consenso è dei genitori</strong>.</p>
+      <p>Chi vuole che una foto o il proprio nome vengano tolti dal sito, o i genitori di un ragazzo del settore giovanile, possono chiederlo in qualsiasi momento all'email della società: provvediamo il prima possibile.</p>
 
-      <h2 class="titolo-display text-[40px] mb-4 mt-10">Diritti</h2>
-      <p>Si può chiedere in ogni momento l'accesso, la correzione o la cancellazione dei propri dati scrivendo all'indirizzo email del titolare, e presentare reclamo al Garante per la protezione dei dati personali.</p>
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="esterni">5. Link a Instagram e Google Maps</h2>
+      <p>Il sito contiene semplici link alla pagina Instagram della società e a Google Maps (per le indicazioni sul campo). Non sono incorporati nella pagina: Instagram e Google ricevono dati solo se clicchi il link, e da quel momento valgono le loro informative privacy.</p>
+
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="cookie">6. Cookie</h2>
+      <p><strong>Il sito non usa cookie</strong>: né tecnici, né di statistica, né di profilazione, e non salva dati nel browser. Per questo non compare il banner dei cookie, che secondo le linee guida del Garante Privacy (10 giugno 2021) serve solo quando si usano cookie diversi da quelli tecnici.</p>
+      <p>Se in futuro verranno aggiunti statistiche, mappe o video incorporati (per esempio Google Analytics, Google Maps o YouTube dentro le pagine), questa informativa verrà aggiornata e, se necessario, comparirà un banner per chiedere il consenso.</p>
+
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="diritti">7. I tuoi diritti</h2>
+      <p>Puoi chiedere in qualsiasi momento di <strong>vedere</strong> i dati che ti riguardano, di <strong>correggerli</strong> o <strong>cancellarli</strong>, di limitarne l'uso o di opporti al trattamento (artt. 15-22 GDPR), scrivendo a <a href="mailto:info@castelverdecalcio1987.it">info@castelverdecalcio1987.it</a>. Ti rispondiamo entro un mese.</p>
+      <p>Se pensi che i tuoi dati siano trattati in modo non corretto puoi presentare reclamo al <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
+
+      <h2 class="titolo-display text-[32px] tablet:text-[40px] mb-4 mt-12 scroll-mt-[140px]" id="crediti">8. Crediti fotografici</h2>
+      <p>Le foto del municipio e del campanile di Castelverde (pagina Società e card "Storia" in Home) sono di Grasso83 e sono pubblicate su Wikimedia Commons con licenza <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.it" target="_blank" rel="noopener">CC BY-SA 3.0</a>. Alcune foto di calcio senza persone riconoscibili, usate nelle notizie in attesa delle foto della società, vengono da Wikimedia Commons con licenza CC0 (pubblico dominio). Le altre foto sono dell'A.C. Castelverde.</p>
     </div>
   </section>
 

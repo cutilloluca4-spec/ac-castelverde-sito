@@ -8,7 +8,7 @@
      disegnaSquadre()         05 · le quattro squadre della stagione
      disegnaRosa()            06 · carosello dei giocatori della prima squadra
      disegnaNumeri()          07 · "Il club in numeri"
-     disegnaSocial()          08 · pulsanti Instagram / Facebook
+     disegnaSocial()          08 · pulsante Instagram
    Le sezioni fisse (Dal 1987) sono scritte in index.html.
    ================================================================== */
 
@@ -87,7 +87,7 @@ function disegnaUltimeNotizie() {
   const lista = [evidenza].concat(tutte.filter(function (n) { return n !== evidenza; })).slice(0, 5);
   box.innerHTML = lista.map(function (n, i) {
     return i === 0
-      ? '<div class="computer:col-span-2 computer:row-span-2">' + htmlCardNotizia(n, "grande") + "</div>"
+      ? '<div class="tablet:col-span-2 computer:row-span-2">' + htmlCardNotizia(n, "grande") + "</div>"
       : "<div>" + htmlCardNotizia(n, "normale") + "</div>";
   }).join("");
 }
@@ -105,14 +105,29 @@ function disegnaPartite() {
 
   function mostra(id) {
     const partite = partiteDi(id);
-    fila.innerHTML = partite.map(htmlCardPartita).join("") +
-      '<a href="calendario.html?squadra=' + id + '" class="' + LARGHEZZA_CARD_PARTITA + ' flex-none grid place-items-center content-center gap-4 bg-acc-nero text-white no-underline p-8 text-center hover:bg-acc-rosso transition-colors">' +
-        '<span class="titolo-display text-[44px]">Calendario<br>completo</span><span class="w-10 h-10">' + ICONE.freccia + "</span>" +
-      "</a>";
     // si parte dalla prima partita ancora da giocare
     const primaDaGiocare = partite.findIndex(function (p) { return !giocata(p); });
-    const card = fila.children[Math.max(0, primaDaGiocare - 1)];
-    fila.scrollLeft = card ? card.offsetLeft - fila.offsetLeft : 0;
+    // su smartphone le partite stanno una sotto l'altra: se ne mostrano 4
+    // (l'ultimo risultato e le 3 successive), le altre restano nascoste (max-tablet:hidden)
+    const da = primaDaGiocare < 0 ? Math.max(0, partite.length - 4) : Math.max(0, primaDaGiocare - 1);
+    fila.innerHTML = partite.map(function (p, k) {
+      const html = htmlCardPartita(p);
+      return k >= da && k < da + 4 ? html : html.replace('<article class="', '<article class="max-tablet:hidden ');
+    }).join("") +
+      '<a href="calendario.html?squadra=' + id + '" class="' + LARGHEZZA_CARD_PARTITA + ' flex-none flex tablet:grid items-center justify-center tablet:place-items-center tablet:content-center gap-4 bg-acc-nero text-white no-underline p-6 tablet:p-8 text-center hover:bg-acc-rosso transition-colors">' +
+        '<span class="titolo-display text-[34px] tablet:text-[44px]">Calendario<br class="hidden tablet:block"> completo</span><span class="w-8 h-8 tablet:w-10 tablet:h-10">' + ICONE.freccia + "</span>" +
+      "</a>";
+    // dopo che la pagina ha finito di impaginarsi (font e immagini), così la card è allineata giusta
+    function allinea() {
+      const card = fila.children[Math.max(0, primaDaGiocare - 1)];
+      if (!card) { fila.scrollLeft = 0; return; }
+      // posizione della card dentro la fila (misurata sullo schermo), meno il margine interno
+      const distanza = card.getBoundingClientRect().left - fila.getBoundingClientRect().left;
+      fila.scrollLeft += distanza - parseFloat(getComputedStyle(fila).paddingLeft || 0);
+    }
+    allinea();
+    requestAnimationFrame(allinea);
+    if (document.fonts) document.fonts.ready.then(allinea);
     const carosello = fila.closest("[data-carosello]");
     if (carosello && carosello.aggiornaFrecce) carosello.aggiornaFrecce();
   }
@@ -137,12 +152,12 @@ function disegnaSquadre() {
     return (
       '<a href="squadre.html#' + s.id + '" class="' + CARD_NOTIZIA.card + '">' +
         '<div class="' + CARD_NOTIZIA.foto + ' aspect-[4/3]"><img class="' + CARD_NOTIZIA.img + '" src="' + testo(s.immagine) + '" alt="" loading="lazy" /></div>' +
-        '<div class="flex flex-col gap-3 p-6 flex-1">' +
+        '<div class="flex flex-col gap-3 p-5 tablet:p-6 flex-1">' +
           '<span class="pillola pillola--piccola self-start' + (s.id === "prima-squadra" ? " pillola--rossa" : "") + '">' + testo(s.categoria) + "</span>" +
-          '<h3 class="' + CARD_NOTIZIA.titolo + ' text-[44px] mt-1">' + testo(s.nome) + "</h3>" +
+          '<h3 class="' + CARD_NOTIZIA.titolo + ' text-[38px] tablet:text-[44px] mt-1">' + testo(s.nome) + "</h3>" +
           '<p class="text-[14px] text-acc-testo-2 leading-snug">' + testo(s.campionato) + "</p>" +
           (prossima
-            ? '<p class="text-[13px] font-semibold border-t border-acc-linea pt-3 mt-auto"><span class="text-acc-rosso-scuro uppercase tracking-[.08em] text-[11px] block mb-0.5">Prossima partita</span>' + dataCorta(prossima.data) + " · " + (prossima.casa ? "Castelverde - " + testo(prossima.avversario) : testo(prossima.avversario) + " - Castelverde") + "</p>"
+            ? '<p class="text-[13px] font-semibold border-t border-acc-linea pt-3 mt-auto"><span class="text-acc-rosso-scuro uppercase tracking-[.08em] text-[12px] block mb-0.5">Prossima partita</span>' + dataCorta(prossima.data) + " · " + (prossima.casa ? "Castelverde - " + testo(prossima.avversario) : testo(prossima.avversario) + " - Castelverde") + "</p>"
             : '<p class="link-freccia text-[16px] mt-auto pt-3">La squadra</p>') +
         "</div>" +
       "</a>"
@@ -154,7 +169,11 @@ function disegnaSquadre() {
 function disegnaRosa() {
   const squadra = trovaSquadra("prima-squadra");
   if (!squadra || !squadra.rosa) return;
-  document.getElementById("filaGiocatori").innerHTML = squadra.rosa.map(htmlCardGiocatore).join("");
+  // su smartphone la rosa è una griglia di 2 colonne con i primi 6 giocatori; "Vedi tutta la rosa" porta agli altri
+  document.getElementById("filaGiocatori").innerHTML = squadra.rosa.map(function (g, k) {
+    const html = htmlCardGiocatore(g);
+    return k < 6 ? html : html.replace('<article class="', '<article class="max-tablet:hidden ');
+  }).join("");
   const mister = squadra.staff.find(function (p) { return p.ruolo === "Allenatore"; });
   if (mister) document.getElementById("allenatore").innerHTML = '<span class="text-acc-testo-2">All.</span> ' + testo(mister.nome);
 }
@@ -176,6 +195,5 @@ function disegnaSocial() {
   const box = document.getElementById("pulsantiSocial");
   let html = "";
   if (CLUB.social.instagram) html += '<a class="btn btn--rosso" href="' + CLUB.social.instagram + '" target="_blank" rel="noopener"><span class="w-5 h-5">' + ICONE.instagram + "</span>Instagram</a>";
-  if (CLUB.social.facebook) html += '<a class="btn btn--nero" href="' + CLUB.social.facebook + '" target="_blank" rel="noopener"><span class="w-5 h-5">' + ICONE.facebook + "</span>Facebook</a>";
   box.innerHTML = html;
 }
