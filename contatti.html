@@ -60,20 +60,20 @@
            Senza chiave apre il programma di posta con il messaggio già compilato. Vedi js/pagine/contatti.js -->
       <form id="moduloContatti" class="cornice angolo-rosso bg-white p-5 tablet:p-10 m-6 grid gap-5" novalidate data-entra>
         <div class="grid gap-5 tablet:grid-cols-2">
-          <div class="campo"><label for="nome">Nome e cognome</label><input id="nome" name="nome" type="text" autocomplete="name" required /></div>
-          <div class="campo"><label for="telefono">Telefono</label><input id="telefono" name="telefono" type="tel" autocomplete="tel" /></div>
+          <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="nome">Nome e cognome</label><input class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="nome" name="nome" type="text" autocomplete="name" required /></div>
+          <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="telefono">Telefono</label><input class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="telefono" name="telefono" type="tel" autocomplete="tel" /></div>
         </div>
-        <div class="campo"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-        <div class="campo">
-          <label for="motivo">Per cosa ci scrivi</label>
-          <select id="motivo" name="motivo">
+        <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="email">Email</label><input class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="email" name="email" type="email" autocomplete="email" required /></div>
+        <div>
+          <label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="motivo">Per cosa ci scrivi</label>
+          <select class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="motivo" name="motivo">
             <option>Informazioni su una squadra</option>
             <option>Tesseramenti e provini</option>
             <option>Diventare partner</option>
             <option>Altro</option>
           </select>
         </div>
-        <div class="campo"><label for="messaggio">Messaggio</label><textarea id="messaggio" name="messaggio" rows="5" required></textarea></div>
+        <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="messaggio">Messaggio</label><textarea class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="messaggio" name="messaggio" rows="5" required></textarea></div>
         <label class="flex items-start gap-3 text-[14px] leading-snug">
           <input type="checkbox" name="privacy" required class="mt-0.5 w-6 h-6 flex-none accent-[var(--color-rosso)]" />
           <span>Ho letto l'<a href="privacy-cookie.html" class="underline">informativa privacy</a> e acconsento al trattamento dei dati per ricevere una risposta.</span>

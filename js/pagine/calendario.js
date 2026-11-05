@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("avvisoCalendario").innerHTML = htmlAvvisoCalendario();
 
   schede.innerHTML = squadre.map(function (s) {
-    return `<button type="button" role="tab" data-squadra="${s.id}">${testo(s.nome)}</button>`;
+    return `<button type="button" role="tab" class="${CLASSI_SCHEDA}" data-squadra="${s.id}">${testo(s.nome)}</button>`;
   }).join("");
 
   function disegna() {

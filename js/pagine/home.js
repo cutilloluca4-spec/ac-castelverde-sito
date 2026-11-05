@@ -100,7 +100,7 @@ function disegnaPartite() {
 
   const squadre = squadreConPartite();
   schede.innerHTML = squadre.map(function (s, i) {
-    return `<button type="button" role="tab" aria-selected="${i === 0}" class="${i === 0 ? "is-attiva" : ""}" data-squadra="${s.id}">${testo(s.nome)}</button>`;
+    return `<button type="button" role="tab" aria-selected="${i === 0}" class="${CLASSI_SCHEDA}${i === 0 ? " is-attiva" : ""}" data-squadra="${s.id}">${testo(s.nome)}</button>`;
   }).join("");
 
   function mostra(id) {

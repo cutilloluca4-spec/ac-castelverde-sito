@@ -7,14 +7,13 @@
    Indice
      1. Menu in alto (.menu) e menu mobile (.menu-mobile)
      2. Intestazione delle pagine interne (.intestazione)
-     3. Caroselli orizzontali (.scorri) e schede (.schede)
-     4. Campi del modulo contatti (.campo)
-     5. Pulsante "torna su" (.torna-su)
+     3. Caroselli orizzontali (.scorri) e contenitore delle schede (.schede)
 
    Qui resta solo quello che Tailwind non fa o che nell'HTML sarebbe
    illeggibile: gli stati cambiati dal JavaScript (classi is-…), le forme
    diagonali (clip-path) e i pezzi ripetuti in più pagine. Tutto il resto
-   (card, apertura della Home, linea del tempo, classifica, footer) è
+   (card, apertura della Home, linea del tempo, classifica, footer, singole
+   schede, frecce dei caroselli, campi del modulo, pulsante "torna su") è
    scritto con Tailwind nell'HTML o in js/componenti.js.
    ================================================================== */
 
@@ -73,28 +72,13 @@ body.menu-aperto { overflow: hidden; }
 .scorri::-webkit-scrollbar { display: none; }
 .scorri > * { scroll-snap-align: start; }
 .scorri:focus-visible { outline: 3px solid var(--color-rosso); outline-offset: 4px; }   /* selezionato con Tab: si scorre con le frecce */
-.scorri-frecce button {
-  width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer;
-  border: 2px solid currentColor; background: transparent; color: inherit; transition: background .2s, color .2s, opacity .2s;
-}
-.scorri-frecce button:hover { background: var(--color-rosso); border-color: var(--color-rosso); color: #fff; }
-.scorri-frecce button:disabled { opacity: .3; pointer-events: none; }
 
-/* Schede (tab) per scegliere la squadra */
+/* Schede (tab) per scegliere la squadra: qui solo il contenitore,
+   lo stile delle singole schede è CLASSI_SCHEDA in js/componenti.js */
 .schede { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
   /* un po' di margine interno (compensato all'esterno) così l'ombra della scheda attiva non viene tagliata */
   padding: 6px 6px 10px; margin: -6px -6px -10px; }
 .schede::-webkit-scrollbar { display: none; }
-.schede button, .schede a {
-  flex: none; cursor: pointer; border: 0;
-  padding: 11px 18px 8px; background: transparent; color: inherit;
-  font-family: var(--font-titoli); font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: .03em;
-  border-radius: 999px; transition: background .2s, color .2s, box-shadow .2s;
-  text-decoration: none;
-}
-.schede button:hover, .schede a:hover { background: rgba(0,0,0,.06); }
-/* scheda attiva: pillola bianca con un filo di bordo e un'ombra leggera, senza "stacco" netto */
-.schede button.is-attiva, .schede a.is-attiva { background: #fff; color: var(--color-nero); box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.08); }
 
 /* MOBILE FIRST: su smartphone (sotto i 700 px) niente scorrimento orizzontale.
    I caroselli diventano elenchi verticali (una card sotto l'altra; la rosa in 2 colonne)
@@ -104,18 +88,5 @@ body.menu-aperto { overflow: hidden; }
   .scorri--griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .schede { flex-wrap: wrap; overflow: visible; gap: 6px; }
 }
-
-/* 4. MODULO CONTATTI -------------------------------------------- */
-.campo label { display: block; font-family: var(--font-titoli); font-weight: 700; text-transform: uppercase; font-size: 15px; letter-spacing: .03em; margin-bottom: 6px; }
-.campo input, .campo select, .campo textarea {
-  width: 100%; padding: 13px 14px; font: inherit; font-size: 16px;
-  background: #fff; border: 2px solid var(--color-grigio); border-radius: 0; transition: border-color .2s;
-}
-.campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--color-rosso); }
-
-/* 5. PULSANTE "TORNA SU" ----------------------------------------- */
-.torna-su { opacity: 0; pointer-events: none; transform: translateY(12px); transition: opacity .3s, transform .3s, background .2s; }
-.torna-su.is-visibile { opacity: 1; pointer-events: auto; transform: none; }
-.torna-su:hover { background: var(--color-nero); }
 
 } /* fine @layer components */

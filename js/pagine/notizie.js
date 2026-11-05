@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let quante = NOTIZIE_PER_VOLTA;
 
   filtri.innerHTML = ["", ...CATEGORIE_NOTIZIE].map(function (c) {
-    return `<button type="button" role="tab" data-categoria="${testo(c)}">${c || "Tutte"}</button>`;
+    return `<button type="button" role="tab" class="${CLASSI_SCHEDA}" data-categoria="${testo(c)}">${c || "Tutte"}</button>`;
   }).join("");
 
   function disegna() {

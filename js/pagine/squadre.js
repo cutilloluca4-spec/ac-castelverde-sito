@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   preparaLayout();
 
   document.getElementById("indiceSquadre").innerHTML = SQUADRE.map(function (s) {
-    return `<a href="#${s.id}">${testo(s.nome)}</a>`;
+    return `<a class="${CLASSI_SCHEDA}" href="#${s.id}">${testo(s.nome)}</a>`;
   }).join("");
 
   document.getElementById("elencoSquadre").innerHTML = SQUADRE.map(htmlSchedaSquadra).join("");
@@ -29,7 +29,7 @@ function htmlSchedaSquadra(s, i) {
     ? '<div class="mt-16" data-carosello>' +
         '<div class="flex items-end justify-between gap-4 mb-6 tablet:mb-8">' +
           '<h3 class="titolo-display text-[40px] tablet:text-[56px]">La <span class="titolo-contorno">rosa</span></h3>' +
-          '<div class="scorri-frecce hidden tablet:flex gap-2"><button type="button" data-scorri-indietro aria-label="Indietro">⟵</button><button type="button" data-scorri-avanti aria-label="Avanti">⟶</button></div>' +
+          `<div class="hidden tablet:flex gap-2"><button type="button" class="${CLASSI_FRECCIA}" data-scorri-indietro aria-label="Indietro">⟵</button><button type="button" class="${CLASSI_FRECCIA}" data-scorri-avanti aria-label="Avanti">⟶</button></div>` +
         "</div>" +
         `<div class="scorri scorri--griglia" tabindex="0" aria-label="Rosa: ${testo(s.nome)} (si scorre con le frecce della tastiera)">${s.rosa.map(htmlCardGiocatore).join("")}</div>` +
       "</div>"

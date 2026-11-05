@@ -189,13 +189,13 @@ Tutto viene dallo **stemma** e dalle **grafiche Instagram** del club (Match day,
 **Quasi tutto è scritto con Tailwind, direttamente nell'HTML** (e nelle funzioni di `js/componenti.js` e `js/layout.js`, che scrivono l'HTML delle parti ripetute). Per cambiare l'aspetto di una card o di una sezione si modificano le sue classi.
 
 - **Colori, ombre e larghezza massima** hanno un nome del club, definito in `design-system/tema-tailwind.js` (i valori sono in `colori.css`): `bg-acc-rosso`, `text-acc-testo-2`, `shadow-acc-card`, `shadow-acc-grafica`, `drop-shadow-acc-stemma`, `max-w-acc` (1320 px). Si cambia un valore in `colori.css` e cambia in tutto il sito.
-- **Classi ripetute in più punti** sono raccolte in costanti in cima a `js/componenti.js` (`CARD_NOTIZIA`, `FASCIA`, `COLORE_ESITO`, `LARGHEZZA_CARD_PARTITA`) e `js/layout.js` (`LINK_PIEDE`): si cambiano lì una volta sola.
+- **Classi ripetute in più punti** sono raccolte in costanti in cima a `js/componenti.js` (`CARD_NOTIZIA`, `FASCIA`, `COLORE_ESITO`, `LARGHEZZA_CARD_PARTITA`, `CLASSI_SCHEDA`, `CLASSI_FRECCIA`) e `js/layout.js` (`LINK_PIEDE`): si cambiano lì una volta sola.
 - **Effetti al passaggio del mouse** con `group` / `group-hover:` (card notizia, giocatore, "Dal 1987"); righe e pallini decorativi con `before:` / `after:` (menu, linea del tempo, avviso "Risultati aggiornati").
 
 **Nei file CSS resta solo quello che Tailwind non fa, o che nell'HTML sarebbe illeggibile** (stessa regola del DSD):
 
 - i **componenti del design system** (`componenti.css`): titoli, pillole, pulsanti, cornice con angolo rosso, trame, fasce diagonali;
-- gli **stati che cambia il JavaScript** (`sito.css`, classi `is-…`): menu che si accorcia, menu mobile, schede, "torna su";
+- gli **stati che cambia il JavaScript** quando sono complessi (`sito.css`): menu che si accorcia e menu mobile. Gli stati semplici sono in Tailwind con la variante `[&.is-attiva]:` / `[&.is-visibile]:` (schede, pulsante "torna su");
 - le **forme lunghe** (`clip-path` delle intestazioni) e i pezzi ripetuti in molte pagine (caroselli, campi del modulo);
 - le **animazioni** (`animazioni.css`): stati iniziali di GSAP e `@keyframes` (`rimbalzo`, `lampeggio`).
 

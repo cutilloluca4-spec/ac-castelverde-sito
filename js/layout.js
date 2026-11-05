@@ -192,7 +192,7 @@ function disegnaPiede() {
     // animato (con transform) "fixed" smetterebbe di essere fisso sullo schermo.
     // L'<aside> lo mette in una zona della pagina per i lettori di schermo.
     '<aside aria-label="Torna su">' +
-      '<a href="#top" id="tornaSu" class="torna-su fixed right-5 bottom-5 z-40 hidden lg:grid place-items-center w-12 h-12 bg-acc-rosso text-white shadow-lg" aria-label="Torna su">' +
+      '<a href="#top" id="tornaSu" class="fixed right-5 bottom-5 z-40 hidden lg:grid place-items-center w-12 h-12 bg-acc-rosso text-white shadow-lg opacity-0 pointer-events-none translate-y-3 transition-[opacity,translate,background-color] duration-300 hover:bg-acc-nero [&.is-visibile]:opacity-100 [&.is-visibile]:pointer-events-auto [&.is-visibile]:translate-y-0" aria-label="Torna su">' +
         `<span class="w-5 h-5 -rotate-90">${ICONE.freccia}</span>` +
       "</a>" +
     "</aside>";
