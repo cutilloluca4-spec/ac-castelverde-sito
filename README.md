@@ -78,15 +78,21 @@ ac-castelverde-sito/
 │   ├── utilita.js           ← date, testi, ricerca partite, icone SVG
 │   ├── componenti.js        ← l'HTML dei pezzi ripetuti (card notizia, card partita…)
 │   ├── layout.js            ← menu, partner e footer: scritti una volta per tutte le pagine
-│   ├── animazioni.js        ← comparse, contatori, caroselli (GSAP + ScrollTrigger)
+│   ├── animazioni.js        ← comparse, contatori, caroselli, linea del tempo (GSAP + ScrollTrigger)
+│   ├── pallone-3d.js        ← il pallone dello stemma in 3D (apertura della Home e linea del tempo)
+│   ├── azione-3d.js         ← la storia (Società) come azione di calcio in 3D (Three.js): campo, pallone, porte, regia
+│   ├── giocatori-3d.js      ← i calciatori 3D: modello e movimenti registrati (assets/3d/calciatore.glb, da Mixamo)
 │   ├── pagine/              ← un file per pagina: home.js, notizie.js, squadre.js…
 │   │   └── home-apertura.js ← l'apertura interattiva della Home (pallone, fascia, stemma)
-│   └── vendor/              ← Tailwind, GSAP, ScrollTrigger (non modificare)
+│   └── vendor/              ← Tailwind, GSAP, ScrollTrigger, Three.js e i suoi caricatori (non modificare)
 │
 ├── assets/
 │   ├── logo/                ← stemma (PNG trasparente in più misure), favicon
 │   ├── font/                ← Barlow Condensed (riserva di DIN Condensed, licenza OFL)
 │   ├── img/                 ← foto: vedi assets/img/LEGGIMI.md per l'elenco completo
+│   ├── 3d/                  ← il calciatore 3D della storia: calciatore.glb e la sua copia calciatore.glb.js
+│   │                          (lo stesso file dentro uno script: così la storia 3D parte anche aprendo
+│   │                          la pagina con un doppio clic, senza Live Server)
 │   └── og-image.jpg         ← anteprima quando il link viene condiviso (1200×630)
 │
 ├── test/                    ← controlli automatici: apri test/index.html con Live Server
@@ -94,6 +100,7 @@ ac-castelverde-sito/
 │   ├── aggiorna_risultati.py ← ⭐ da lanciare ogni settimana (lo fa da solo un'attività pianificata)
 │   ├── calendari_lnd.py     ← calendari ufficiali LND 2026/27: date, campi, orari, squadre ritirate
 │   ├── tuttocampo.py        ← lettura dei risultati da Tuttocampo
+│   ├── glb_in_js.py         ← rigenera assets/3d/calciatore.glb.js dopo aver cambiato calciatore.glb
 │   └── archivio/            ← giornate già lette (non va su GitHub)
 │
 ├── docs/

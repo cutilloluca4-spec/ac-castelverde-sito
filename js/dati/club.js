@@ -12,7 +12,7 @@ const CLUB = {
   nome: "A.C. Castelverde",
   nomeCompleto: "Associazione Calcio Castelverde A.S.D.",
   fondazione: 1987,
-  motto: "Never give up!",
+  motto: "Cresciamo insieme, dal 1987",
   stagione: "2026/27",
   categoria: "Seconda Categoria · Cremona",   // DA VERIFICARE: girone della stagione
 
@@ -22,8 +22,8 @@ const CLUB = {
 
   contatti: {
     email: "info@castelverdecalcio1987.it",   // DA VERIFICARE
-    telefono: "+39 331 375 8110",             // DA VERIFICARE
-    telefonoLink: "+393313758110",
+    telefono: "+39 348 901 6995",             // numero provvisorio: da sostituire con il numero della società
+    telefonoLink: "+393489016995",
     indirizzo: "Via dei Gerani, 39",
     cap: "26022",
     citta: "Castelverde (CR)",

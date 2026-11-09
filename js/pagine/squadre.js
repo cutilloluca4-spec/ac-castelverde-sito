@@ -9,12 +9,13 @@ document.addEventListener("DOMContentLoaded", function () {
   preparaLayout();
 
   document.getElementById("indiceSquadre").innerHTML = SQUADRE.map(function (s) {
-    return `<a class="${CLASSI_SCHEDA}" href="#${s.id}">${testo(s.nome)}</a>`;
+    return `<a class="${CLASSI_SCHEDA} max-tablet:!text-[15px] max-tablet:!px-3" href="#${s.id}">${testo(s.nome)}</a>`;
   }).join("");
 
   document.getElementById("elencoSquadre").innerHTML = SQUADRE.map(htmlSchedaSquadra).join("");
 
   evidenziaSquadraVisibile();
+  vaiAllaSquadra();
   avviaAnimazioni();
 });
 
@@ -36,7 +37,7 @@ function htmlSchedaSquadra(s, i) {
     : "";
 
   return (
-    `<section id="${s.id}" class="scroll-mt-[150px] py-16 computer:py-24 ${scura ? "trama-grigia" : ""}">` +
+    `<section id="${s.id}" class="scroll-mt-[128px] lg:scroll-mt-[150px] py-16 computer:py-24 ${scura ? "trama-grigia" : ""}">` +
       '<div class="max-w-acc mx-auto px-4 tablet:px-6">' +
         '<div class="grid gap-8 tablet:gap-12 computer:grid-cols-[1.1fr_1fr] items-center">' +
           `<div class="cornice angolo-rosso m-6 ${i % 2 ? "computer:order-2" : ""}" data-entra>` +
@@ -59,6 +60,26 @@ function htmlSchedaSquadra(s, i) {
       "</div>" +
     "</section>"
   );
+}
+
+// Clic su una scheda: la squadra si ferma subito sotto il menu e la barra delle schede.
+// Il menu scendendo si accorcia (70 px su telefono, 82 da computer) e risalendo torna
+// intero (108 / 120): lo spazio da lasciare dipende quindi dalla direzione.
+function vaiAllaSquadra() {
+  document.getElementById("indiceSquadre").addEventListener("click", function (e) {
+    const link = e.target.closest("a[href^='#']");
+    if (!link) return;
+    const sezione = document.querySelector(link.getAttribute("href"));
+    if (!sezione) return;
+    e.preventDefault();
+    const computer = matchMedia("(min-width: 1024px)").matches;
+    const barra = document.getElementById("barraSquadre").offsetHeight;
+    const arrivo = sezione.getBoundingClientRect().top + window.scrollY;
+    const scende = arrivo > window.scrollY;
+    const menu = scende ? (computer ? 82 : 70) : (computer ? 120 : 108);
+    window.scrollTo({ top: arrivo - menu - barra + 1, behavior: "smooth" });
+    history.replaceState(null, "", link.getAttribute("href"));
+  });
 }
 
 // Nell'indice in alto si accende la squadra che si sta guardando

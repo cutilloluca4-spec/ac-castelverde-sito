@@ -78,7 +78,7 @@ const STORIA = [
   },
   {
     anno: "Oggi",
-    titolo: "Never give up",
+    titolo: "Cresciamo insieme",
     immagine: "assets/img/club/storia-oggi.jpg",
     credito: "La prima squadra 2026/27",
     testo: "Il Castelverde scende in campo con quattro squadre agonistiche: la prima squadra in Seconda Categoria, la Juniores nel Campionato Regionale Under 19, Allievi e Giovanissimi nei provinciali cremonesi. Lo spirito è sempre quello del 1987: pazienza, forza e volontà, al servizio del paese e del territorio."

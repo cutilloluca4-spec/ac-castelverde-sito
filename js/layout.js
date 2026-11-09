@@ -49,8 +49,14 @@ function disegnaMenu(pagina) {
       (attiva ? ' aria-current="page"' : "") + ">" + v.nome + "</a>";
   }).join("");
 
+  // menu mobile: la pagina aperta è rossa con una barretta rossa a sinistra;
+  // le altre diventano rosse al tocco (active:) o al passaggio del mouse
   const vociMobile = VOCI_MENU.map(function (v) {
-    return `<a href="${v.indirizzo}" class="${v.id === pagina ? "is-attiva " : ""}titolo-display text-[44px] text-acc-nero no-underline">${v.nome}</a>`;
+    const attiva = v.id === pagina;
+    return `<a href="${v.indirizzo}" class="flex items-center gap-3 titolo-display text-[44px] no-underline py-0.5 transition-colors ` +
+      `before:block before:w-1.5 before:h-[.7em] before:-mt-1.5 before:bg-acc-rosso before:transition-transform before:origin-left ` +
+      (attiva ? "text-acc-rosso before:scale-x-100" : "text-acc-nero before:scale-x-0 -ml-[18px] hover:text-acc-rosso active:text-acc-rosso") + `"` +
+      (attiva ? ' aria-current="page"' : "") + `>${v.nome}</a>`;
   }).join("");
 
   contenitore.innerHTML =
@@ -211,7 +217,9 @@ function preparaComandiMenu() {
     const y = window.scrollY;
     if (testata) {
       testata.classList.toggle("is-scorso", y > 40);
-      testata.classList.toggle("is-nascosto", y > 200 && y > ultimaPosizione && !document.body.classList.contains("menu-aperto"));
+      const ridotto = y > 200 && y > ultimaPosizione && !document.body.classList.contains("menu-aperto");
+      testata.classList.toggle("is-nascosto", ridotto);
+      document.body.classList.toggle("menu-ridotto", ridotto);   // lo usano le barre fisse sotto il menu (pagina Squadre)
     }
     if (tornaSu) tornaSu.classList.toggle("is-visibile", y > 700);
     ultimaPosizione = y;

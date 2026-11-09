@@ -167,7 +167,7 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 .diagonali::after {    /* fascia rossa in basso */
   left: -5%; bottom: 0; width: 110%; height: 42%;
   background: var(--color-rosso);
-  clip-path: polygon(0 70%, 100% 0, 100% 45%, 0 100%);
+  clip-path: polygon(0 80%, 100% 0, 100% 45%, 0 100%);   /* a sinistra la fascia resta bassa, sotto i testi */
 }
 @media (max-width: 899px) {   /* su smartphone la fascia resta bassa, sotto i testi */
   .diagonali::after { height: 70px; }

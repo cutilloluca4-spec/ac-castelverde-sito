@@ -42,7 +42,6 @@
 
 .menu-mobile { transform: translateX(100%); transition: transform .4s cubic-bezier(.7,0,.2,1); }
 .menu-mobile.is-aperto { transform: none; }
-.menu-mobile a.is-attiva { color: var(--color-rosso); }
 body.menu-aperto { overflow: hidden; }
 
 /* 2. INTESTAZIONE DELLE PAGINE INTERNE --------------------------- */
@@ -75,9 +74,7 @@ body.menu-aperto { overflow: hidden; }
 
 /* Schede (tab) per scegliere la squadra: qui solo il contenitore,
    lo stile delle singole schede è CLASSI_SCHEDA in js/componenti.js */
-.schede { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
-  /* un po' di margine interno (compensato all'esterno) così l'ombra della scheda attiva non viene tagliata */
-  padding: 6px 6px 10px; margin: -6px -6px -10px; }
+.schede { display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .schede::-webkit-scrollbar { display: none; }
 
 /* MOBILE FIRST: su smartphone (sotto i 700 px) niente scorrimento orizzontale.

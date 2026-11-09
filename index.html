@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="css/sito.css?v=1" />
 <link rel="stylesheet" href="css/animazioni.css?v=1" />
 </head>
-<body data-pagina="home" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-hidden">
+<body data-pagina="home" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-clip">
 
 <!-- Menu: lo disegna js/layout.js (uguale in tutte le pagine) -->
 <div id="menu"></div>
@@ -188,7 +188,8 @@
   </section>
 
   <!-- ============ 08 · SOCIAL ============ -->
-  <section class="diagonali bg-acc-grigio-chiaro py-16 computer:py-24" aria-labelledby="titoloSocial">
+  <!-- pb più alto da computer: la fascia rossa diagonale passa sotto il pulsante Instagram, staccata -->
+  <section class="diagonali bg-acc-grigio-chiaro pt-16 pb-24 computer:pt-24 computer:pb-40" aria-labelledby="titoloSocial">
     <div class="max-w-acc mx-auto px-4 tablet:px-6 grid computer:grid-cols-[1fr_1.2fr] gap-10 items-center">
       <div data-entra>
         <h2 id="titoloSocial" class="titolo-display text-[56px] tablet:text-[80px]">Match day,<br><span class="text-acc-rosso">full time</span>,<br><span class="titolo-contorno">starting XI</span></h2>
@@ -220,6 +221,7 @@
 <script src="js/utilita.js?v=1"></script>
 <script src="js/componenti.js?v=1"></script>
 <script src="js/layout.js?v=1"></script>
+<script src="js/pallone-3d.js?v=1"></script>
 <script src="js/animazioni.js?v=1"></script>
 <script src="js/pagine/home-apertura.js?v=1"></script>
 <script src="js/pagine/home.js?v=1"></script>
