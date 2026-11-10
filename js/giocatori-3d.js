@@ -279,17 +279,32 @@ function preparaGuanto(gltf) {
   gltf.scene.updateMatrixWorld(true);
   gltf.scene.traverse(function (m) { if (m.isMesh && !mesh) mesh = m; });
   const ge = mesh.geometry.clone().applyMatrix4(mesh.matrixWorld);
-  const pos = ge.attributes.position, ix = ge.index.array, tieni = [];
+  let pos = ge.attributes.position;
+  const ix = ge.index.array, tieni = [];
   for (let t = 0; t < ix.length; t += 3) {             // solo i triangoli del guanto di sinistra (x < 0)
     if (pos.getX(ix[t]) < 0 && pos.getX(ix[t + 1]) < 0 && pos.getX(ix[t + 2]) < 0) tieni.push(ix[t], ix[t + 1], ix[t + 2]);
   }
-  ge.setIndex(tieni);
+  // solo i punti del guanto sinistro (gli altri resterebbero nella geometria, inutili)
+  const nuovoIndice = new Int32Array(pos.count).fill(-1), usati = [];
+  tieni.forEach(function (i) { if (nuovoIndice[i] < 0) { nuovoIndice[i] = usati.length; usati.push(i); } });
+  Object.keys(ge.attributes).forEach(function (nome) {
+    const a = ge.attributes[nome], out = new Float32Array(usati.length * a.itemSize);
+    const leggi = [a.getX, a.getY, a.getZ, a.getW];      // (gli attributi possono essere "intrecciati")
+    usati.forEach(function (i, j) { for (let c = 0; c < a.itemSize; c++) out[j * a.itemSize + c] = leggi[c].call(a, i); });
+    ge.setAttribute(nome, new THREE.BufferAttribute(out, a.itemSize));
+  });
+  ge.setIndex(tieni.map(function (i) { return nuovoIndice[i]; }));
+  pos = ge.attributes.position;
   // il riquadro del guanto: le dita verso +y, il dorso verso +z, il pollice verso +x
   const min = new THREE.Vector3(Infinity, Infinity, Infinity), max = min.clone().negate();
-  tieni.forEach(function (i) { const v = new THREE.Vector3().fromBufferAttribute(pos, i); min.min(v); max.max(v); });
+  for (let i = 0; i < pos.count; i++) { const v = new THREE.Vector3().fromBufferAttribute(pos, i); min.min(v); max.max(v); }
   const alto = max.y - min.y;
   const polso = min.y + alto * .3;                     // il polso: in cima al polsino
-  ge.translate(-(min.x + max.x) / 2, -polso, -(min.z + max.z) / 2);
+  // al centro del polsino (non del riquadro, che il pollice sposta di lato): così il polsino
+  // si infila dritto sull'avambraccio
+  let cx = 0, cz = 0, cn = 0;
+  for (let i = 0; i < pos.count; i++) if (pos.getY(i) < polso) { cx += pos.getX(i); cz += pos.getZ(i); cn++; }
+  ge.translate(-cx / cn, -polso, -cz / cn);
   guantoBase = { geometria: ge, materiale: mesh.material, lunghezza: max.y - polso };
 }
 
@@ -299,41 +314,56 @@ function mettiGuanti(corpo, materiali) {
   const V = THREE.Vector3;
   const osso = function (nome) { return corpo.getObjectByName("mixamorig5" + nome); };
   const dove = function (nome) { return new V().setFromMatrixPosition(osso(nome).matrixWorld); };
-  // 1. la mano del modello, sotto il guanto, non si disegna (e si trova il pezzo con le mani)
-  const nascosto = new THREE.MeshBasicMaterial({ visible: false });
-  let pelle = null, piuMani = 0;
+  const leggi = function (a, i, j) { return j === 0 ? a.getX(i) : j === 1 ? a.getY(i) : j === 2 ? a.getZ(i) : a.getW(i); };
+  // 1. il pezzo del modello con la pelle delle mani (il corpo) e quanto ogni punto è "mano"
+  let pelle = null, piuMani = 0, quantoPelle = null;
+  const pezzi = [];                                      // tutti i pezzi: per misurare il braccio
   corpo.traverse(function (m) {
     if (!m.isSkinnedMesh || !m.geometry.index) return;
-    const ge = m.geometry, si = ge.attributes.skinIndex, sw = ge.attributes.skinWeight;
-    const leggi = function (a, i, j) { return j === 0 ? a.getX(i) : j === 1 ? a.getY(i) : j === 2 ? a.getZ(i) : a.getW(i); };
+    pezzi.push(m);
+    if (!m.skeleton.bones.some(function (b) { return /HandMiddle3$/.test(b.name); })) return;
+    const si = m.geometry.attributes.skinIndex, sw = m.geometry.attributes.skinWeight;
     const diMano = m.skeleton.bones.map(function (b) { return /Hand/.test(b.name); });
     const quanto = new Float32Array(si.count);
-    for (let i = 0; i < si.count; i++) for (let j = 0; j < 4; j++) if (diMano[leggi(si, i, j)]) quanto[i] += leggi(sw, i, j);
-    const ix = ge.index.array, gruppi = [[], []];
+    let mani = 0;
+    for (let i = 0; i < si.count; i++) {
+      for (let j = 0; j < 4; j++) if (diMano[leggi(si, i, j)]) quanto[i] += leggi(sw, i, j);
+      if (quanto[i] > .5) mani++;
+    }
+    if (mani > piuMani) { pelle = m; piuMani = mani; quantoPelle = quanto; }
+  });
+  if (!pelle) return;
+  // la mano nuda, sotto il guanto, non si disegna (la manica e il resto del corpo sì)
+  (function () {
+    const ge = pelle.geometry, ix = ge.index.array, gruppi = [[], []];
     for (let t = 0; t < ge.index.count; t += 3) {
       const a = ix[t], b = ix[t + 1], c = ix[t + 2];
-      gruppi[(quanto[a] + quanto[b] + quanto[c]) / 3 > .3 ? 1 : 0].push(a, b, c);
+      gruppi[(quantoPelle[a] + quantoPelle[b] + quantoPelle[c]) / 3 > .3 ? 1 : 0].push(a, b, c);
     }
-    if (gruppi[1].length < 150) return;                  // in questo pezzo del modello non ci sono le mani
     const nuova = ge.clone();                            // una geometria sua: gli altri giocatori hanno le mani
     nuova.setIndex(gruppi[0].concat(gruppi[1]));
     nuova.clearGroups();
     nuova.addGroup(0, gruppi[0].length, 0);
     nuova.addGroup(gruppi[0].length, gruppi[1].length, 1);
-    m.geometry = nuova;
-    m.material = [m.material, nascosto];
-    // i guanti si legano allo scheletro del pezzo con più mano (che ha anche le ossa delle dita)
-    if (gruppi[1].length > piuMani && m.skeleton.bones.some(function (b) { return /HandMiddle3$/.test(b.name); })) { pelle = m; piuMani = gruppi[1].length; }
-  });
-  if (!pelle) return;
+    pelle.geometry = nuova;
+    pelle.material = [pelle.material, new THREE.MeshBasicMaterial({ visible: false })];
+  })();
   const materiale = guantoBase.materiale.clone();
+  materiale.side = THREE.DoubleSide;                     // dentro il polsino si vede l'interno, non il vuoto
   materiali.push(materiale);
   const ossa = pelle.skeleton.bones;
   const versoPelle = pelle.matrixWorld.clone().invert();
+  // i punti di tutto il modello (corpo, maglia…) nella posa di partenza: per misurare il braccio
+  const punti = [];
+  pezzi.forEach(function (m) {
+    const p = m.geometry.attributes.position, w = new V();
+    for (let i = 0; i < p.count; i++) punti.push(w.set(p.getX(i), p.getY(i), p.getZ(i)).applyMatrix4(m.matrixWorld).clone());
+  });
 
-  // 2. un guanto per mano. Non è un pezzo rigido: ogni punto del guanto segue l'osso più
-  //    vicino (polso, palmo, falangi di ogni dito), come la pelle del modello. Così le dita
-  //    del guanto si piegano con le dita della mano e il guanto sembra indossato.
+  // 2. un guanto per mano, cucito sul braccio:
+  //    - il polsino abbraccia l'avambraccio (e la manica) e lo segue;
+  //    - dal polso in su ogni punto del guanto segue l'osso più vicino (palmo, falangi di
+  //      ogni dito), come la pelle del modello: le dita del guanto si piegano con le dita.
   ["Left", "Right"].forEach(function (lato) {
     if (!osso(lato + "Hand") || !osso(lato + "HandMiddle4")) return;
     // gli assi della mano, nella posa di partenza: dita, dorso, pollice
@@ -349,15 +379,77 @@ function mettiGuanti(corpo, materiali) {
     // la misura: dal polso alla punta del medio, più lo spessore dell'imbottitura
     const lungo = P.distanceTo(dove(lato + "HandMiddle1")) + dove(lato + "HandMiddle1").distanceTo(dove(lato + "HandMiddle4"));
     const k = lungo * 1.08 / guantoBase.lunghezza;
-    const mondo = new THREE.Matrix4().makeBasis(pollice.multiplyScalar(k), dita.multiplyScalar(k), dorso.multiplyScalar(k)).setPosition(P);
-    const ge = guantoBase.geometria.clone().applyMatrix4(mondo);   // nel mondo, mano in posa di partenza
+    const mondo = new THREE.Matrix4().makeBasis(pollice.clone().multiplyScalar(k), dita.clone().multiplyScalar(k), dorso.clone().multiplyScalar(k)).setPosition(P);
+    const ge = guantoBase.geometria.clone().applyMatrix4(mondo);   // nel mondo, mano in posa di partenza (normali comprese)
     if (specchio) {                                      // lo specchio rovescia i triangoli: si rimettono dritti
       const a = ge.index.array;
       for (let t = 0; t < a.length; t += 3) { const x = a[t + 1]; a[t + 1] = a[t + 2]; a[t + 2] = x; }
     }
-    // i tratti dello scheletro della mano: [osso che muove, da, a]
-    const tratti = [["ForeArm", "ForeArm", "Hand"]];
-    ["Index1", "Middle1", "Ring1", "Pinky1"].forEach(function (n) { tratti.push(["Hand", "Hand", "Hand" + n]); });
+    const pos = ge.attributes.position, nor = ge.attributes.normal, n = pos.count;
+    const v = new V(), q = new V();
+
+    // l'asse dell'avambraccio (gomito → polso) e quanto è largo il braccio, fetta per fetta
+    const G = dove(lato + "ForeArm"), asse = P.clone().sub(G).normalize();
+    const FETTA = .01, larghezza = {}, guantoLargo = {};
+    const fetta = function (p) { return Math.round(q.copy(p).sub(P).dot(asse) / FETTA); };
+    const raggio = function (p) { q.copy(p).sub(P); return q.addScaledVector(asse, -q.dot(asse)).length(); };
+    punti.forEach(function (p) {
+      const f = fetta(p);
+      if (f < -14 || f > 1) return;
+      const r = raggio(p);
+      if (r < .07) larghezza[f] = Math.max(larghezza[f] || 0, r);   // il punto più esterno (la manica)
+    });
+    const polsino = [];                                  // i punti del polsino: sotto il polso
+    for (let i = 0; i < n; i++) {
+      v.fromBufferAttribute(pos, i);
+      const f = fetta(v);
+      if (f > 0) continue;
+      polsino.push(i);
+      const r = raggio(v);
+      guantoLargo[f] = (guantoLargo[f] || [0, 0]); guantoLargo[f][0] += r; guantoLargo[f][1]++;
+    }
+    // la fodera interna del polsino (le facce che guardano verso il braccio) si toglie: è
+    // lei che, stretta sul braccio, spunterebbe a punte dal bordo
+    const fodera = new Uint8Array(n), nn = new V();
+    polsino.forEach(function (i) {
+      v.fromBufferAttribute(pos, i);
+      q.copy(v).sub(P);
+      q.addScaledVector(asse, -q.dot(asse)).normalize();
+      nn.fromBufferAttribute(nor, i);
+      if (nn.dot(q) < -.2) fodera[i] = 1;
+    });
+    const ixG = ge.index.array, restano = [];
+    for (let t = 0; t < ixG.length; t += 3) if (!(fodera[ixG[t]] && fodera[ixG[t + 1]] && fodera[ixG[t + 2]])) restano.push(ixG[t], ixG[t + 1], ixG[t + 2]);
+    ge.setIndex(restano);
+    // il polsino: un anello dritto e pulito attorno al braccio, appena più largo della manica
+    // (non segue le curve del braccio, se no sembra un calzino)
+    let braccioMax = 0;
+    for (let f = -9; f <= 0; f++) if (larghezza[f]) braccioMax = Math.max(braccioMax, larghezza[f]);
+    // il bordo: dove finisce il polsino del modello, pareggiato (i punti più bassi salgono
+    // tutti alla stessa altezza: un taglio dritto, senza frange)
+    let fondoModello = 0;
+    polsino.forEach(function (i) { v.fromBufferAttribute(pos, i); fondoModello = Math.max(fondoModello, -q.copy(v).sub(P).dot(asse)); });
+    const FONDO = fondoModello - .008;
+    polsino.forEach(function (i) {
+      v.fromBufferAttribute(pos, i);
+      const f = fetta(v);
+      if (!guantoLargo[f]) return;
+      let lungoA = q.copy(v).sub(P).dot(asse);
+      if (lungoA < -FONDO) lungoA = -FONDO;
+      const c = P.clone().addScaledVector(asse, q.copy(v).sub(P).dot(asse));
+      const radiale = v.clone().sub(c), r = radiale.length();
+      const medio = guantoLargo[f][0] / guantoLargo[f][1];
+      const t = Math.min(1, -lungoA / FONDO);            // 0 al polso, 1 al bordo
+      const verso0 = Math.min(1, t * 2.5);               // vicino al polso il guanto resta com'è
+      const voluto = (braccioMax + .008 + .003 * t) * Math.pow(r / medio, .3 * (1 - t) + .04 * t);
+      const nuovo = r + (voluto - r) * verso0;
+      v.copy(P).addScaledVector(asse, lungoA).addScaledVector(radiale, nuovo / r);
+      pos.setXYZ(i, v.x, v.y, v.z);
+    });
+
+    // i pesi: il polsino va con l'avambraccio, la mano con le sue ossa
+    const tratti = [];
+    ["Index1", "Middle1", "Ring1", "Pinky1"].forEach(function (nn) { tratti.push(["Hand", "Hand", "Hand" + nn]); });
     ["Thumb", "Index", "Middle", "Ring", "Pinky"].forEach(function (d) {
       for (let f = 1; f <= 3; f++) tratti.push(["Hand" + d + f, "Hand" + d + f, "Hand" + d + (f + 1), f === 3]);
     });
@@ -366,24 +458,37 @@ function mettiGuanti(corpo, materiali) {
       if (t[3]) b.sub(a).multiplyScalar(1.6).add(a);     // l'ultima falange: fino in punta al guanto
       return { i: ossa.indexOf(osso(lato + t[0])), a: a, ab: b.sub(a) };
     }).filter(function (s) { return s.i >= 0; });
-    const pos = ge.attributes.position, n = pos.count;
-    const indici = new Uint16Array(n * 4), pesi = new Float32Array(n * 4), v = new V(), q = new V();
+    const iAvambraccio = ossa.indexOf(osso(lato + "ForeArm")), iMano = ossa.indexOf(osso(lato + "Hand"));
+    const indici = new Uint16Array(n * 4), pesi = new Float32Array(n * 4);
     const morbido = lungo * .06;                         // quanto sfumano i pesi tra un osso e l'altro
     for (let i = 0; i < n; i++) {
       v.fromBufferAttribute(pos, i);
+      const lungoAsse = q.copy(v).sub(P).dot(dita) / lungo;   // dove sta lungo la mano (0 = polso)
+      // dal polsino alla mano: avambraccio → mano, sfumando attorno al polso
+      const suBraccio = Math.min(1, Math.max(0, (.06 - lungoAsse) / .18));
       const d = seg.map(function (s) {
         const u = Math.min(1, Math.max(0, q.copy(v).sub(s.a).dot(s.ab) / s.ab.lengthSq()));
         return { i: s.i, d: q.copy(s.a).addScaledVector(s.ab, u).distanceTo(v) };
       }).sort(function (x, y) { return x.d - y.d; });
-      // i più vicini (un osso compare una volta sola)
-      const presi = [];
-      for (let j = 0; j < d.length && presi.length < 4; j++) if (!presi.some(function (p) { return p.i === d[j].i; })) presi.push(d[j]);
+      const presi = [];                                  // i più vicini (un osso compare una volta sola)
+      for (let j = 0; j < d.length && presi.length < 3; j++) if (!presi.some(function (p) { return p.i === d[j].i; })) presi.push(d[j]);
       let somma = 0;
       presi.forEach(function (p) { p.w = Math.exp(-(p.d - presi[0].d) / morbido * 3); somma += p.w; });
-      presi.forEach(function (p, j) { indici[i * 4 + j] = p.i; pesi[i * 4 + j] = p.w / somma; });
+      // vicino al polso la mano conta tutta sull'osso della mano (niente dita che tirano il polsino)
+      const vicinoPolso = Math.min(1, Math.max(0, (.28 - lungoAsse) / .2));
+      presi.forEach(function (p) { p.w = p.w / somma * (1 - vicinoPolso); });
+      presi.push({ i: iMano, w: vicinoPolso });
+      const finali = [{ i: iAvambraccio, w: suBraccio }];
+      presi.forEach(function (p) {
+        const w = p.w * (1 - suBraccio), gia = finali.find(function (x) { return x.i === p.i; });
+        if (gia) gia.w += w; else finali.push({ i: p.i, w: w });
+      });
+      finali.sort(function (x, y) { return y.w - x.w; });
+      let tot = 0;
+      for (let j = 0; j < 4 && j < finali.length; j++) tot += finali[j].w;
+      for (let j = 0; j < 4 && j < finali.length; j++) { indici[i * 4 + j] = finali[j].i; pesi[i * 4 + j] = finali[j].w / tot; }
     }
     ge.applyMatrix4(versoPelle);                         // nelle coordinate del corpo del modello
-    ge.computeVertexNormals();
     ge.setAttribute("skinIndex", new THREE.BufferAttribute(indici, 4));
     ge.setAttribute("skinWeight", new THREE.BufferAttribute(pesi, 4));
     const guanto = new THREE.SkinnedMesh(ge, materiale);
