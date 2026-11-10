@@ -9,13 +9,15 @@
        spostamento(movimento, t)             quanto si è spostato il corpo al tempo t
        durata(movimento)                     quanto dura un movimento (secondi)
 
-     crea({ tinta, guanti: true })          un portiere: i guantoni seguono mani e dita
+     crea({ tinta, guanti: true })          un portiere: con i guantoni (assets/3d/guanti.glb)
 
      ogni giocatore creato ha:
        radice                                il gruppo da aggiungere alla scena
-       metti([{ movimento, t, peso, origine, yaw }])
+       metti([{ movimento, t, peso, origine, yaw }], presa)
                                              lo mette nella posa: uno o più movimenti
-                                             fusi insieme (peso), ognuno al suo tempo t
+                                             fusi insieme (peso), ognuno al suo tempo t;
+                                             presa = { punto, peso }: tiene il pallone
+                                             con le due mani (le braccia si adattano)
        osso(nome)                            dov'è un osso nel mondo (Vector3): un nome di OSSA
                                              o la fine del nome Mixamo ("LeftHand", "RightLeg"…)
        sbiadisci(0…1)                        trasparenza (se copre la telecamera)
@@ -64,15 +66,22 @@ const OSSA = {
 function caricaCalciatori(url) {
   return new Promise(function (fatto, errore) {
     const caricatore = new THREE.GLTFLoader();
-    const finito = function (gltf) { fatto(preparaCalciatori(gltf)); };
-    if (window.CALCIATORE_3D) {
-      const binario = atob(window.CALCIATORE_3D);
-      const byte = new Uint8Array(binario.length);
-      for (let i = 0; i < binario.length; i++) byte[i] = binario.charCodeAt(i);
-      caricatore.parse(byte.buffer, "", finito, errore);
-    } else {
-      caricatore.load(url, finito, undefined, errore);
-    }
+    const byte = function (b64) {
+      const binario = atob(b64), out = new Uint8Array(binario.length);
+      for (let i = 0; i < binario.length; i++) out[i] = binario.charCodeAt(i);
+      return out.buffer;
+    };
+    const leggi = function (b64, file) {
+      return new Promise(function (ok, no) {
+        if (b64) caricatore.parse(byte(b64), "", ok, no);
+        else caricatore.load(file, ok, undefined, no);
+      });
+    };
+    // i guanti (assets/3d/guanti.glb.js, accanto al calciatore): se mancano, i portieri restano a mani nude
+    const guanti = leggi(window.GUANTI_3D, url.replace(/calciatore\.glb$/, "guanti.glb"))
+      .then(preparaGuanto).catch(function () {});
+    Promise.all([leggi(window.CALCIATORE_3D, url), guanti])
+      .then(function (r) { fatto(preparaCalciatori(r[0])); }, errore);
   });
 }
 
@@ -151,7 +160,8 @@ function preparaCalciatori(gltf) {
     }
 
     // stati = [{ movimento, t, peso, origine (Vector3), yaw }]: i movimenti fusi insieme
-    function metti(stati) {
+    // presa = { punto, peso } (facoltativa): le mani tengono il pallone in quel punto
+    function metti(stati, presa) {
       Object.keys(azioni).forEach(function (n) { azioni[n].enabled = false; });
       let somma = 0, x = 0, z = 0;
       const yaw = stati[0].yaw;
@@ -173,6 +183,74 @@ function preparaCalciatori(gltf) {
       radice.rotation.y = yaw;
       mixer.update(0);
       radice.updateMatrixWorld(true);
+      if (presa && presa.peso > 0) tieni(presa.punto, presa.peso, yaw);
+    }
+
+    // ---- tenere il pallone con le due mani (il portiere prima del rinvio) ----
+    // Le braccia si piegano da sole (IK a due ossa: spalla-gomito-polso) per portare i
+    // palmi ai lati del pallone, con le dita in avanti e verso l'alto. peso 0…1 fonde con
+    // il movimento registrato (per lasciarlo andare senza scatti).
+    const W = THREE.Vector3, Q = THREE.Quaternion;
+    const verso = {};                                 // da che parte guarda il palmo, nella posa a T (in basso)
+    function assi(lato) {
+      const polso = osso(lato + "Hand"), medio = osso(lato + "HandMiddle1");
+      const dita = medio.clone().sub(polso).normalize();
+      const largo = osso(lato + "HandIndex1").sub(osso(lato + "HandPinky1"));
+      const palmo = new W().crossVectors(largo, dita).normalize();
+      return { dita: dita, palmo: palmo.multiplyScalar(verso[lato] || 1) };
+    }
+    radice.updateMatrixWorld(true);
+    ["Left", "Right"].forEach(function (lato) {
+      if (!trova(lato + "HandIndex1")) return;
+      verso[lato] = assi(lato).palmo.y < 0 ? 1 : -1;
+    });
+    // ruota l'osso (nel mondo) di q, tenendo conto del genitore
+    const qGen = new Q(), qMondo = new Q();
+    function giraNelMondo(o, q) {
+      o.getWorldQuaternion(qMondo);
+      o.parent.getWorldQuaternion(qGen);
+      o.quaternion.copy(qGen.invert().multiply(q.multiply(qMondo)));
+      o.updateMatrixWorld(true);
+    }
+    function punta(o, da, a) { giraNelMondo(o, new Q().setFromUnitVectors(da.normalize(), a.normalize())); }
+    function tieni(palla, peso, yaw) {
+      const avanti = new W(Math.sin(yaw), 0, Math.cos(yaw)), su = new W(0, 1, 0);
+      const fianco = new W(Math.cos(yaw), 0, -Math.sin(yaw));          // verso la sinistra del giocatore
+      const ditaVoluto = avanti.clone().multiplyScalar(.55).addScaledVector(su, .83).normalize();
+      ["Left", "Right"].forEach(function (lato, i) {
+        const spalla = trova(lato + "Arm"), gomito = trova(lato + "ForeArm"), polso = trova(lato + "Hand");
+        if (!spalla || !gomito || !polso || !verso[lato]) return;
+        const s = i === 0 ? 1 : -1;
+        const prima = [spalla.quaternion.clone(), gomito.quaternion.clone(), polso.quaternion.clone()];
+        // dove deve stare il polso: il palmo sul fianco del pallone, un po' dietro il centro
+        const lato3 = fianco.clone().multiplyScalar(s);
+        const contatto = palla.clone().addScaledVector(lato3, .11 + .03).addScaledVector(avanti, -.03);
+        const meta = contatto.clone().addScaledVector(ditaVoluto, -.075);
+        const A = osso(lato + "Arm"), B = osso(lato + "ForeArm"), C = osso(lato + "Hand");
+        const l1 = A.distanceTo(B), l2 = B.distanceTo(C);
+        const dir = meta.clone().sub(A);
+        const d = Math.min(Math.max(dir.length(), Math.abs(l1 - l2) + .01), (l1 + l2) * .995);
+        dir.normalize();
+        // il gomito: in basso e un po' in fuori
+        const polo = A.clone().addScaledVector(lato3, .35).addScaledVector(su, -.8).addScaledVector(avanti, .05).sub(A);
+        polo.addScaledVector(dir, -polo.dot(dir)).normalize();
+        const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+        const E = A.clone().addScaledVector(dir, a).addScaledVector(polo, h);
+        punta(spalla, B.clone().sub(A), E.clone().sub(A));
+        const B2 = osso(lato + "ForeArm"), C2 = osso(lato + "Hand");
+        punta(gomito, C2.clone().sub(B2), A.clone().addScaledVector(dir, d).sub(B2));
+        // la mano: dita in avanti e in alto, palmo verso il pallone
+        const ora = assi(lato);
+        punta(polso, ora.dita.clone(), ditaVoluto.clone());
+        const ora2 = assi(lato);
+        const palmoVoluto = lato3.clone().negate().addScaledVector(ditaVoluto, -lato3.clone().negate().dot(ditaVoluto)).normalize();
+        punta(polso, ora2.palmo.addScaledVector(ditaVoluto, -ora2.palmo.dot(ditaVoluto)), palmoVoluto);
+        // fusione con il movimento registrato
+        if (peso < 1) {
+          [spalla, gomito, polso].forEach(function (o, j) { o.quaternion.copy(prima[j].slerp(o.quaternion.clone(), peso)); });
+          spalla.updateMatrixWorld(true);
+        }
+      });
     }
     // (le matrici delle ossa sono già aggiornate da metti: qui si leggono e basta)
     function osso(nome) { return new THREE.Vector3().setFromMatrixPosition(trova(nome).matrixWorld); }
@@ -185,52 +263,86 @@ function preparaCalciatori(gltf) {
   return { crea: crea, spostamento: spostamento, durata: durata };
 }
 
-// I guantoni del portiere: pezzi attaccati alle ossa della mano (palmo, dita, polsino),
-// così seguono ogni movimento registrato, anche le dita.
-function mettiGuanti(corpo, materiali) {
-  corpo.updateMatrixWorld(true);
-  const guanto = new THREE.MeshStandardMaterial({ color: "#2b2d30", roughness: .75 });
-  const polsino = new THREE.MeshStandardMaterial({ color: "#f2f2f2", roughness: .6 });
-  materiali.push(guanto, polsino);
-  const V = THREE.Vector3;
-  function pezzo(geo, mat, osso) {
-    const m = new THREE.Mesh(geo, mat);
-    m.castShadow = true;
-    osso.add(m);
-    return m;
+// I guantoni del portiere: un modello 3D di guanti veri (assets/3d/guanti.glb, "Goalkeeper
+// Galaxy Gloves" di cbarreiro su Sketchfab, licenza CC BY 4.0: il credito è nel piede della
+// pagina Società). Dal paio si prende il sinistro (dorso col logo, palmo in lattice) e lo si
+// fissa all'osso della mano; per la mano destra lo stesso guanto, specchiato. La mano del
+// modello, sotto, si nasconde (non può "bucare" il guanto).
+let guantoBase = null;               // la geometria del guanto sinistro, già pronta (vedi preparaGuanto)
+function preparaGuanto(gltf) {
+  let mesh = null;
+  gltf.scene.updateMatrixWorld(true);
+  gltf.scene.traverse(function (m) { if (m.isMesh && !mesh) mesh = m; });
+  const ge = mesh.geometry.clone().applyMatrix4(mesh.matrixWorld);
+  const pos = ge.attributes.position, ix = ge.index.array, tieni = [];
+  for (let t = 0; t < ix.length; t += 3) {             // solo i triangoli del guanto di sinistra (x < 0)
+    if (pos.getX(ix[t]) < 0 && pos.getX(ix[t + 1]) < 0 && pos.getX(ix[t + 2]) < 0) tieni.push(ix[t], ix[t + 1], ix[t + 2]);
   }
+  ge.setIndex(tieni);
+  // il riquadro del guanto: le dita verso +y, il dorso verso +z, il pollice verso +x
+  const min = new THREE.Vector3(Infinity, Infinity, Infinity), max = min.clone().negate();
+  tieni.forEach(function (i) { const v = new THREE.Vector3().fromBufferAttribute(pos, i); min.min(v); max.max(v); });
+  const alto = max.y - min.y;
+  const polso = min.y + alto * .3;                     // il polso: in cima al polsino
+  ge.translate(-(min.x + max.x) / 2, -polso, -(min.z + max.z) / 2);
+  guantoBase = { geometria: ge, materiale: mesh.material, lunghezza: max.y - polso };
+}
+
+function mettiGuanti(corpo, materiali) {
+  if (!guantoBase) return;
+  corpo.updateMatrixWorld(true);
+  const V = THREE.Vector3;
+  const dove = function (nome) { return new V().setFromMatrixPosition(corpo.getObjectByName("mixamorig5" + nome).matrixWorld); };
+  const materiale = guantoBase.materiale.clone();
+  materiali.push(materiale);
   ["Left", "Right"].forEach(function (lato) {
     const mano = corpo.getObjectByName("mixamorig5" + lato + "Hand");
-    if (!mano) return;
-    const scala = mano.getWorldScale(new V()).x || 1;       // le ossa possono essere in centimetri
-    const m = function (metri) { return metri / scala; };
-    const dito = function (nome, i) { return corpo.getObjectByName("mixamorig5" + lato + "Hand" + nome + i); };
-    // le dita (e il pollice): un cilindro arrotondato per ogni falange
-    ["Thumb", "Index", "Middle", "Ring", "Pinky"].forEach(function (nome) {
-      for (let i = 1; i <= 3; i++) {
-        const osso = dito(nome, i), dopo = dito(nome, i + 1);
-        if (!osso || !dopo) continue;
-        const lungo = dopo.position.length();
-        const r = m(nome === "Thumb" ? .0135 : .0125);
-        const p = pezzo(new THREE.CapsuleGeometry(r, Math.max(lungo - r, r * .2), 4, 10), guanto, osso);
-        p.position.copy(dopo.position).multiplyScalar(.5);
-        p.quaternion.setFromUnitVectors(new V(0, 1, 0), dopo.position.clone().normalize());
-      }
-    });
-    // il palmo: un ovale schiacciato tra il polso e la base delle dita
-    const indice = dito("Index", 1), medio = dito("Middle", 1), mignolo = dito("Pinky", 1);
-    if (indice && medio && mignolo) {
-      const su = medio.position.clone().normalize();
-      const largo = indice.position.clone().sub(mignolo.position);
-      const lato2 = largo.clone().addScaledVector(su, -largo.dot(su)).normalize();
-      const fuori = new V().crossVectors(lato2, su).normalize();
-      const palmo = pezzo(new THREE.SphereGeometry(1, 18, 12), guanto, mano);
-      palmo.position.copy(medio.position).multiplyScalar(.5);
-      palmo.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(lato2, su, fuori));
-      palmo.scale.set(largo.length() / 2 + m(.016), medio.position.length() * .62, m(.026));
+    if (!mano || !corpo.getObjectByName("mixamorig5" + lato + "HandMiddle4")) return;
+    // gli assi della mano, nella posa di partenza: dita, dorso, pollice
+    const P = dove(lato + "Hand");
+    const dita = dove(lato + "HandMiddle1").sub(P).normalize();
+    const largo = dove(lato + "HandIndex1").sub(dove(lato + "HandPinky1"));
+    const dorso = new V().crossVectors(largo, dita).normalize();
+    if (dorso.y < 0) dorso.negate();                     // nella posa a T i palmi guardano in basso: il dorso in alto
+    dita.addScaledVector(dorso, -dita.dot(dorso)).normalize();
+    const pollice = new V().crossVectors(dita, dorso);   // per la sinistra è il lato del pollice
+    const specchio = pollice.dot(dove(lato + "HandThumb1").sub(P)) < 0;   // mano destra: guanto specchiato
+    if (specchio) pollice.negate();
+    // la misura: dal polso alla punta del medio, più lo spessore dell'imbottitura
+    const lungo = P.distanceTo(dove(lato + "HandMiddle1")) + dove(lato + "HandMiddle1").distanceTo(dove(lato + "HandMiddle4"));
+    const k = lungo * 1.1 / guantoBase.lunghezza;
+    const mondo = new THREE.Matrix4().makeBasis(pollice.multiplyScalar(k), dita.multiplyScalar(k), dorso.multiplyScalar(k)).setPosition(P);
+    const ge = guantoBase.geometria.clone().applyMatrix4(mano.matrixWorld.clone().invert().multiply(mondo));
+    if (specchio) {                                      // lo specchio rovescia i triangoli: si rimettono dritti
+      const a = ge.index.array;
+      for (let t = 0; t < a.length; t += 3) { const x = a[t + 1]; a[t + 1] = a[t + 2]; a[t + 2] = x; }
+      ge.computeVertexNormals();
     }
-    // il polsino
-    const cuff = pezzo(new THREE.CylinderGeometry(m(.041), m(.037), m(.06), 16), polsino, mano);
-    cuff.position.y = m(-.012);
+    const guanto = new THREE.Mesh(ge, materiale);
+    guanto.castShadow = true;
+    mano.add(guanto);
+  });
+  // la mano del modello, sotto il guanto, non si disegna
+  const nascosto = new THREE.MeshBasicMaterial({ visible: false });
+  corpo.traverse(function (m) {
+    if (!m.isSkinnedMesh || !m.geometry.index) return;
+    const ge = m.geometry, si = ge.attributes.skinIndex, sw = ge.attributes.skinWeight;
+    const leggi = function (a, i, j) { return j === 0 ? a.getX(i) : j === 1 ? a.getY(i) : j === 2 ? a.getZ(i) : a.getW(i); };
+    const diMano = m.skeleton.bones.map(function (b) { return /Hand/.test(b.name); });
+    const quanto = new Float32Array(si.count);
+    for (let i = 0; i < si.count; i++) for (let j = 0; j < 4; j++) if (diMano[leggi(si, i, j)]) quanto[i] += leggi(sw, i, j);
+    const ix = ge.index.array, gruppi = [[], []];
+    for (let t = 0; t < ge.index.count; t += 3) {
+      const a = ix[t], b = ix[t + 1], c = ix[t + 2];
+      gruppi[(quanto[a] + quanto[b] + quanto[c]) / 3 > .3 ? 1 : 0].push(a, b, c);
+    }
+    if (gruppi[1].length < 150) return;                  // in questo pezzo del modello non ci sono le mani
+    const nuova = ge.clone();                            // una geometria sua: gli altri giocatori hanno le mani
+    nuova.setIndex(gruppi[0].concat(gruppi[1]));
+    nuova.clearGroups();
+    nuova.addGroup(0, gruppi[0].length, 0);
+    nuova.addGroup(gruppi[0].length, gruppi[1].length, 1);
+    m.geometry = nuova;
+    m.material = [m.material, nascosto];
   });
 }
