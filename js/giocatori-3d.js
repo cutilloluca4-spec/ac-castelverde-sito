@@ -191,6 +191,9 @@ function preparaCalciatori(gltf) {
     // palmi ai lati del pallone, con le dita in avanti e verso l'alto. peso 0…1 fonde con
     // il movimento registrato (per lasciarlo andare senza scatti).
     const W = THREE.Vector3, Q = THREE.Quaternion;
+    // le dita nella posa di partenza (distese): tenendo il pallone le mani si aprono
+    const ditaDistese = [];
+    corpo.traverse(function (b) { if (b.isBone && /Hand(Thumb|Index|Middle|Ring|Pinky)[123]$/.test(b.name)) ditaDistese.push([b, b.quaternion.clone()]); });
     const verso = {};                                 // da che parte guarda il palmo, nella posa a T (in basso)
     function assi(lato) {
       const polso = osso(lato + "Hand"), medio = osso(lato + "HandMiddle1");
@@ -224,7 +227,7 @@ function preparaCalciatori(gltf) {
         const prima = [spalla.quaternion.clone(), gomito.quaternion.clone(), polso.quaternion.clone()];
         // dove deve stare il polso: il palmo sul fianco del pallone, un po' dietro il centro
         const lato3 = fianco.clone().multiplyScalar(s);
-        const contatto = palla.clone().addScaledVector(lato3, .11 + .03).addScaledVector(avanti, -.03);
+        const contatto = palla.clone().addScaledVector(lato3, .11 + .025).addScaledVector(avanti, -.03);
         const meta = contatto.clone().addScaledVector(ditaVoluto, -.075);
         const A = osso(lato + "Arm"), B = osso(lato + "ForeArm"), C = osso(lato + "Hand");
         const l1 = A.distanceTo(B), l2 = B.distanceTo(C);
@@ -245,6 +248,8 @@ function preparaCalciatori(gltf) {
         const ora2 = assi(lato);
         const palmoVoluto = lato3.clone().negate().addScaledVector(ditaVoluto, -lato3.clone().negate().dot(ditaVoluto)).normalize();
         punta(polso, ora2.palmo.addScaledVector(ditaVoluto, -ora2.palmo.dot(ditaVoluto)), palmoVoluto);
+        // le dita quasi distese, appoggiate sul pallone
+        ditaDistese.forEach(function (d) { if (d[0].name.indexOf(lato + "Hand") >= 0) d[0].quaternion.slerp(d[1], .75 * peso); });
         // fusione con il movimento registrato
         if (peso < 1) {
           [spalla, gomito, polso].forEach(function (o, j) { o.quaternion.copy(prima[j].slerp(o.quaternion.clone(), peso)); });
@@ -292,38 +297,11 @@ function mettiGuanti(corpo, materiali) {
   if (!guantoBase) return;
   corpo.updateMatrixWorld(true);
   const V = THREE.Vector3;
-  const dove = function (nome) { return new V().setFromMatrixPosition(corpo.getObjectByName("mixamorig5" + nome).matrixWorld); };
-  const materiale = guantoBase.materiale.clone();
-  materiali.push(materiale);
-  ["Left", "Right"].forEach(function (lato) {
-    const mano = corpo.getObjectByName("mixamorig5" + lato + "Hand");
-    if (!mano || !corpo.getObjectByName("mixamorig5" + lato + "HandMiddle4")) return;
-    // gli assi della mano, nella posa di partenza: dita, dorso, pollice
-    const P = dove(lato + "Hand");
-    const dita = dove(lato + "HandMiddle1").sub(P).normalize();
-    const largo = dove(lato + "HandIndex1").sub(dove(lato + "HandPinky1"));
-    const dorso = new V().crossVectors(largo, dita).normalize();
-    if (dorso.y < 0) dorso.negate();                     // nella posa a T i palmi guardano in basso: il dorso in alto
-    dita.addScaledVector(dorso, -dita.dot(dorso)).normalize();
-    const pollice = new V().crossVectors(dita, dorso);   // per la sinistra è il lato del pollice
-    const specchio = pollice.dot(dove(lato + "HandThumb1").sub(P)) < 0;   // mano destra: guanto specchiato
-    if (specchio) pollice.negate();
-    // la misura: dal polso alla punta del medio, più lo spessore dell'imbottitura
-    const lungo = P.distanceTo(dove(lato + "HandMiddle1")) + dove(lato + "HandMiddle1").distanceTo(dove(lato + "HandMiddle4"));
-    const k = lungo * 1.1 / guantoBase.lunghezza;
-    const mondo = new THREE.Matrix4().makeBasis(pollice.multiplyScalar(k), dita.multiplyScalar(k), dorso.multiplyScalar(k)).setPosition(P);
-    const ge = guantoBase.geometria.clone().applyMatrix4(mano.matrixWorld.clone().invert().multiply(mondo));
-    if (specchio) {                                      // lo specchio rovescia i triangoli: si rimettono dritti
-      const a = ge.index.array;
-      for (let t = 0; t < a.length; t += 3) { const x = a[t + 1]; a[t + 1] = a[t + 2]; a[t + 2] = x; }
-      ge.computeVertexNormals();
-    }
-    const guanto = new THREE.Mesh(ge, materiale);
-    guanto.castShadow = true;
-    mano.add(guanto);
-  });
-  // la mano del modello, sotto il guanto, non si disegna
+  const osso = function (nome) { return corpo.getObjectByName("mixamorig5" + nome); };
+  const dove = function (nome) { return new V().setFromMatrixPosition(osso(nome).matrixWorld); };
+  // 1. la mano del modello, sotto il guanto, non si disegna (e si trova il pezzo con le mani)
   const nascosto = new THREE.MeshBasicMaterial({ visible: false });
+  let pelle = null, piuMani = 0;
   corpo.traverse(function (m) {
     if (!m.isSkinnedMesh || !m.geometry.index) return;
     const ge = m.geometry, si = ge.attributes.skinIndex, sw = ge.attributes.skinWeight;
@@ -344,5 +322,75 @@ function mettiGuanti(corpo, materiali) {
     nuova.addGroup(gruppi[0].length, gruppi[1].length, 1);
     m.geometry = nuova;
     m.material = [m.material, nascosto];
+    // i guanti si legano allo scheletro del pezzo con più mano (che ha anche le ossa delle dita)
+    if (gruppi[1].length > piuMani && m.skeleton.bones.some(function (b) { return /HandMiddle3$/.test(b.name); })) { pelle = m; piuMani = gruppi[1].length; }
+  });
+  if (!pelle) return;
+  const materiale = guantoBase.materiale.clone();
+  materiali.push(materiale);
+  const ossa = pelle.skeleton.bones;
+  const versoPelle = pelle.matrixWorld.clone().invert();
+
+  // 2. un guanto per mano. Non è un pezzo rigido: ogni punto del guanto segue l'osso più
+  //    vicino (polso, palmo, falangi di ogni dito), come la pelle del modello. Così le dita
+  //    del guanto si piegano con le dita della mano e il guanto sembra indossato.
+  ["Left", "Right"].forEach(function (lato) {
+    if (!osso(lato + "Hand") || !osso(lato + "HandMiddle4")) return;
+    // gli assi della mano, nella posa di partenza: dita, dorso, pollice
+    const P = dove(lato + "Hand");
+    const dita = dove(lato + "HandMiddle1").sub(P).normalize();
+    const largo = dove(lato + "HandIndex1").sub(dove(lato + "HandPinky1"));
+    const dorso = new V().crossVectors(largo, dita).normalize();
+    if (dorso.y < 0) dorso.negate();                     // nella posa a T i palmi guardano in basso: il dorso in alto
+    dita.addScaledVector(dorso, -dita.dot(dorso)).normalize();
+    const pollice = new V().crossVectors(dita, dorso);   // per la sinistra è il lato del pollice
+    const specchio = pollice.dot(dove(lato + "HandThumb1").sub(P)) < 0;   // mano destra: guanto specchiato
+    if (specchio) pollice.negate();
+    // la misura: dal polso alla punta del medio, più lo spessore dell'imbottitura
+    const lungo = P.distanceTo(dove(lato + "HandMiddle1")) + dove(lato + "HandMiddle1").distanceTo(dove(lato + "HandMiddle4"));
+    const k = lungo * 1.08 / guantoBase.lunghezza;
+    const mondo = new THREE.Matrix4().makeBasis(pollice.multiplyScalar(k), dita.multiplyScalar(k), dorso.multiplyScalar(k)).setPosition(P);
+    const ge = guantoBase.geometria.clone().applyMatrix4(mondo);   // nel mondo, mano in posa di partenza
+    if (specchio) {                                      // lo specchio rovescia i triangoli: si rimettono dritti
+      const a = ge.index.array;
+      for (let t = 0; t < a.length; t += 3) { const x = a[t + 1]; a[t + 1] = a[t + 2]; a[t + 2] = x; }
+    }
+    // i tratti dello scheletro della mano: [osso che muove, da, a]
+    const tratti = [["ForeArm", "ForeArm", "Hand"]];
+    ["Index1", "Middle1", "Ring1", "Pinky1"].forEach(function (n) { tratti.push(["Hand", "Hand", "Hand" + n]); });
+    ["Thumb", "Index", "Middle", "Ring", "Pinky"].forEach(function (d) {
+      for (let f = 1; f <= 3; f++) tratti.push(["Hand" + d + f, "Hand" + d + f, "Hand" + d + (f + 1), f === 3]);
+    });
+    const seg = tratti.map(function (t) {
+      const a = dove(lato + t[1]), b = dove(lato + t[2]);
+      if (t[3]) b.sub(a).multiplyScalar(1.6).add(a);     // l'ultima falange: fino in punta al guanto
+      return { i: ossa.indexOf(osso(lato + t[0])), a: a, ab: b.sub(a) };
+    }).filter(function (s) { return s.i >= 0; });
+    const pos = ge.attributes.position, n = pos.count;
+    const indici = new Uint16Array(n * 4), pesi = new Float32Array(n * 4), v = new V(), q = new V();
+    const morbido = lungo * .06;                         // quanto sfumano i pesi tra un osso e l'altro
+    for (let i = 0; i < n; i++) {
+      v.fromBufferAttribute(pos, i);
+      const d = seg.map(function (s) {
+        const u = Math.min(1, Math.max(0, q.copy(v).sub(s.a).dot(s.ab) / s.ab.lengthSq()));
+        return { i: s.i, d: q.copy(s.a).addScaledVector(s.ab, u).distanceTo(v) };
+      }).sort(function (x, y) { return x.d - y.d; });
+      // i più vicini (un osso compare una volta sola)
+      const presi = [];
+      for (let j = 0; j < d.length && presi.length < 4; j++) if (!presi.some(function (p) { return p.i === d[j].i; })) presi.push(d[j]);
+      let somma = 0;
+      presi.forEach(function (p) { p.w = Math.exp(-(p.d - presi[0].d) / morbido * 3); somma += p.w; });
+      presi.forEach(function (p, j) { indici[i * 4 + j] = p.i; pesi[i * 4 + j] = p.w / somma; });
+    }
+    ge.applyMatrix4(versoPelle);                         // nelle coordinate del corpo del modello
+    ge.computeVertexNormals();
+    ge.setAttribute("skinIndex", new THREE.BufferAttribute(indici, 4));
+    ge.setAttribute("skinWeight", new THREE.BufferAttribute(pesi, 4));
+    const guanto = new THREE.SkinnedMesh(ge, materiale);
+    guanto.castShadow = true;
+    guanto.frustumCulled = false;
+    guanto.position.copy(pelle.position); guanto.quaternion.copy(pelle.quaternion); guanto.scale.copy(pelle.scale);
+    pelle.parent.add(guanto);
+    guanto.bind(pelle.skeleton, pelle.bindMatrix);
   });
 }
