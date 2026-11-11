@@ -31,38 +31,44 @@
 const CAMPO_3D = {
   nebbia: "#d2d3d5",                 // il campo sfuma nel grigio della trama dietro la scena (.trama-grigia)
   campo: "#a9abaf", striscia: "#a2a4a8", linee: "#e9eaeb",   // scuri: con la luce diventano grigio chiaro
-  // per ora niente divise: i nostri chiari (la divisa del modello), gli avversari un po' più scuri
-  nostri: "#ffffff", nostroPortiere: "#5b5e63", avversari: "#8f9296", portiere: "#6f7276",
+  // per ora niente divise: i nostri chiari (la divisa del modello, portiere compreso), gli avversari un po' più scuri
+  nostri: "#ffffff", nostroPortiere: "#ffffff", avversari: "#8f9296", portiere: "#6f7276",
   rosso: "#ff0000"
 };
 const RAGGIO_PALLA = .11;
 // I nostri giocatori, uno per tappa: dove si trovano (x, z) e il ruolo nell'azione:
 //   come riceve (stop, prima, testa, rovesciata), se porta palla (dribbling, finta) e come passa
 //   (passa = rasoterra, lancio = lungo e alto, cross, rinvio del portiere)
+//   I passaggi vanno da 12 a 30 metri e l'azione va a zig-zag: chi riceve ha sempre il pallone
+//   davanti (o di lato), mai alle spalle, e si gira verso dove lo manda con il primo controllo.
 const SCHEMA_3D = [
   [2, -46.5, "rinvio"],                  // il portiere: rinvio lungo di collo pieno
-  [15, -14, "testa"],                    // sponda di testa in salto
-  [8, -7.5, "stop passa"],
-  [-8, -3, "stop dribbling passa"],
-  [-3, 11, "prima"],                     // passaggio di prima
-  [12, 14.5, "stop finta passa"],        // la roulette per saltare l'avversario
-  [3, 23, "stop lancio"],                // cambio di gioco
-  [-22, 30, "stop dribbling passa"],
-  [-9, 35.5, "prima"],
-  [6, 31, "stop passa"],
-  [19, 36, "stop dribbling cross"],
+  [14, -16, "testa"],                    // sponda di testa in salto (contrastato)
+  [2, -8, "stop passa"],
+  [15, 0, "stop dribbling passa"],       // parte in dribbling: il difensore entra in scivolata, in ritardo
+  [2, 11, "prima"],                      // passaggio di prima
+  [15, 15, "stop finta passa"],          // la roulette per saltare l'avversario che lo pressa
+  [8, 28, "stop lancio"],                // cambio di gioco sulla fascia destra
+  [-21, 21, "stop dribbling passa"],     // l'ala salta l'uomo in dribbling
+  [-9, 33, "prima"],                     // triangolo di prima
+  [-6, 20, "stop passa"],                // apre per il terzino che sale
+  [-29, 33, "stop dribbling cross"],     // il cross dalla fascia, alla Carvajal
   [.6, 45, "rovesciata"]                 // e il gol
 ];
-// gli avversari: chiudono gli spazi e vanno incontro a chi ha il pallone, ma nessun passaggio
-// passa a portata di intercetto (il pallone basso resta sempre ad almeno 3,5 m da ognuno)
+// Gli avversari non stanno fermi: contrastano chi ha il pallone, ma arrivano sempre un attimo
+// tardi (il pallone è già partito) e nessun passaggio passa a portata di intercetto.
+//   testa: salta con il nostro sul pallone alto · scivolata: entra in scivolata (lato: da dove
+//   arriva, 1/-1 di fianco, 0 di fronte) · pressa: corre addosso a chi riceve · marca: tiene la
+//   posizione e si sposta (passi laterali o corsa all'indietro) quando il pallone arriva dalle sue parti
 const AVVERSARI_3D = [
-  [9, -21],        // sul rinvio lungo
-  [-2, 3],         // va incontro a chi parte in dribbling
-  [9.8, 19.2],     // chiude chi riceve: viene saltato con la roulette
-  [-14, 24],       // scavalcato dal cambio di gioco
-  [-4.5, 39.5],    // il centrale, tagliato fuori dal passaggio di prima
-  [14, 44],        // esce sull'ala che crossa
-  [-5, 46]         // il marcatore, battuto dalla rovesciata
+  { tipo: "testa", contro: 1 },
+  { tipo: "scivolata", contro: 3, lato: 1 },
+  { tipo: "pressa", contro: 5 },
+  { tipo: "marca", pos: [-12, 31], quando: 6, mov: "indietro", volte: 2 },   // scavalcato dal cambio di gioco
+  { tipo: "scivolata", contro: 7, lato: -1 },
+  { tipo: "marca", pos: [-1, 30], quando: 8, mov: "laterale", volte: 2 },    // il centrale: segue il triangolo
+  { tipo: "scivolata", contro: 10, lato: -1 },                                // prova a murare il cross
+  { tipo: "marca", pos: [-4, 41], quando: 10, mov: "indietro", volte: 2 }     // il marcatore della rovesciata
 ];
 
 function creaAzione3D(tela, quante, modello) {
@@ -231,8 +237,9 @@ function creaAzione3D(tela, quante, modello) {
     ombra.position.y = .013;
     scena.add(ombra);
     let ultimo = null;
-    sprite.ridisegna = function (schermo, raggioPx) {
-      if (ultimo) disegno.rotola(schermo.x - ultimo.x, schermo.y - ultimo.y, Math.max(raggioPx, 2));
+    // tenuto = true: il pallone è in mano al portiere (si sposta con lui ma non gira)
+    sprite.ridisegna = function (schermo, raggioPx, tenuto) {
+      if (ultimo && !tenuto) disegno.rotola(schermo.x - ultimo.x, schermo.y - ultimo.y, Math.max(raggioPx, 2));
       ultimo = schermo;
       contesto.clearRect(0, 0, LATO, LATO);
       disegno.disegna(contesto, LATO / 2, LATO / 2, LATO / 2 / MARGINE, false);
@@ -264,7 +271,7 @@ function creaAzione3D(tela, quante, modello) {
   const avversari = AVVERSARI_3D.map(function (p) {
     const g = modello.crea({ tinta: CAMPO_3D.avversari });
     scena.add(g.radice);
-    return { g: g, pos: V(p[0], 0, p[1]) };
+    return { g: g, ruolo: p };
   });
   const portiere = modello.crea({ tinta: CAMPO_3D.portiere, guanti: true });
   scena.add(portiere.radice);
@@ -326,18 +333,22 @@ function creaAzione3D(tela, quante, modello) {
   const SFIORA = V(piuLontana.x - .25, piuLontana.y + .22, piuLontana.z);         // il punto in cui il pallone gli sfugge
 
   // ---- la geometria dell'azione: dove ognuno riceve e colpisce, e verso dove guarda ----
-  const yaw = [], geo = [];
+  // yaw = verso del giocatore quando passa; yawIn = quando riceve (stop): guarda il pallone che
+  // arriva, già un po' girato verso dove lo manderà (il controllo orientato)
+  const yaw = [], yawIn = [], geo = [];
+  const ORIENTA = g2r(40);
+  const scarto = function (a, b) { return Math.atan2(Math.sin(a - b), Math.cos(a - b)); };
   const dischetto = nostri[0].base.clone();                // dove il portiere calcia il pallone
-  for (let k = 0; k < n; k++) yaw[k] = angolo((k < n - 1 ? nostri[k + 1].base : V(0, 0, 52.5)).clone().sub(nostri[k].base));
+  for (let k = 0; k < n; k++) yaw[k] = yawIn[k] = angolo((k < n - 1 ? nostri[k + 1].base : V(0, 0, 52.5)).clone().sub(nostri[k].base));
   function geometria(k) {
-    const x = nostri[k], g = x.g, y = yaw[k], G = { segmenti: [], tocchi: [] };
+    const x = nostri[k], g = x.g, y = yaw[k], yi = yawIn[k], G = { segmenti: [], tocchi: [] };
     let o = x.base, t = 0;
     if (x.ricezione === "stop") {
-      G.segmenti.push({ movimento: "ricevi", rel: 0, origine: o });
+      G.segmenti.push({ movimento: "ricevi", rel: 0, origine: o, yaw: yi });
       G.contattoRel = M.riceviContatto;
-      posa(g, "ricevi", M.riceviContatto, o, y);
+      posa(g, "ricevi", M.riceviContatto, o, yi);
       G.piedeStop = punta(g);
-      o = dopo(o, y, "ricevi", M.riceviFine); t = M.riceviFine;
+      o = dopo(o, yi, "ricevi", M.riceviFine); t = M.riceviFine;
     }
     if (x.conduzione === "dribbling") {
       G.segmenti.push({ movimento: "dribbling", rel: t, origine: o });
@@ -345,16 +356,23 @@ function creaAzione3D(tela, quante, modello) {
       M.dribblingTocchi.forEach(function (tocco) { G.tocchi.push({ rel: tt + tocco, palla: colpoDiPiede(g, "dribbling", tocco, oo, y, true).palla }); });
       o = dopo(o, y, "dribbling", M.dribblingFine); t += M.dribblingFine;
     } else if (x.conduzione === "finta") {
-      // la roulette: il pallone resta tra i piedi mentre il giocatore gira su sé stesso
-      G.segmenti.push({ movimento: "finta", rel: t, origine: o });
+      // la roulette (la "veronica"): il destro si appoggia sul pallone e lo tira indietro girando,
+      // il sinistro lo accompagna sotto la suola, poi il destro lo spinge avanti. Il pallone sta
+      // sempre sotto la suola del piede che lo tocca (misurato sulle ossa del movimento).
+      G.segmenti.push({ movimento: "finta", rel: t, origine: o, fondi: .2 });
       const d = modello.durata("finta");
-      [.3, .6, .9].forEach(function (tf) {
+      const sotto = function (tf, lato) {
         posa(g, "finta", tf, o, y);
-        const piedi = g.osso("RightToe_End").lerp(g.osso("LeftToe_End"), .5);
-        G.tocchi.push({ rel: t + tf, palla: piedi.addScaledVector(avantiDi(y), .3).setY(R) });
+        const p = lato ? g.osso(lato + "ToeBase") : g.osso("RightToeBase").lerp(g.osso("LeftToeBase"), .5);
+        return p.setY(R);
+      };
+      [[.3, "Right"], [.45, "Right"], [.56, null], [.7, "Left"], [.78, "Left"]].forEach(function (c) {
+        G.tocchi.push({ rel: t + c[0], palla: sotto(c[0], c[1]), dopo: "regolare" });
       });
+      // la spinta del destro in avanti: il pallone parte davanti al piede
+      posa(g, "finta", 1.0, o, y);
+      G.tocchi.push({ rel: t + 1.0, palla: g.osso("RightToeBase").addScaledVector(avantiDi(y), R + .05).setY(R) });
       o = dopo(o, y, "finta", d); t += d;
-      G.tocchi.push({ rel: t - .05, palla: o.clone().addScaledVector(avantiDi(y), .55).setY(R) });
     }
     const clip = CLIP[x.azione];
     G.clip = clip;
@@ -386,6 +404,10 @@ function creaAzione3D(tela, quante, modello) {
     for (let k = 0; k < n; k++) {
       const x = nostri[k], G = geo[k];
       const verso = k < n - 1 ? geo[k + 1].arriva : SFIORA;
+      if (x.ricezione === "stop") {
+        const faccia = angolo(pianoXZ(geo[k - 1].ferma.clone().sub(x.base)));
+        yawIn[k] = faccia + Math.max(-ORIENTA, Math.min(ORIENTA, scarto(yaw[k], faccia)));
+      }
       if (G.clip === "testa") {
         // di testa: guarda a metà tra da dove arriva il pallone e dove lo manda
         const a = pianoXZ(geo[k - 1].ferma.clone().sub(G.ferma)).normalize();
@@ -436,8 +458,12 @@ function creaAzione3D(tela, quante, modello) {
   const arrivoGol = arrivoMani + SFIORA.distanceTo(GOL) / VEL_TIRO;
   const TUFFO = { da: .4, velocita: 1.5 };
   const inizioTuffo = arrivoMani - (M.tuffoMani - TUFFO.da) / TUFFO.velocita;
-  const inizioEsulta = inizio[n - 1] + geo[n - 1].fineRel - .1;
-  const fineTiro = inizioEsulta + modello.durata("testa");
+  // il fermo immagine: il pallone è in rete, chi ha segnato è ancora in aria nella rovesciata
+  // e il portiere è a terra. Lì la scena si ferma e parte il GOAL!
+  const FERMO = arrivoGol + .4;
+  const IN_ARIA = .92;                               // la posa della rovesciata nel fermo immagine (in alto)
+  const A_TERRA = 1.55;                              // la posa del tuffo nel fermo immagine (disteso)
+  const fineTiro = FERMO;
   const T0 = inizio[n - 1];                          // da qui il rallentatore della rovesciata
 
   // ---- il programma di ogni giocatore: i movimenti uno dopo l'altro (si fondono tra loro) ----
@@ -451,14 +477,17 @@ function creaAzione3D(tela, quante, modello) {
       lista.push({ movimento: "corsa", inizio: inizio[0] - d, origine: o1 });
     } else {
       // prima si smarca: due falcate di corsa che finiscono dove comincia la ricezione
-      const corsa = x.ricezione === "rovesciata" ? "indietro" : "corsa", d = modello.durata(corsa);
-      const o2 = prima(x.base, y, corsa, d), o1 = prima(o2, y, corsa, d);
-      lista.push({ movimento: "attesa", respiro: true, inizio: -1e9, origine: o1 });
-      lista.push({ movimento: corsa, inizio: inizio[k] - 2 * d, origine: o1 });
-      lista.push({ movimento: corsa, inizio: inizio[k] - d, origine: o2, fondi: .01 });
+      // (verso il pallone che arriva: chi riceve guarda chi gli passa la palla)
+      const corsa = x.ricezione === "rovesciata" ? "indietro" : "corsa", d = modello.durata(corsa), yc = yawIn[k];
+      const o2 = prima(x.base, yc, corsa, d), o1 = prima(o2, yc, corsa, d);
+      lista.push({ movimento: "attesa", respiro: true, inizio: -1e9, origine: o1, yaw: "palla" });
+      lista.push({ movimento: corsa, inizio: inizio[k] - 2 * d, origine: o1, yaw: yc });
+      lista.push({ movimento: corsa, inizio: inizio[k] - d, origine: o2, fondi: .01, yaw: yc });
     }
     G.segmenti.forEach(function (s, i) {
-      const pezzo = { movimento: s.movimento, inizio: inizio[k] + s.rel, origine: s.origine };
+      const pezzo = { movimento: s.movimento, inizio: inizio[k] + s.rel, origine: s.origine, yaw: s.yaw, fondi: s.fondi };
+      // dopo il controllo orientato si gira verso dove passa: un po' più di tempo per farlo
+      if (i > 0 && G.segmenti[i - 1].yaw !== undefined && s.yaw === undefined) pezzo.fondi = .2 + .25 * Math.min(1, Math.abs(scarto(y, G.segmenti[i - 1].yaw)) / g2r(60));
       // se il colpo arriva subito (di prima), il movimento comincia prima, fermo sulla posa iniziale:
       // così nell'istante del colpo non si sta ancora fondendo con la corsa
       if (i === 0 && k > 0 && G.contattoRel < FONDI + .15) { pezzo.inizio -= .35; pezzo.da = -.35; }
@@ -467,14 +496,89 @@ function creaAzione3D(tela, quante, modello) {
     if (k < n - 1) {
       lista.push({ movimento: "attesa", respiro: true, inizio: inizio[k] + G.fineRel - .1, origine: G.fine, fondi: .35 });
     } else {
-      lista.push({ movimento: "testa", inizio: inizioEsulta, origine: G.fine, fondi: .3 });      // l'esultanza: il salto a braccia alte
+      // dopo il colpo la rovesciata rallenta fino a fermarsi in alto, nel fermo immagine
+      const ultimo = lista[lista.length - 1], imp = IMPATTO.rovesciata, cc = calcio[k];
+      ultimo.tempo = function (T) {
+        if (T <= cc) return (ultimo.da || 0) + T - ultimo.inizio;
+        return imp + (IN_ARIA - imp) * (1 - Math.pow(1 - tratto(T, cc, FERMO), 2));
+      };
     }
     return lista;
   });
   const programmaPortiere = [
     { movimento: "difende", ciclo: true, inizio: -1e9, origine: POSTO_PORTIERE },
-    { movimento: "tuffo", inizio: inizioTuffo, da: TUFFO.da, velocita: TUFFO.velocita, origine: POSTO_PORTIERE, fondi: .12 }
+    { movimento: "tuffo", inizio: inizioTuffo, da: TUFFO.da, velocita: TUFFO.velocita, origine: POSTO_PORTIERE, fondi: .12,
+      // dopo il pallone che gli sfugge, arriva disteso a terra per il fermo immagine
+      tempo: function (T) {
+        if (T <= arrivoMani) return TUFFO.da + (T - inizioTuffo) * TUFFO.velocita;
+        return M.tuffoMani + (A_TERRA - M.tuffoMani) * liscia(tratto(T, arrivoMani, FERMO));
+      } }
   ];
+  // ---- gli avversari: ognuno ha il suo programma, come i nostri ----
+  // dov'è il destro della scivolata (dal punto di partenza, guardando verso +z) quando è disteso
+  const g0 = avversari[0].g;
+  posa(g0, "scivolata", M.scivolataPiede, V(0, 0, 0), 0);
+  const PIEDE_SCIVOLATA = pianoXZ(g0.osso("RightToeBase"));
+  const DUR = function (m) { return modello.durata(m); };
+  function attesaVerso(lista, inizioT, origine) { lista.push({ movimento: "attesa", respiro: true, inizio: inizioT, origine: origine, yaw: "palla", fondi: .4 }); }
+  const programmiAvversari = avversari.map(function (a) {
+    const r = a.ruolo, lista = [];
+    if (r.tipo === "scivolata") {
+      // entra in scivolata dove il pallone è appena passato: arriva un attimo tardi
+      const k = r.contro, G = geo[k];
+      const dOut = k < n - 1 ? pianoXZ(geo[k + 1].arriva.clone().sub(G.ferma)).normalize() : avantiDi(yaw[k]);
+      const fianco = V(-dOut.z, 0, dOut.x).multiplyScalar(r.lato || 0);
+      const meta = G.ferma.clone().setY(0).addScaledVector(dOut, r.lato ? 2.4 : 1.3).addScaledVector(fianco, r.lato ? -.3 : 0);
+      const ys = r.lato ? angolo(fianco.clone().negate()) : angolo(dOut.clone().negate());
+      const quando = calcio[k] + (r.lato ? .24 : .12);
+      const o = meta.clone().sub(ruota(PIEDE_SCIVOLATA, ys));
+      const dc = DUR("corsa"), o1 = prima(o, ys, "corsa", dc), o0 = prima(o1, ys, "corsa", dc);
+      const parte = quando - M.scivolataPiede;
+      attesaVerso(lista, -1e9, o0);
+      lista.push({ movimento: "corsa", inizio: parte - 2 * dc, origine: o0, yaw: ys });
+      lista.push({ movimento: "corsa", inizio: parte - dc, origine: o1, yaw: ys, fondi: .01 });
+      lista.push({ movimento: "scivolata", inizio: parte, origine: o, yaw: ys, fondi: .15 });
+      attesaVerso(lista, parte + DUR("scivolata") - .15, dopo(o, ys, "scivolata", DUR("scivolata")));
+    } else if (r.tipo === "testa") {
+      // salta con il nostro sul pallone alto, appena dietro di lui
+      const k = r.contro, G = geo[k];
+      const dIn = pianoXZ(G.ferma.clone().sub(geo[k - 1].ferma)).normalize();
+      const o = G.segmenti[0].origine.clone().addScaledVector(dIn, 1.05).addScaledVector(V(-dIn.z, 0, dIn.x), .5);
+      const yt = angolo(dIn.clone().negate());
+      const dc = DUR("indietro"), o1 = prima(o, yt, "indietro", dc);
+      attesaVerso(lista, -1e9, o1);
+      lista.push({ movimento: "indietro", inizio: inizio[k] - .1 - dc, origine: o1, yaw: yt });
+      lista.push({ movimento: "testa", inizio: inizio[k] - .1, origine: o, yaw: yt, fondi: .2 });
+      attesaVerso(lista, inizio[k] - .1 + DUR("testa") - .2, dopo(o, yt, "testa", DUR("testa")));
+    } else if (r.tipo === "pressa") {
+      // corre addosso a chi riceve e arriva quando lui comincia la roulette: viene saltato
+      const k = r.contro, G = geo[k];
+      const s = G.segmenti.find(function (x) { return x.movimento === "finta"; }) || G.segmenti[G.segmenti.length - 1];
+      const avanti = avantiDi(yaw[k]);
+      const arrivo = s.origine.clone().addScaledVector(avanti, 2.6).addScaledVector(V(avanti.z, 0, -avanti.x), 1.45);
+      const yp = angolo(s.origine.clone().sub(arrivo));
+      const dc = DUR("corsa"), o2 = prima(arrivo, yp, "corsa", dc), o1 = prima(o2, yp, "corsa", dc);
+      const quando = inizio[k] + s.rel;
+      attesaVerso(lista, -1e9, o1);
+      lista.push({ movimento: "corsa", inizio: quando - 2 * dc, origine: o1, yaw: yp });
+      lista.push({ movimento: "corsa", inizio: quando - dc, origine: o2, yaw: yp, fondi: .01 });
+      lista.push({ movimento: "difende", ciclo: true, inizio: quando, origine: arrivo, yaw: "palla", fondi: .3 });
+    } else {
+      // marca: tiene la posizione e quando il pallone arriva dalle sue parti si sposta
+      const base = V(r.pos[0], 0, r.pos[1]), k = r.quando;
+      const verso = angolo(pianoXZ(geo[k].ferma.clone().sub(base)));
+      const mov = r.mov === "laterale" && scarto(angolo(pianoXZ(geo[Math.min(n - 1, k + 1)].ferma.clone().sub(geo[k].ferma))), verso) < 0 ? "lateraleD" : r.mov;
+      attesaVerso(lista, -1e9, base);
+      let o = base, t0 = calcio[k] - .3;
+      for (let v = 0; v < (r.volte || 1); v++) {
+        lista.push({ movimento: mov, inizio: t0, origine: o, yaw: verso, fondi: v ? .01 : .3 });
+        o = dopo(o, verso, mov, DUR(mov)); t0 += DUR(mov);
+      }
+      lista.push({ movimento: "difende", ciclo: true, inizio: t0, origine: o, yaw: "palla", fondi: .3 });
+    }
+    return lista;
+  });
+
   // ---- il pallone in mano al portiere: lo tiene davanti al petto, poi lo lascia cadere sul piede ----
   // (dove sta il pallone mentre lo tiene: segue il petto; si calcola una volta sola, in una tabella)
   const PASSO_PRESA = 1 / 60, presa = [];
@@ -502,19 +606,25 @@ function creaAzione3D(tela, quante, modello) {
   const presaMani = function (T) { return 1 - liscia(tratto(T, lascia, lascia + .2)); };
 
   function tempoLocale(s, T, k) {
+    if (s.tempo) return s.tempo(T);
     if (s.respiro) return .25 + .2 * Math.sin(T * 1.7 + k * 1.3);
     if (s.ciclo) { const d = modello.durata(s.movimento); return ((T * .8 + k * .9) % d + d) % d; }
     return (s.da || 0) + (T - s.inizio) * (s.velocita || 1);
+  }
+  // il verso di un pezzo di programma: il suo, quello del giocatore, o verso il pallone
+  function versoDi(s, y, T) {
+    if (s.yaw === "palla") return angolo(pianoXZ(pallaA(T)).sub(s.origine));
+    return s.yaw === undefined ? y : s.yaw;
   }
   function stati(lista, y, T, k) {
     let i = lista.length - 1;
     while (i > 0 && T < lista[i].inizio) i--;
     const s = lista[i], dt = T - s.inizio, f = s.fondi || FONDI;
-    const out = [{ movimento: s.movimento, t: tempoLocale(s, T, k), peso: 1, origine: s.origine, yaw: y }];
+    const out = [{ movimento: s.movimento, t: tempoLocale(s, T, k), peso: 1, origine: s.origine, yaw: versoDi(s, y, T) }];
     if (i > 0 && dt < f) {
       const u = liscia(dt / f), p = lista[i - 1];
       out[0].peso = u;
-      out.push({ movimento: p.movimento, t: tempoLocale(p, T, k), peso: 1 - u, origine: p.origine, yaw: y });
+      out.push({ movimento: p.movimento, t: tempoLocale(p, T, k), peso: 1 - u, origine: p.origine, yaw: versoDi(p, y, T) });
     }
     return out;
   }
@@ -525,7 +635,7 @@ function creaAzione3D(tela, quante, modello) {
     const G = geo[k];
     // dopo lo stop il pallone rotola piano e regolare (il giocatore lo rincorre e lo calcia);
     // dopo un tocco parte più veloce e rallenta
-    return [{ T: contatto[k], p: G.arriva, dopo: "regolare" }].concat(G.tocchi.map(function (t) { return { T: inizio[k] + t.rel, p: t.palla, dopo: "rallenta" }; }), [{ T: calcio[k], p: G.ferma }]);
+    return [{ T: contatto[k], p: G.arriva, dopo: "regolare" }].concat(G.tocchi.map(function (t) { return { T: inizio[k] + t.rel, p: t.palla, dopo: t.dopo || "rallenta" }; }), [{ T: calcio[k], p: G.ferma }]);
   });
   function inVolo(k, T, p) {
     const a = geo[k].ferma, b = geo[k + 1].arriva, v = voli[k];
@@ -600,7 +710,8 @@ function creaAzione3D(tela, quante, modello) {
   const tappa = [0];
   for (let k = 1; k < n - 1; k++) tappa[k] = contatto[k] - .45;
   tappa[n - 1] = T0;
-  const FASI_TIRO = [[0, T0], [.34, calcio[n - 1] - .02], [.56, arrivoGol + .35], [1, fineTiro]];
+  // (l'ultimo quarto è il fermo immagine con il GOAL!)
+  const FASI_TIRO = [[0, T0], [.4, calcio[n - 1] - .02], [.75, FERMO], [1, FERMO + 1e-6]];
   function tempoDa(p) {
     p = Math.max(0, Math.min(n + 1, p));
     if (p < n - 1) { const k = Math.floor(p); return tappa[k] + (p - k) * (tappa[k + 1] - tappa[k]); }
@@ -643,9 +754,7 @@ function creaAzione3D(tela, quante, modello) {
       x.g.metti(stati(programma[j], yaw[j], T, j), mani > 0 ? { punto: pallaPos, peso: mani } : null);
     });
     portiere.metti(stati(programmaPortiere, YAW_PORTIERE, T, 0));
-    avversari.forEach(function (a, j) {
-      a.g.metti([{ movimento: "difende", t: (T * .8 + j * .9) % 4.4, peso: 1, origine: a.pos, yaw: angolo(pianoXZ(pallaPos.clone().sub(a.pos))) }]);
-    });
+    avversari.forEach(function (a, j) { a.g.metti(stati(programmiAvversari[j], 0, T, j + 3)); });
     const vicini = nostri.map(function (x) { return x.g; }).concat(avversari.map(function (a) { return a.g; })).filter(function (g) {
       return g.radice.position.distanceToSquared(pianoXZ(pallaPos)) < 6;
     });
@@ -706,7 +815,7 @@ function creaAzione3D(tela, quante, modello) {
     camera.updateMatrixWorld();
     const sulloSchermo = schermo(palla.position);
     const distanza = camera.position.distanceTo(palla.position);
-    palla.ridisegna(sulloSchermo, R / (distanza * Math.tan(g2r(camera.fov / 2))) * alto / 2);
+    palla.ridisegna(sulloSchermo, R / (distanza * Math.tan(g2r(camera.fov / 2))) * alto / 2, T <= lascia);
     sole.position.copy(guarda).add(V(-10, 20, -6));
     sole.target.position.copy(guarda);
     disegna();
@@ -727,15 +836,20 @@ function creaAzione3D(tela, quante, modello) {
       ? { pos: S.clone().addScaledVector(fianco, 7.2).addScaledVector(dt, -.6).setY(1.6), guarda: S.clone().addScaledVector(dt, .15).setY(.95) }
       : { pos: S.clone().addScaledVector(fianco, 7.5).addScaledVector(dt, -1.5).setY(1.5), guarda: S.clone().addScaledVector(dt, 1.2).setY(1.1) };
     const B = verticale ? { pos: V(5, 3.4, 37.5), guarda: V(-.8, 1.1, 51.6) } : { pos: V(11.5, 2.8, 44), guarda: V(-1.4, 1.1, 51.8) };
-    const B2 = { pos: B.pos.clone().lerp(B.guarda, .12), guarda: B.guarda };
-    const C = verticale ? { pos: V(4, 9.5, 30), guarda: V(0, 1, 47) } : { pos: V(14, 6.5, 36.5), guarda: V(-.5, 1.1, 47) };
+    // il fermo immagine: chi ha segnato ancora in aria, il portiere a terra, il pallone in rete
+    // (la scena sta nella parte bassa dello schermo: sopra c'è la fascia del GOAL!)
+    const centroF = S.clone().lerp(GOL, .32).setY(.9);
+    // (su smartphone la fascia è in basso: la scena sta in alto, più vicina)
+    const guardaF = verticale ? centroF.clone().add(V(-.3, -.45, .4)) : centroF.clone().add(V(-.6, .95, 0));
+    const F = verticale
+      ? { pos: guardaF.clone().add(V(5.6, 3.4, -8).divideScalar(allarga)), guarda: guardaF }
+      : { pos: guardaF.clone().add(V(8.4, 1.9, -6.1)), guarda: guardaF };
     const mix = function (x, y, w) { return { pos: x.pos.clone().lerp(y.pos, w), guarda: x.guarda.clone().lerp(y.guarda, w) }; };
     const c = calcio[n - 1];
     let qq;
     if (T < c + .05) qq = A;
     else if (T < arrivoGol + .1) qq = mix(A, B, liscia(tratto(T, c + .05, arrivoGol + .1)));
-    else if (T < arrivoGol + .9) qq = mix(B, B2, liscia(tratto(T, arrivoGol + .1, arrivoGol + .9)));
-    else qq = mix(B2, C, liscia(tratto(T, arrivoGol + .9, arrivoGol + 2)));
+    else qq = mix(B, F, liscia(tratto(T, arrivoGol + .1, FERMO)));
     guarda.copy(qq.guarda);
     camera.position.copy(qq.guarda).add(qq.pos.clone().sub(qq.guarda).multiplyScalar(allarga));
   }
@@ -781,7 +895,7 @@ function creaAzione3D(tela, quante, modello) {
     schermo: schermo,
     metti: metti, misura: misura, etichette: etichette, quante: n,
     // il momento in cui il pallone entra in porta (per far partire il GOAL!)
-    momentoGoal: pDa(arrivoGol),
+    momentoGoal: pDa(FERMO - 1e-3),
     // da qui la scheda si fa da parte e la scena prende tutto lo schermo
     momentoPalcoLibero: pDa(T0),
     fine: n + 1,

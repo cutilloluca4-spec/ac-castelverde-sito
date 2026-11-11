@@ -178,12 +178,19 @@ function preparaGoal(palco) {
   const strato = palco.querySelector(".azione__goal");
   const fascia = palco.querySelector(".azione__fascia");
   const filo = palco.querySelector(".azione__filo");
-  const ombra = palco.querySelector(".azione__ombra");
   const scritta = palco.querySelector(".azione__scritta");
   const sotto = palco.querySelector(".azione__sotto");
   const scatola = palco.querySelector(".azione__coriandoli");
-  scritta.innerHTML = "GOAL!".split("").map(function (l) { return `<span class="inline-block">${l}</span>`; }).join("");
-  const lettere = scritta.querySelectorAll("span");
+  // ogni lettera ha il suo contorno dietro (sempre allineato) e il bianco davanti, che la riempie dal basso
+  scritta.innerHTML = "GOAL!".split("").map(function (l) {
+    return '<span class="goal__lettera relative inline-block">' +
+      `<span class="goal__contorno absolute inset-0 titolo-contorno [-webkit-text-stroke-width:3px]">${l}</span>` +
+      `<span class="goal__pieno relative inline-block">${l}</span>` +
+      "</span>";
+  }).join("");
+  const lettere = scritta.querySelectorAll(".goal__lettera");
+  const contorni = scritta.querySelectorAll(".goal__contorno");
+  const pieni = scritta.querySelectorAll(".goal__pieno");
   const COLORI = ["#ff0000", "#d0d2d4", "#0e0e0f", "#ffffff", "#c80000"];
   const coriandoli = [];
   for (let k = 0; k < 56; k++) {
@@ -195,13 +202,16 @@ function preparaGoal(palco) {
   }
   let acceso = false;
   function accendi() {
-    gsap.killTweensOf([strato, fascia, filo, ombra, lettere, sotto]);
+    gsap.killTweensOf([strato, fascia, filo, lettere, contorni, pieni, sotto]);
     gsap.set(strato, { autoAlpha: 1 });
     gsap.fromTo(fascia, { scaleX: 0 }, { scaleX: 1, duration: .45, ease: "power4.out" });
     gsap.fromTo(filo, { scaleX: 0 }, { scaleX: 1, duration: .5, ease: "power4.out", delay: .12 });
+    // le lettere saltano fuori vuote (solo il contorno), poi il bianco le riempie tutte dal basso
+    // e il contorno scivola di lato, a fare l'ombra
     gsap.fromTo(lettere, { opacity: 0, scale: 0, y: 60, rotation: function (k) { return k % 2 ? 14 : -14; } },
       { opacity: 1, scale: 1, y: 0, rotation: 0, duration: .55, ease: "back.out(3)", stagger: .06, delay: .15 });
-    gsap.fromTo(ombra, { opacity: 0, x: 0, y: 0 }, { opacity: 1, x: 10, y: 10, duration: .5, ease: "power3.out", delay: .5 });
+    gsap.fromTo(pieni, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: .45, ease: "power2.inOut", stagger: .06, delay: .45 });
+    gsap.fromTo(contorni, { x: 0, y: 0 }, { x: 10, y: 10, duration: .45, ease: "power3.out", stagger: .06, delay: .7 });
     gsap.fromTo(sotto, { opacity: 0, y: 116 }, { opacity: 1, y: function () { return window.innerWidth >= 900 ? 136 : 100; }, duration: .45, ease: "power3.out", delay: .6 });
     coriandoli.forEach(function (c) {
       const a = Math.random() * Math.PI * 2, forza = 140 + Math.random() * 260;

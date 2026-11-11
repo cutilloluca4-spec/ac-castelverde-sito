@@ -42,7 +42,10 @@ const MOVIMENTI = {
   testa: "Soccer_Header",             // colpo di testa in salto (anche il salto dell'esultanza)
   rovesciata: "Scissor_Kick",         // la rovesciata
   difende: "Goalkeeper_Idle",         // pronto sulle gambe: gli avversari e i portieri
-  tuffo: "Goalkeeper_Diving_Save"     // il tuffo del portiere (verso la sua sinistra)
+  tuffo: "Goalkeeper_Diving_Save",    // il tuffo del portiere (verso la sua sinistra)
+  scivolata: "Soccer_Tackle",         // il difensore entra in scivolata (poi si rialza)
+  laterale: "Jog_Strafe_Left",        // passi laterali verso la sua sinistra (marcando)
+  lateraleD: "Jog_Strafe_Right"       // e verso la sua destra
 };
 // I momenti chiave dei movimenti (secondi), misurati sulla traiettoria del piede destro
 const MOMENTI = {
@@ -54,7 +57,8 @@ const MOMENTI = {
   testaImpatto: 1.17,    // la fronte colpisce il pallone, in cima al salto
   dribblingTocchi: [.58, 1.45], dribblingFine: 1.62,   // i tocchi: il destro davanti al corpo
   rovesciataImpatto: .85,// il destro colpisce il pallone sopra la testa
-  tuffoMani: 1.0         // il portiere è disteso in volo, con le mani più lontane
+  tuffoMani: 1.0,        // il portiere è disteso in volo, con le mani più lontane
+  scivolataPiede: .65    // in scivolata: il destro è disteso più avanti, raso terra
 };
 const OSSA = {
   bacino: "mixamorig5Hips", testa: "mixamorig5Head", cima: "mixamorig5HeadTop_End",
@@ -163,8 +167,10 @@ function preparaCalciatori(gltf) {
     // presa = { punto, peso } (facoltativa): le mani tengono il pallone in quel punto
     function metti(stati, presa) {
       Object.keys(azioni).forEach(function (n) { azioni[n].enabled = false; });
-      let somma = 0, x = 0, z = 0;
-      const yaw = stati[0].yaw;
+      let somma = 0, x = 0, z = 0, sx = 0, cz = 0;
+      // il verso del corpo: la media dei versi dei movimenti fusi (così girarsi è morbido)
+      stati.forEach(function (s) { if (s.peso > 0) { sx += Math.sin(s.yaw) * s.peso; cz += Math.cos(s.yaw) * s.peso; } });
+      const yaw = Math.atan2(sx, cz);
       stati.forEach(function (s) {
         if (s.peso <= 0) return;
         const nome = MOVIMENTI[s.movimento] || s.movimento;
