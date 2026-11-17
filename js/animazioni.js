@@ -8,7 +8,7 @@
                          attributo data-entrano  → i figli compaiono uno dopo l'altro
      2. Contatori        attributo data-conta="1987" → il numero sale da 0
      3. Caroselli        .scorri + frecce data-scorri-indietro / data-scorri-avanti
-     4. Linea del tempo  la riga rossa si riempie scorrendo (la storia in 3D è in js/pagine/societa.js)
+     4. Linea del tempo  .linea-tempo__progresso si riempie scorrendo, i rombi diventano rossi
 
    Animazioni spente: aggiungere ?statico all'indirizzo (utile per
    controllare i testi o importare la pagina in Figma), oppure attivare
@@ -97,15 +97,22 @@ function preparaCaroselli() {
 }
 
 /* 4. LINEA DEL TEMPO ---------------------------------------------- */
-// La linea del tempo classica della pagina Società: scorrendo, la riga rossa si
-// allunga lungo quella tratteggiata. Quando la storia è in 3D (.storia.con-3d,
-// vedi js/pagine/societa.js) la linea non si vede e non serve animarla.
 function animaLineaTempo() {
   const linea = document.querySelector(".linea-tempo");
   const progresso = document.querySelector(".linea-tempo__progresso");
-  if (!linea || !progresso || linea.closest(".con-3d")) return;
+  if (!linea || !progresso) return;
+  const punti = linea.querySelectorAll(".linea-tempo__punto");
+  // ogni rombo è "raggiunto" (rosso) quando la fine della linea rossa supera il suo centro;
+  // scorrendo indietro la linea si ritira e il rombo torna bianco
+  function coloraPunti() {
+    const fine = progresso.getBoundingClientRect().bottom;
+    punti.forEach(function (p) {
+      const r = p.getBoundingClientRect();
+      p.classList.toggle("is-raggiunto", fine >= r.top + r.height / 2);
+    });
+  }
   gsap.to(progresso, {
     height: "100%", ease: "none",
-    scrollTrigger: { trigger: linea, start: "top 70%", end: "bottom 70%", scrub: 0.6 }
+    scrollTrigger: { trigger: linea, start: "top 70%", end: "bottom 70%", scrub: true, onUpdate: coloraPunti, onRefresh: coloraPunti }
   });
 }

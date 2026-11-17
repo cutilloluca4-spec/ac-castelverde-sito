@@ -43,63 +43,13 @@
     <div id="numeri" class="max-w-acc mx-auto px-4 tablet:px-6 grid grid-cols-2 computer:grid-cols-4 gap-4" data-entrano></div>
   </section>
 
-  <!-- ============ LA NOSTRA STORIA (le tappe sono in js/dati/storia.js) ============
-       Se il browser ha il 3D (WebGL) e le animazioni sono attive, la storia è un'azione di
-       calcio: la sezione .azione resta ferma a tutto schermo e, scorrendo, i giocatori si
-       passano il pallone fino al tiro in porta; ogni passaggio è una tappa (scheda a lato).
-       La classe .con-3d su questa sezione accende l'azione e nasconde la linea del tempo
-       classica (che resta per i lettori di schermo, la versione ?statico e i browser senza 3D).
-       La scena 3D è in js/azione-3d.js, i calciatori (modello e movimenti registrati, assets/3d/calciatore.glb)
-       in js/giocatori-3d.js; la regia dello scorrimento in js/pagine/societa.js. -->
-  <section id="storia" class="storia pt-16 computer:pt-24 pb-16 computer:pb-24 [&.con-3d]:pb-0 scroll-mt-[120px]">
+  <!-- ============ LA NOSTRA STORIA (linea del tempo da js/dati/storia.js) ============ -->
+  <section id="storia" class="py-16 computer:py-24 scroll-mt-[120px]">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
-      <h2 class="titolo-sezione text-[40px] tablet:text-[80px] mb-10 tablet:mb-14 [.con-3d_&]:mb-4" data-entra>La nostra storia</h2>
-      <p class="hidden [.con-3d_&]:block max-w-[620px] text-[17px] leading-relaxed text-acc-testo-2 mb-10" data-entra>
-        Dal 1987 a oggi, un passaggio alla volta. Scorri e costruisci l'azione: ogni giocatore è una tappa della nostra storia.
-      </p>
-    </div>
-
-    <!-- l'azione 3D (accesa da js/pagine/societa.js). Lo sfondo è la trama grigia delle
-         grafiche del club: il campo 3D ci sfuma dentro all'orizzonte. -->
-    <div class="azione hidden [.con-3d_&]:block relative h-[100svh] overflow-hidden trama-grigia" aria-label="La storia del Castelverde come un'azione di calcio">
-      <canvas class="azione__tela absolute inset-0 w-full h-full block" aria-hidden="true"></canvas>
-      <!-- gli anni sopra la testa dei giocatori: li sposta la regia a ogni fotogramma -->
-      <div class="azione__etichette absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
-      <!-- la scheda della tappa: a sinistra da computer, in basso su smartphone -->
-      <div class="azione__scheda absolute z-10 inset-x-4 bottom-[84px] max-h-[44svh] overflow-y-auto pt-3.5 pl-3.5 computer:p-0 computer:inset-x-auto computer:max-h-none computer:overflow-visible computer:left-[max(36px,calc((100%-1240px)/2+36px))] computer:top-[150px] computer:bottom-[96px] computer:w-[400px] computer:flex computer:items-center" aria-live="polite"></div>
-      <!-- il percorso: tutti gli anni in fila, come le schede del sito (rosso = quello attuale) -->
-      <nav class="absolute z-10 inset-x-0 bottom-0 pb-4 pt-6 bg-gradient-to-t from-acc-grigio/95 via-acc-grigio/70 to-transparent" aria-label="Tappe della storia">
-        <ol class="azione__percorso relative list-none m-0 mx-auto px-4 flex gap-1 overflow-x-auto computer:justify-center [scrollbar-width:none]"></ol>
-      </nav>
-      <!-- mentre si caricano i calciatori -->
-      <p class="azione__attesa absolute inset-0 m-0 grid place-items-center pointer-events-none"><span class="pillola text-[16px]">Entrano in campo…</span></p>
-      <!-- l'invito a scorrere, sparisce al primo passaggio -->
-      <p class="azione__invito absolute z-10 left-1/2 -translate-x-1/2 top-[84px] computer:top-auto computer:bottom-[92px] m-0 pillola text-[14px] whitespace-nowrap pointer-events-none">Scorri per giocare l'azione ↓</p>
-      <!-- il GOAL! finale come le grafiche "FULL TIME": fascia diagonale rossa, scritta enorme, pillola -->
-      <div class="azione__goal absolute inset-0 z-20 pointer-events-none invisible" aria-hidden="true">
-        <div class="absolute inset-x-0 top-[14%] max-computer:top-auto max-computer:bottom-[11%] grid place-items-center">
-          <div class="azione__fascia absolute -inset-x-[10%] h-[150px] computer:h-[210px] trama-rossa -rotate-[5deg] origin-left shadow-[0_14px_0_rgba(0,0,0,.18)]"></div>
-          <div class="azione__filo absolute -inset-x-[10%] h-[10px] bg-acc-nero -rotate-[5deg] origin-left translate-y-[80px] computer:translate-y-[110px]"></div>
-          <div class="relative text-center">
-            <!-- ogni lettera: il contorno nero (spostato, come nelle grafiche) e il bianco che lo riempie -->
-            <p class="azione__scritta relative m-0 titolo-display text-[110px] computer:text-[168px] leading-none text-white whitespace-nowrap"></p>
-          </div>
-          <p class="azione__sotto absolute pillola text-[15px] computer:text-[17px] translate-y-[100px] computer:translate-y-[136px] opacity-0">1987 → oggi · la storia continua</p>
-          <div class="azione__coriandoli absolute left-1/2 top-1/2"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- il credito del modello 3D dei guanti (licenza CC BY 4.0: va citato l'autore) -->
-    <p class="hidden [.con-3d_&]:block max-w-acc mx-auto px-4 tablet:px-6 pt-3 pb-6 m-0 text-[12px] leading-snug text-acc-testo-2">
-      Guanti del portiere: modello 3D <a href="https://sketchfab.com/3d-models/goalkeeper-galaxy-gloves-38143f02d8e0424fb81cd12ad6bbc3c0" class="underline" target="_blank" rel="noopener">“Goalkeeper Galaxy Gloves”</a>
-      di <a href="https://sketchfab.com/cbarreiro" class="underline" target="_blank" rel="noopener">cbarreiro</a>,
-      licenza <a href="https://creativecommons.org/licenses/by/4.0/deed.it" class="underline" target="_blank" rel="noopener">CC BY 4.0</a> (alleggerito e adattato al portiere).
-    </p>
-
-    <!-- la linea del tempo classica (senza 3D, o per i lettori di schermo quando il 3D è acceso) -->
-    <div class="max-w-acc mx-auto px-4 tablet:px-6 [.con-3d_&]:sr-only">
-      <div class="linea-tempo relative before:absolute before:inset-y-0 before:left-[15px] before:w-1 before:bg-[repeating-linear-gradient(to_bottom,var(--color-grigio-medio)_0_12px,transparent_12px_22px)] computer:before:left-1/2 computer:before:-ml-0.5">
+      <h2 class="titolo-sezione text-[40px] tablet:text-[80px] mb-10 tablet:mb-14" data-entra>La nostra storia</h2>
+      <!-- linea grigia verticale (before:) e linea rossa che si riempie scorrendo
+           (linea-tempo__progresso, la anima js/animazioni.js): a sinistra su smartphone, al centro da computer -->
+      <div class="linea-tempo relative before:absolute before:inset-y-0 before:left-[15px] before:w-1 before:bg-acc-grigio computer:before:left-1/2 computer:before:-ml-0.5">
         <span class="linea-tempo__progresso absolute top-0 left-[15px] w-1 h-0 bg-acc-rosso computer:left-1/2 computer:-ml-0.5" aria-hidden="true"></span>
         <ol id="lineaTempo" class="list-none p-0 m-0 flex flex-col gap-14"></ol>
       </div>
@@ -142,14 +92,7 @@
 <script src="js/utilita.js?v=1"></script>
 <script src="js/componenti.js?v=1"></script>
 <script src="js/layout.js?v=1"></script>
-<script src="js/pallone-3d.js?v=1"></script>
-<script src="js/animazioni.js?v=3"></script>
-<script src="js/vendor/three.min.js"></script>
-<script src="js/vendor/three-caricatori.min.js"></script>
-<script src="assets/3d/calciatore.glb.js?v=2"></script>
-<script src="assets/3d/guanti.glb.js?v=1"></script>
-<script src="js/giocatori-3d.js?v=9"></script>
-<script src="js/azione-3d.js?v=7"></script>
-<script src="js/pagine/societa.js?v=8"></script>
+<script src="js/animazioni.js?v=4"></script>
+<script src="js/pagine/societa.js?v=9"></script>
 </body>
 </html>
