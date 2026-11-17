@@ -60,18 +60,26 @@ function disegnaProssimaPartita() {
       "</div>" +
     "</div>";
 
-  // Conto alla rovescia (giorni, ore, minuti), aggiornato ogni 30 secondi
-  const ora = p.ora.split(":");
+  // Conto alla rovescia (giorni, ore, minuti), aggiornato ogni 30 secondi.
+  // Se l'orario non è ancora fissato (es. "orario ufficiale") si contano solo i giorni.
+  const ora = /^\d{1,2}:\d{2}$/.test(p.ora) ? p.ora.split(":") : null;
   const inizio = leggiData(p.data);
-  inizio.setHours(+ora[0], +ora[1], 0, 0);
+  if (ora) inizio.setHours(+ora[0], +ora[1], 0, 0);
+  else inizio.setHours(0, 0, 0, 0);   // leggiData mette mezzogiorno: per contare i giorni serve la mezzanotte
   const conto = document.getElementById("contoRovescia");
   function aggiorna() {
-    const diff = Math.max(0, inizio - new Date());
-    const g = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24, m = Math.floor(diff / 6e4) % 60;
     const cella = function (n, etichetta) {
       // min-w-[2ch]: le cifre non fanno "ballare" il conto quando cambiano
       return `<span class="flex flex-col items-center min-w-[2ch] text-center leading-none"><span class="inline-block min-w-[2ch] text-center">${String(n).padStart(2, "0")}</span><small class="text-[12px] font-acc-testo font-semibold uppercase tracking-[.1em] mt-1">${etichetta}</small></span>`;
     };
+    if (!ora) {
+      const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+      const g = Math.max(0, Math.round((inizio - oggi) / 864e5));
+      conto.innerHTML = cella(g, g === 1 ? "giorno" : "giorni");
+      return;
+    }
+    const diff = Math.max(0, inizio - new Date());
+    const g = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24, m = Math.floor(diff / 6e4) % 60;
     conto.innerHTML = cella(g, "giorni") + cella(h, "ore") + cella(m, "min");
   }
   aggiorna();
