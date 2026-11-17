@@ -161,7 +161,7 @@ function disegnaSquadre() {
       `<a href="squadre.html#${s.id}" class="${CARD_NOTIZIA.card}">` +
         `<div class="${CARD_NOTIZIA.foto} aspect-[4/3]"><img class="${CARD_NOTIZIA.img}" src="${testo(s.immagine)}" alt="" loading="lazy" /></div>` +
         '<div class="flex flex-col gap-3 p-5 tablet:p-6 flex-1">' +
-          `<span class="pillola pillola--piccola self-start${s.id === "prima-squadra" ? " pillola--rossa" : ""}">${testo(s.categoria)}</span>` +
+          `<span class="pillola pillola--piccola self-start">${testo(s.categoria)}</span>` +
           `<h3 class="${CARD_NOTIZIA.titolo} text-[38px] tablet:text-[44px] mt-1">${testo(s.nome)}</h3>` +
           `<p class="text-[14px] text-acc-testo-2 leading-snug">${testo(s.campionato)}</p>` +
           (prossima
