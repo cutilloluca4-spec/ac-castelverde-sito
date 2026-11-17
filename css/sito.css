@@ -5,8 +5,9 @@
    (cerca il nome della classe nelle pagine e in js/).
 
    Indice
-     1. Intestazione delle pagine interne (.intestazione)
-     2. Caroselli orizzontali (.scorri) e contenitore delle schede (.schede)
+     1. Menu da telefono (.menu-mobile)
+     2. Intestazione delle pagine interne (.intestazione)
+     3. Caroselli orizzontali (.scorri) e contenitore delle schede (.schede)
 
    Qui resta solo quello che in Tailwind sarebbe illeggibile o ripetuto in
    molte pagine: le forme diagonali (clip-path) delle intestazioni e i
@@ -25,7 +26,18 @@
 @layer components {
 
 
-/* 1. INTESTAZIONE DELLE PAGINE INTERNE --------------------------- */
+/* 1. MENU DA TELEFONO --------------------------------------------- */
+/* Sta qui e non in Tailwind perché il menu lo scrive il JavaScript: con le
+   classi Tailwind (calcolate un attimo dopo) a ogni pagina il menu si vedrebbe
+   per un istante e poi scivolerebbe via. Chiuso è fuori dallo schermo e
+   invisibile (i suoi link non si raggiungono con il tasto Tab). */
+.menu-mobile {
+  transform: translateX(100%); visibility: hidden;
+  transition: transform .4s cubic-bezier(.7,0,.2,1), visibility 0s .4s;
+}
+.menu-mobile.is-aperto { transform: none; visibility: visible; transition: transform .4s cubic-bezier(.7,0,.2,1); }
+
+/* 2. INTESTAZIONE DELLE PAGINE INTERNE --------------------------- */
 .intestazione { position: relative; overflow: hidden; isolation: isolate; }
 .intestazione::after {      /* fascia rossa diagonale a destra */
   content: ""; position: absolute; z-index: -1; right: -8%; top: 0; bottom: 0; width: 46%;
@@ -42,7 +54,7 @@
   clip-path: polygon(33% 0, 100% 0, 100% 100%, 0 100%);
 }
 
-/* 2. CAROSELLI ORIZZONTALI E SCHEDE ------------------------------ */
+/* 3. CAROSELLI ORIZZONTALI E SCHEDE ------------------------------ */
 .scorri {
   display: grid; grid-auto-flow: column; gap: 20px;
   overflow-x: auto; overscroll-behavior-x: contain;
@@ -60,11 +72,13 @@
 
 /* MOBILE FIRST: su smartphone (sotto i 700 px) niente scorrimento orizzontale.
    I caroselli diventano elenchi verticali (una card sotto l'altra; la rosa in 2 colonne)
-   e le schede delle squadre vanno a capo. Il carosello torna da tablet in su. */
+   e le schede restano su una riga. Il carosello torna da tablet in su. */
 @media (max-width: 699px) {
   .scorri { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); gap: 16px; overflow: visible; scroll-snap-type: none; padding-bottom: 0; }
   .scorri--griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .schede { flex-wrap: wrap; overflow: visible; gap: 6px; }
+  /* le schede restano su una riga: arrivano fino al bordo dello schermo
+     (margine negativo = il margine della pagina) e se servono scorrono di lato */
+  .schede { gap: 4px; margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px; }
 }
 
 } /* fine @layer components */

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   preparaLayout();
 
   document.getElementById("indiceSquadre").innerHTML = SQUADRE.map(function (s) {
-    return `<a class="${CLASSI_SCHEDA} max-tablet:!text-[15px] max-tablet:!px-3" href="#${s.id}">${testo(s.nome)}</a>`;
+    return `<a class="${CLASSI_SCHEDA}" href="#${s.id}">${testo(s.nome)}</a>`;
   }).join("");
 
   document.getElementById("elencoSquadre").innerHTML = SQUADRE.map(htmlSchedaSquadra).join("");

@@ -18,7 +18,7 @@
 <script src="design-system/tema-tailwind.js?v=1"></script>
 <script src="js/vendor/tailwind-browser.js"></script>
 <link rel="stylesheet" href="css/componenti.css?v=1" />
-<link rel="stylesheet" href="css/sito.css?v=2" />
+<link rel="stylesheet" href="css/sito.css?v=3" />
 <link rel="stylesheet" href="css/animazioni.css?v=1" />
 </head>
 <body data-pagina="squadre" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-clip">
@@ -40,10 +40,10 @@
 
   <!-- ============ SCHEDE DELLE SQUADRE ============ -->
   <!-- barra fissa sotto il menu: "top" segue il menu, che scorrendo giù si accorcia (classe menu-ridotto sul body,
-       la mette js/layout.js). Su telefono le 4 schede stanno su una riga (testo più piccolo). -->
+       la mette js/layout.js). Le schede stanno su una riga come in tutto il sito (.schede in css/sito.css). -->
   <nav id="barraSquadre" class="sticky top-[108px] lg:top-[120px] [.menu-ridotto_&]:top-[70px] lg:[.menu-ridotto_&]:top-[82px] transition-[top] duration-300 z-30 bg-white/95 backdrop-blur border-b border-acc-linea" aria-label="Vai alla squadra">
     <div class="max-w-acc mx-auto px-4 tablet:px-6 py-2.5">
-      <div id="indiceSquadre" class="schede max-tablet:!flex-nowrap max-tablet:justify-between max-tablet:!gap-0"></div>
+      <div id="indiceSquadre" class="schede max-tablet:justify-between"></div>
     </div>
   </nav>
 
@@ -64,9 +64,9 @@
 <script src="js/dati/partite.js?v=1"></script>
 <script src="js/dati/partner.js?v=1"></script>
 <script src="js/utilita.js?v=1"></script>
-<script src="js/componenti.js?v=2"></script>
-<script src="js/layout.js?v=2"></script>
-<script src="js/animazioni.js?v=1"></script>
-<script src="js/pagine/squadre.js?v=2"></script>
+<script src="js/componenti.js?v=3"></script>
+<script src="js/layout.js?v=3"></script>
+<script src="js/animazioni.js?v=5"></script>
+<script src="js/pagine/squadre.js?v=3"></script>
 </body>
 </html>

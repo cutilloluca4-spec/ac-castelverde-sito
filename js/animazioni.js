@@ -39,12 +39,17 @@ function quandoEntra(elemento, azione, inizio) {
 
 /* 1. COMPARSE ----------------------------------------------------- */
 function animaComparse() {
+  // Quello che è già nella prima schermata si vede subito, senza animazione:
+  // aprendo una pagina dal menu il titolo è lì, non "arriva" ogni volta.
+  const subito = function (el) { return el.getBoundingClientRect().top < window.innerHeight; };
   document.querySelectorAll("[data-entra]").forEach(function (el) {
+    if (subito(el)) { gsap.set(el, { opacity: 1, y: 0 }); return; }
     quandoEntra(el, function () {
       gsap.to(el, { opacity: 1, y: 0, duration: .8, ease: "power3.out", delay: parseFloat(el.dataset.ritardo || 0) });
     });
   });
   document.querySelectorAll("[data-entrano]").forEach(function (gruppo) {
+    if (subito(gruppo)) { gsap.set(gruppo.children, { opacity: 1, y: 0 }); return; }
     quandoEntra(gruppo, function () {
       gsap.to(gruppo.children, { opacity: 1, y: 0, duration: .7, ease: "power3.out", stagger: .08 });
     });

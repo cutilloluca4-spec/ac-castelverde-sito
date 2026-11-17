@@ -30,7 +30,18 @@ document.addEventListener("DOMContentLoaded", function () {
       b.classList.toggle("is-attiva", attivo);
       b.setAttribute("aria-selected", attivo);
     });
+    mostraFiltroScelto("smooth");
   }
+
+  // su smartphone la riga dei filtri scorre di lato: il filtro scelto resta in vista
+  function mostraFiltroScelto(modo) {
+    const scelto = filtri.querySelector(".is-attiva");
+    if (!scelto) return;
+    const dx = scelto.getBoundingClientRect().left - filtri.getBoundingClientRect().left;
+    filtri.scrollTo({ left: filtri.scrollLeft + dx - (filtri.clientWidth - scelto.offsetWidth) / 2, behavior: modo });
+  }
+  // all'apertura (es. notizie.html?categoria=Storia) quando la pagina è impaginata del tutto
+  window.addEventListener("load", function () { mostraFiltroScelto("instant"); });
 
   filtri.addEventListener("click", function (e) {
     const b = e.target.closest("button");

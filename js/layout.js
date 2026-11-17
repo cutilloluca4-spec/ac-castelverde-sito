@@ -98,8 +98,8 @@ function disegnaMenu(pagina) {
       '<div class="h-[6px] bg-[linear-gradient(90deg,var(--color-grigio)_50%,var(--color-rosso)_50%)]"></div>' +
     "</header>" +
     // menu mobile
-    // chiuso sta fuori dallo schermo a destra; con is-aperto entra
-    '<div id="menuMobile" class="fixed inset-0 z-40 trama-grigia flex flex-col pt-[132px] pb-10 px-6 overflow-y-auto lg:hidden translate-x-full transition-[translate] duration-[400ms] ease-[cubic-bezier(.7,0,.2,1)] [&.is-aperto]:translate-x-0" aria-hidden="true">' +
+    // menu-mobile (css/sito.css): chiuso sta fuori dallo schermo a destra; con is-aperto entra
+    '<div id="menuMobile" class="menu-mobile fixed inset-0 z-40 trama-grigia flex flex-col pt-[132px] pb-10 px-6 overflow-y-auto lg:hidden" aria-hidden="true">' +
       `<nav class="flex flex-col gap-3" aria-label="Menu">${vociMobile}</nav>` +
       (CLUB.social.instagram ? `<a href="${CLUB.social.instagram}" target="_blank" rel="noopener" class="btn btn--rosso self-start mt-8"><span class="w-5 h-5">${ICONE.instagram}</span>Seguici su Instagram</a>` : "") +
     "</div>";

@@ -49,8 +49,10 @@ const LARGHEZZA_CARD_PARTITA = "w-full tablet:w-[min(82vw,360px)]";
 // Le schede per scegliere squadra o categoria (Home, Calendario, Notizie, Squadre).
 // La classe is-attiva la mette il JavaScript sulla scheda scelta: pillola rossa con testo bianco
 // (come la voce attiva del menu da telefono).
-// Il contenitore (.schede, in css/sito.css) le mette in fila e le fa andare a capo su smartphone.
-const CLASSI_SCHEDA = "flex-none cursor-pointer border-0 rounded-full bg-transparent text-inherit no-underline font-acc-titoli font-bold uppercase text-[18px] tracking-[.03em] px-[18px] pt-[11px] pb-2 transition-[background-color,box-shadow] duration-200 hover:bg-black/6 [&.is-attiva]:bg-acc-rosso [&.is-attiva]:text-white [&.is-attiva]:hover:bg-acc-rosso";
+// Il contenitore (.schede, in css/sito.css) le tiene sempre su una riga. Su smartphone testo e
+// margini si adattano alla larghezza dello schermo (clamp: minimo, valore in vw, massimo), così le
+// 4 squadre ci stanno; se le voci sono di più (filtri delle notizie) la riga scorre di lato.
+const CLASSI_SCHEDA = "flex-none cursor-pointer border-0 rounded-full bg-transparent text-inherit no-underline font-acc-titoli font-bold uppercase text-[clamp(13px,3.7vw,15px)] tracking-[.02em] px-[clamp(7px,2.4vw,12px)] pt-[9px] pb-1.5 tablet:text-[18px] tablet:tracking-[.03em] tablet:px-[18px] tablet:pt-[11px] tablet:pb-2 transition-[background-color,box-shadow] duration-200 hover:bg-black/6 [&.is-attiva]:bg-acc-rosso [&.is-attiva]:text-white [&.is-attiva]:hover:bg-acc-rosso";
 
 // I pulsanti ⟵ ⟶ dei caroselli (disabled = siamo all'inizio o alla fine della fila)
 const CLASSI_FRECCIA = "grid place-items-center w-12 h-12 cursor-pointer border-2 border-current bg-transparent text-inherit transition-colors hover:bg-acc-rosso hover:border-acc-rosso hover:text-white disabled:opacity-30 disabled:pointer-events-none";
