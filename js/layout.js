@@ -60,7 +60,8 @@ function disegnaMenu(pagina) {
   }).join("");
 
   contenitore.innerHTML =
-    '<header id="testata" class="menu fixed top-0 inset-x-0 z-50 bg-white">' +
+    // is-scorso (ombra) e is-nascosto (sparisce la barra nera) li mette preparaComandiMenu() scorrendo
+    '<header id="testata" class="fixed top-0 inset-x-0 z-50 bg-white transition-[box-shadow,translate] duration-300 [&.is-scorso]:shadow-[0_6px_20px_rgba(0,0,0,.08)] [&.is-nascosto]:-translate-y-[38px]">' +
       // barra nera sottile
       '<div class="bg-acc-nero text-white h-[38px]">' +
         '<div class="max-w-acc mx-auto h-full px-4 tablet:px-6 flex items-center justify-between gap-4 text-[12px] font-semibold uppercase tracking-[.1em]">' +
@@ -77,7 +78,8 @@ function disegnaMenu(pagina) {
       // su smartphone la barra è più bassa (64 px): più spazio per i contenuti
       '<div class="max-w-acc mx-auto h-[64px] lg:h-[76px] px-4 tablet:px-6 flex items-center gap-6">' +
         `<a href="index.html" class="flex items-center gap-3 no-underline text-acc-nero self-start pt-2" aria-label="${testo(CLUB.nome)} — Home">` +
-          '<img class="menu__stemma h-[70px] lg:h-[84px] w-auto -mb-5 drop-shadow-[0_6px_8px_rgba(0,0,0,.18)]" src="assets/logo/stemma-400.png" alt="" />' +
+          // scorrendo lo stemma si rimpicciolisce (! = vince sulle altezze di base)
+          '<img class="h-[70px] lg:h-[84px] w-auto -mb-5 drop-shadow-[0_6px_8px_rgba(0,0,0,.18)] transition-[height,margin] duration-300 [.is-scorso_&]:!h-[52px] [.is-scorso_&]:!mb-0" src="assets/logo/stemma-400.png" alt="" />' +
           '<span class="flex lg:hidden xl:flex flex-col leading-none pt-1">' +
             '<span class="titolo-display text-[22px] sm:text-[26px]">A.C. Castelverde</span>' +
             `<span class="text-[12px] font-semibold uppercase tracking-[.18em] text-acc-testo-2 mt-1">Dal ${CLUB.fondazione}</span>` +
@@ -85,15 +87,19 @@ function disegnaMenu(pagina) {
         "</a>" +
         `<nav class="hidden lg:flex flex-1 justify-center gap-6 xl:gap-9" aria-label="Menu principale">${voci}</nav>` +
         (CLUB.social.instagram ? `<a href="${CLUB.social.instagram}" target="_blank" rel="noopener" class="hidden lg:inline-flex btn btn--rosso ml-auto lg:ml-0 !py-3 !px-4 !text-[17px]"><span class="w-[18px] h-[18px]">${ICONE.instagram}</span>Seguici</a>` : "") +
-        '<button id="apriMenu" class="menu__apri lg:hidden ml-auto -mr-1.5 w-11 h-11 px-1.5 flex flex-col justify-center bg-transparent border-0 cursor-pointer" aria-label="Apri il menu" aria-expanded="false" aria-controls="menuMobile">' +
-          "<span></span><span></span><span></span>" +
+        // le tre righe dell'hamburger: con is-aperto diventano una X
+        '<button id="apriMenu" class="group lg:hidden ml-auto -mr-1.5 w-11 h-11 px-1.5 flex flex-col justify-center gap-1.5 bg-transparent border-0 cursor-pointer" aria-label="Apri il menu" aria-expanded="false" aria-controls="menuMobile">' +
+          '<span class="block h-[3px] bg-acc-nero transition-[translate,rotate] duration-300 group-[.is-aperto]:translate-y-[9px] group-[.is-aperto]:rotate-45"></span>' +
+          '<span class="block h-[3px] bg-acc-nero transition-opacity duration-200 group-[.is-aperto]:opacity-0"></span>' +
+          '<span class="block h-[3px] bg-acc-nero transition-[translate,rotate] duration-300 group-[.is-aperto]:-translate-y-[9px] group-[.is-aperto]:-rotate-45"></span>' +
         "</button>" +
       "</div>" +
       // fascia grigio/rossa come lo stemma
       '<div class="h-[6px] bg-[linear-gradient(90deg,var(--color-grigio)_50%,var(--color-rosso)_50%)]"></div>' +
     "</header>" +
     // menu mobile
-    '<div id="menuMobile" class="menu-mobile fixed inset-0 z-40 trama-grigia flex flex-col pt-[132px] pb-10 px-6 overflow-y-auto lg:hidden" aria-hidden="true">' +
+    // chiuso sta fuori dallo schermo a destra; con is-aperto entra
+    '<div id="menuMobile" class="fixed inset-0 z-40 trama-grigia flex flex-col pt-[132px] pb-10 px-6 overflow-y-auto lg:hidden translate-x-full transition-[translate] duration-[400ms] ease-[cubic-bezier(.7,0,.2,1)] [&.is-aperto]:translate-x-0" aria-hidden="true">' +
       `<nav class="flex flex-col gap-3" aria-label="Menu">${vociMobile}</nav>` +
       (CLUB.social.instagram ? `<a href="${CLUB.social.instagram}" target="_blank" rel="noopener" class="btn btn--rosso self-start mt-8"><span class="w-5 h-5">${ICONE.instagram}</span>Seguici su Instagram</a>` : "") +
     "</div>";
@@ -229,13 +235,21 @@ function preparaComandiMenu() {
 
   // Menu mobile
   if (pulsante && menuMobile) {
-    pulsante.addEventListener("click", function () {
-      const aperto = !menuMobile.classList.contains("is-aperto");
+    const apriChiudi = function (aperto) {
       menuMobile.classList.toggle("is-aperto", aperto);
       pulsante.classList.toggle("is-aperto", aperto);
       document.body.classList.toggle("menu-aperto", aperto);
+      document.body.style.overflow = aperto ? "hidden" : "";   // la pagina sotto non scorre
       pulsante.setAttribute("aria-expanded", aperto);
+      pulsante.setAttribute("aria-label", aperto ? "Chiudi il menu" : "Apri il menu");
       menuMobile.setAttribute("aria-hidden", !aperto);
+    };
+    pulsante.addEventListener("click", function () {
+      apriChiudi(!menuMobile.classList.contains("is-aperto"));
+    });
+    // il tasto Esc chiude il menu
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menuMobile.classList.contains("is-aperto")) apriChiudi(false);
     });
   }
 }

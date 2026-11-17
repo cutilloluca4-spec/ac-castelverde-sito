@@ -239,7 +239,7 @@ function htmlClassifica(c, limite) {
     const cella = td(r.noi);
     return "<tr>" +
       `<td class="${cella}">${i + 1}</td>` +
-      `<td class="${cella} text-left whitespace-nowrap">${nome}</td>` +
+      `<td class="${cella} text-left tablet:whitespace-nowrap">${nome}</td>` +
       `<td class="${cella}"><strong>${r.pt}</strong></td>` +
       `<td class="${cella}">${r.g}</td>` +
       `<td class="${cella}${soloTablet}">${r.v}</td>` +

@@ -39,7 +39,7 @@ function htmlSchedaSquadra(s, i) {
   return (
     `<section id="${s.id}" class="scroll-mt-[128px] lg:scroll-mt-[150px] py-16 computer:py-24 ${scura ? "trama-grigia" : ""}">` +
       '<div class="max-w-acc mx-auto px-4 tablet:px-6">' +
-        '<div class="grid gap-8 tablet:gap-12 computer:grid-cols-[1.1fr_1fr] items-center">' +
+        '<div class="grid grid-cols-1 gap-8 tablet:gap-12 computer:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">' +
           `<div class="cornice angolo-rosso m-6 ${i % 2 ? "computer:order-2" : ""}" data-entra>` +
             `<img class="block w-full aspect-[4/3] object-cover" src="${testo(s.immagine)}" alt="${testo(s.nome)}" loading="lazy" />` +
           "</div>" +

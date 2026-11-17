@@ -5,16 +5,15 @@
    (cerca il nome della classe nelle pagine e in js/).
 
    Indice
-     1. Menu in alto (.menu) e menu mobile (.menu-mobile)
-     2. Intestazione delle pagine interne (.intestazione)
-     3. Caroselli orizzontali (.scorri) e contenitore delle schede (.schede)
+     1. Intestazione delle pagine interne (.intestazione)
+     2. Caroselli orizzontali (.scorri) e contenitore delle schede (.schede)
 
-   Qui resta solo quello che Tailwind non fa o che nell'HTML sarebbe
-   illeggibile: gli stati cambiati dal JavaScript (classi is-…), le forme
-   diagonali (clip-path) e i pezzi ripetuti in più pagine. Tutto il resto
-   (card, apertura della Home, linea del tempo, classifica, footer, singole
-   schede, frecce dei caroselli, campi del modulo, pulsante "torna su") è
-   scritto con Tailwind nell'HTML o in js/componenti.js.
+   Qui resta solo quello che in Tailwind sarebbe illeggibile o ripetuto in
+   molte pagine: le forme diagonali (clip-path) delle intestazioni e i
+   caroselli che su smartphone diventano elenchi. Tutto il resto (menu, card,
+   apertura della Home, linea del tempo, classifica, footer, schede, frecce
+   dei caroselli, campi del modulo, pulsante "torna su") è scritto con
+   Tailwind nell'HTML o in js/componenti.js e js/layout.js.
    ================================================================== */
 
 /* Le regole di questo file stanno nel livello "components" di Tailwind:
@@ -26,25 +25,7 @@
 @layer components {
 
 
-/* 1. MENU ---------------------------------------------------------- */
-.menu { transition: box-shadow .3s ease, transform .35s ease; }
-.menu.is-scorso { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
-.menu.is-nascosto { transform: translateY(-38px); }      /* scorrendo giù sparisce la barra nera */
-.menu__stemma { transition: height .3s ease, margin .3s ease; }
-.menu.is-scorso .menu__stemma { height: 52px !important; margin-bottom: 0 !important; }   /* !important: vince sulle classi Tailwind dello stemma */
-
-/* Pulsante hamburger */
-.menu__apri span { display: block; height: 3px; background: var(--color-nero); transition: transform .3s ease, opacity .2s ease; }
-.menu__apri span + span { margin-top: 6px; }
-.menu__apri.is-aperto span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.menu__apri.is-aperto span:nth-child(2) { opacity: 0; }
-.menu__apri.is-aperto span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-.menu-mobile { transform: translateX(100%); transition: transform .4s cubic-bezier(.7,0,.2,1); }
-.menu-mobile.is-aperto { transform: none; }
-body.menu-aperto { overflow: hidden; }
-
-/* 2. INTESTAZIONE DELLE PAGINE INTERNE --------------------------- */
+/* 1. INTESTAZIONE DELLE PAGINE INTERNE --------------------------- */
 .intestazione { position: relative; overflow: hidden; isolation: isolate; }
 .intestazione::after {      /* fascia rossa diagonale a destra */
   content: ""; position: absolute; z-index: -1; right: -8%; top: 0; bottom: 0; width: 46%;
@@ -61,7 +42,7 @@ body.menu-aperto { overflow: hidden; }
   clip-path: polygon(33% 0, 100% 0, 100% 100%, 0 100%);
 }
 
-/* 3. CAROSELLI ORIZZONTALI E SCHEDE ------------------------------ */
+/* 2. CAROSELLI ORIZZONTALI E SCHEDE ------------------------------ */
 .scorri {
   display: grid; grid-auto-flow: column; gap: 20px;
   overflow-x: auto; overscroll-behavior-x: contain;

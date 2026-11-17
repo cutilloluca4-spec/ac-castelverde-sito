@@ -64,7 +64,7 @@ ac-castelverde-sito/
 │
 ├── css/
 │   ├── componenti.css       ← i mattoncini del design system: titoli, pillola, pulsanti, cornice, trame
-│   ├── sito.css             ← menu, intestazioni, caroselli, campi del modulo, stati is-…
+│   ├── sito.css             ← le fasce diagonali delle intestazioni e i caroselli (il resto è Tailwind)
 │   └── animazioni.css       ← stati iniziali delle animazioni
 │
 ├── js/
@@ -79,20 +79,15 @@ ac-castelverde-sito/
 │   ├── componenti.js        ← l'HTML dei pezzi ripetuti (card notizia, card partita…)
 │   ├── layout.js            ← menu, partner e footer: scritti una volta per tutte le pagine
 │   ├── animazioni.js        ← comparse, contatori, caroselli, linea del tempo (GSAP + ScrollTrigger)
-│   ├── pallone-3d.js        ← il pallone dello stemma in 3D (apertura della Home e linea del tempo)
-│   ├── azione-3d.js         ← la storia (Società) come azione di calcio in 3D (Three.js): campo, pallone, porte, regia
-│   ├── giocatori-3d.js      ← i calciatori 3D: modello e movimenti registrati (assets/3d/calciatore.glb, da Mixamo)
+│   ├── pallone-3d.js        ← il pallone dello stemma disegnato in 3D su canvas (solo apertura della Home)
 │   ├── pagine/              ← un file per pagina: home.js, notizie.js, squadre.js…
 │   │   └── home-apertura.js ← l'apertura interattiva della Home (pallone, fascia, stemma)
-│   └── vendor/              ← Tailwind, GSAP, ScrollTrigger, Three.js e i suoi caricatori (non modificare)
+│   └── vendor/              ← Tailwind, GSAP e ScrollTrigger (librerie esterne: non modificare)
 │
 ├── assets/
 │   ├── logo/                ← stemma (PNG trasparente in più misure), favicon
 │   ├── font/                ← Barlow Condensed (riserva di DIN Condensed, licenza OFL)
 │   ├── img/                 ← foto: vedi assets/img/LEGGIMI.md per l'elenco completo
-│   ├── 3d/                  ← il calciatore 3D della storia: calciatore.glb e la sua copia calciatore.glb.js
-│   │                          (lo stesso file dentro uno script: così la storia 3D parte anche aprendo
-│   │                          la pagina con un doppio clic, senza Live Server)
 │   └── og-image.jpg         ← anteprima quando il link viene condiviso (1200×630)
 │
 ├── test/                    ← controlli automatici: apri test/index.html con Live Server
@@ -100,7 +95,6 @@ ac-castelverde-sito/
 │   ├── aggiorna_risultati.py ← ⭐ da lanciare ogni settimana (lo fa da solo un'attività pianificata)
 │   ├── calendari_lnd.py     ← calendari ufficiali LND 2026/27: date, campi, orari, squadre ritirate
 │   ├── tuttocampo.py        ← lettura dei risultati da Tuttocampo
-│   ├── glb_in_js.py         ← rigenera assets/3d/calciatore.glb.js dopo aver cambiato calciatore.glb
 │   └── archivio/            ← giornate già lette (non va su GitHub)
 │
 ├── docs/
@@ -202,11 +196,10 @@ Tutto viene dallo **stemma** e dalle **grafiche Instagram** del club (Match day,
 **Nei file CSS resta solo quello che Tailwind non fa, o che nell'HTML sarebbe illeggibile** (stessa regola del DSD):
 
 - i **componenti del design system** (`componenti.css`): titoli, pillole, pulsanti, cornice con angolo rosso, trame, fasce diagonali;
-- gli **stati che cambia il JavaScript** quando sono complessi (`sito.css`): menu che si accorcia e menu mobile. Gli stati semplici sono in Tailwind con la variante `[&.is-attiva]:` / `[&.is-visibile]:` (schede, pulsante "torna su");
-- le **forme lunghe** (`clip-path` delle intestazioni) e i pezzi ripetuti in molte pagine (caroselli, campi del modulo);
+- le **forme lunghe** (`clip-path` delle intestazioni) e i pezzi ripetuti in molte pagine (caroselli che su smartphone diventano elenchi), in `sito.css`;
 - le **animazioni** (`animazioni.css`): stati iniziali di GSAP e `@keyframes` (`rimbalzo`, `lampeggio`).
 
-Una classe con un nome "parlante" (`apertura__stemma`, `linea-tempo__progresso`, `menu__apri`) ha una parte di stile in `css/` oppure la usa il JavaScript: cercala lì.
+Una classe con un nome "parlante" (`apertura__stemma`, `linea-tempo__progresso`, `intestazione`) ha una parte di stile in `css/` oppure la usa il JavaScript per trovare l'elemento: cercala lì. Gli stati cambiati dal JavaScript sono classi `is-…` (es. `is-aperto`, `is-attiva`, `is-scorso`): lo stile che ne dipende è scritto direttamente sull'elemento, con le varianti di Tailwind (`[&.is-aperto]:translate-x-0`, `group-[.is-aperto]:rotate-45`).
 
 Prefissi per le larghezze dello schermo:
 

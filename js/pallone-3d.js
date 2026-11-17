@@ -2,8 +2,7 @@
    A.C. Castelverde — js/pallone-3d.js
    Il pallone dello stemma (32 facce: 12 pentagoni neri e 20 esagoni
    bianchi) disegnato in 3D su un <canvas>, che rotola davvero.
-   Usato dall'apertura della Home (js/pagine/home-apertura.js) e dalla
-   linea del tempo della pagina Società (js/animazioni.js).
+   Usato solo dall'apertura della Home (js/pagine/home-apertura.js).
 
      const palla = creaPallone3D();
      palla.rotola(dx, dy, raggio);              // spostamento in px → rotazione
