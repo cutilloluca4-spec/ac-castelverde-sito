@@ -37,21 +37,25 @@
        Altezza: riempie sempre tutto lo schermo sotto l'header (100lvh = schermo
        con le barre del browser nascoste), così la sezione dopo si vede solo
        scorrendo, su telefono come su computer. La freccia sta 24px sopra il bordo
-       visibile anche quando le barre di Safari/Chrome sono aperte (100lvh-100svh). -->
-  <section id="apertura" class="apertura cursor-pointer relative isolate overflow-hidden bg-acc-grigio-chiaro h-[calc(100lvh-108px)] lg:h-[calc(100lvh-120px)] min-h-[480px] select-none touch-pan-y" aria-label="A.C. Castelverde, dal 1987">
+       visibile anche quando le barre di Safari/Chrome sono aperte (100lvh-100svh).
+       Stemma e fascia sono centrati nella parte VISIBILE dello schermo
+       (100svh meno l'header), non nella sezione: così restano al centro anche
+       su iPhone, dove la sezione continua sotto la barra di Safari.
+       Lo stemma si rimpicciolisce sugli schermi bassi (telefono in orizzontale). -->
+  <section id="apertura" class="apertura cursor-pointer relative isolate overflow-hidden bg-acc-grigio-chiaro h-[calc(100lvh-108px)] lg:h-[calc(100lvh-120px)] min-h-[300px] select-none touch-pan-y" aria-label="A.C. Castelverde, dal 1987">
     <!-- titolo principale della Home: non si vede (l'apertura è solo grafica) ma lo leggono Google e i lettori di schermo -->
     <h1 class="sr-only">A.C. Castelverde — Associazione Calcio Castelverde, dal 1987</h1>
 
 
     <!-- fascia bianca: la scritta è ripetuta due volte per far scorrere il nastro senza salti -->
-    <div class="apertura__banda absolute -left-10 -right-10 top-1/2 -translate-y-1/2 bg-white shadow-[0_14px_30px_rgba(0,0,0,.10)] overflow-hidden pointer-events-none">
+    <div class="apertura__banda absolute -left-10 -right-10 top-[calc((100svh-108px)/2)] lg:top-[calc((100svh-120px)/2)] -translate-y-1/2 bg-white shadow-[0_14px_30px_rgba(0,0,0,.10)] overflow-hidden pointer-events-none">
       <p class="apertura__scritta flex w-max m-0 whitespace-nowrap font-acc-titoli font-bold uppercase text-[clamp(64px,11vw,168px)] leading-none pt-[.12em] pb-[.02em] will-change-transform" aria-hidden="true">
         <span class="apertura__giro flex items-center [&>*]:pr-[.28em]" aria-hidden="true"><span class="text-acc-grigio">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i></span><span class="apertura__giro flex items-center [&>*]:pr-[.28em]" aria-hidden="true"><span class="text-acc-grigio">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i></span>
       </p>
     </div>
 
-    <div class="absolute inset-0 grid place-items-center pointer-events-none">
-      <div class="apertura__stemma relative w-[min(56vw,340px)] will-change-transform">
+    <div class="absolute inset-x-0 top-0 h-[calc(100svh-108px)] lg:h-[calc(100svh-120px)] grid place-items-center pointer-events-none">
+      <div class="apertura__stemma relative w-[min(56vw,340px,(100svh-108px)*.5)] will-change-transform">
         <img class="block w-full h-auto drop-shadow-[16px_26px_28px_rgba(0,0,0,.35)]" src="assets/logo/stemma.webp" alt="Stemma dell'A.C. Castelverde, 1987" draggable="false" />
       </div>
     </div>
