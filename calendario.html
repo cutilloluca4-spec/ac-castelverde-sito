@@ -46,7 +46,9 @@
   <section class="py-14 computer:py-20">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
       <h2 class="titolo-sezione titolo-sezione--sinistra text-[36px] tablet:text-[60px] mb-10">Prossime partite</h2>
-      <div id="prossime" class="grid gap-6 tablet:grid-cols-2 computer:grid-cols-3 [&>*]:w-auto"></div>
+      <!-- 1 colonna sul telefono, 2 da tablet, 3 da computer; se l'ultima riga resta con
+           una card sola (3 partite su 2 colonne) la card va al centro, non a sinistra -->
+      <div id="prossime" class="flex flex-wrap justify-center gap-6 [&>*]:w-full tablet:[&>*]:w-[calc((100%-24px)/2)] computer:[&>*]:w-[calc((100%-48px)/3)]"></div>
       <!-- il resto del calendario, in elenco -->
       <div id="restoCalendarioBox" class="mt-12">
         <h3 class="titolo-display text-[32px] mb-4">Tutto il calendario</h3>

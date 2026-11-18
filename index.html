@@ -41,21 +41,25 @@
        Stemma e fascia sono centrati nella parte VISIBILE dello schermo
        (100svh meno l'header), non nella sezione: così restano al centro anche
        su iPhone, dove la sezione continua sotto la barra di Safari.
-       Lo stemma si rimpicciolisce sugli schermi bassi (telefono in orizzontale). -->
-  <section id="apertura" class="apertura cursor-pointer relative isolate overflow-hidden bg-acc-grigio-chiaro h-[calc(100lvh-108px)] lg:h-[calc(100lvh-120px)] min-h-[300px] select-none touch-pan-y" aria-label="A.C. Castelverde, dal 1987">
+       Sugli schermi bassi (telefono in orizzontale) stemma e scritta si rimpiccioliscono:
+       lo stemma (alto 1,14 volte la sua larghezza) lascia sempre 88px sopra e sotto,
+       così non tocca mai la freccia. Sotto i 500px di altezza (basso:) la freccia
+       va in basso a destra e lo stemma può restare più grande.
+       Lo controlla un test in test/sito.spec.js ("apertura della Home"). -->
+  <section id="apertura" class="apertura cursor-pointer relative isolate overflow-hidden bg-acc-grigio-chiaro h-[calc(100lvh-108px)] lg:h-[calc(100lvh-120px)] select-none touch-pan-y" aria-label="A.C. Castelverde, dal 1987">
     <!-- titolo principale della Home: non si vede (l'apertura è solo grafica) ma lo leggono Google e i lettori di schermo -->
     <h1 class="sr-only">A.C. Castelverde — Associazione Calcio Castelverde, dal 1987</h1>
 
 
     <!-- fascia bianca: la scritta è ripetuta due volte per far scorrere il nastro senza salti -->
     <div class="apertura__banda absolute -left-10 -right-10 top-[calc((100svh-108px)/2)] lg:top-[calc((100svh-120px)/2)] -translate-y-1/2 bg-white shadow-[0_14px_30px_rgba(0,0,0,.10)] overflow-hidden pointer-events-none">
-      <p class="apertura__scritta flex w-max m-0 whitespace-nowrap font-acc-titoli font-bold uppercase text-[clamp(64px,11vw,168px)] leading-none pt-[.12em] pb-[.02em] will-change-transform" aria-hidden="true">
+      <p class="apertura__scritta flex w-max m-0 whitespace-nowrap font-acc-titoli font-bold uppercase text-[min(clamp(64px,11vw,168px),(100svh-108px)*.25)] leading-none pt-[.12em] pb-[.02em] will-change-transform" aria-hidden="true">
         <span class="apertura__giro flex items-center [&>*]:pr-[.28em]" aria-hidden="true"><span class="text-acc-grigio">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i></span><span class="apertura__giro flex items-center [&>*]:pr-[.28em]" aria-hidden="true"><span class="text-acc-grigio">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Associazione</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-grigio">Calcio</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i><span class="text-acc-rosso">Castelverde</span><i class="not-italic text-acc-nero" aria-hidden="true">·</i></span>
       </p>
     </div>
 
     <div class="absolute inset-x-0 top-0 h-[calc(100svh-108px)] lg:h-[calc(100svh-120px)] grid place-items-center pointer-events-none">
-      <div class="apertura__stemma relative w-[min(56vw,340px,(100svh-108px)*.5)] will-change-transform">
+      <div class="apertura__stemma relative w-[min(56vw,340px,(100svh-108px)*.877-154px)] lg:w-[min(56vw,340px,(100svh-120px)*.877-154px)] basso:w-[min(56vw,340px,(100svh-108px)*.877-44px)] will-change-transform">
         <img class="block w-full h-auto drop-shadow-[16px_26px_28px_rgba(0,0,0,.35)]" src="assets/logo/stemma.webp" alt="Stemma dell'A.C. Castelverde, 1987" draggable="false" />
       </div>
     </div>
@@ -64,7 +68,7 @@
     <canvas id="campoPallone" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
 
     <!-- freccia per scendere alla prossima partita -->
-    <a href="#prossima" class="apertura__giu animate-[rimbalzo_1.8s_ease-in-out_infinite] absolute bottom-[calc(100lvh-100svh+24px)] left-1/2 -translate-x-1/2 z-10 grid place-items-center w-12 h-12 rounded-full bg-acc-nero text-white hover:bg-acc-rosso transition-colors" aria-label="Scorri alla prossima partita">
+    <a href="#prossima" class="apertura__giu animate-[rimbalzo_1.8s_ease-in-out_infinite] absolute bottom-[calc(100lvh-100svh+24px)] left-1/2 -translate-x-1/2 basso:left-auto basso:right-6 basso:translate-x-0 z-10 grid place-items-center w-12 h-12 rounded-full bg-acc-nero text-white hover:bg-acc-rosso transition-colors" aria-label="Scorri alla prossima partita">
       <span class="w-5 h-5 rotate-90"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </a>
   </section>

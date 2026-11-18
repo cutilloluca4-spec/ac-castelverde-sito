@@ -143,3 +143,37 @@ test("tutti i link interni portano a una pagina che esiste", async ({ page, requ
   }
   expect(rotti, rotti.join("\n")).toEqual([]);
 });
+
+// Apertura della Home: in ogni formato, verticale e orizzontale, lo stemma è al
+// centro dello schermo visibile, non tocca la freccia e il rosso del Match Day
+// si vede solo scorrendo
+test.describe("apertura della Home", () => {
+  const FORMATI = [
+    [320, 568], [360, 740], [390, 844], [430, 932], [626, 800], [768, 1024],
+    [568, 320], [667, 375], [740, 360], [844, 390], [932, 430], [1024, 600],
+    [1024, 768], [1280, 720], [1440, 900], [1920, 1080], [2560, 1440],
+  ];
+  for (const [larghezza, altezza] of FORMATI) {
+    test(`${larghezza}x${altezza}`, async ({ page }) => {
+      await page.setViewportSize({ width: larghezza, height: altezza });
+      await page.goto("index.html?statico");
+      const m = await page.evaluate(() => {
+        const r = (s) => document.querySelector(s).getBoundingClientRect();
+        const testata = r("header").bottom, stemma = r(".apertura__stemma img"), freccia = r(".apertura__giu");
+        return {
+          scarto: Math.abs((stemma.top + stemma.bottom) / 2 - (testata + innerHeight) / 2),
+          spazioSopra: stemma.top - testata,
+          // distanza tra stemma e freccia (0 o meno = si toccano)
+          spazioFreccia: Math.max(freccia.top - stemma.bottom, freccia.left - stemma.right, stemma.left - freccia.right),
+          frecciaDentro: freccia.bottom <= innerHeight,
+          rossoNascosto: r("#apertura").bottom >= innerHeight - 1,
+        };
+      });
+      expect(m.scarto, "stemma al centro").toBeLessThan(2);
+      expect(m.spazioSopra, "spazio tra header e stemma").toBeGreaterThan(8);
+      expect(m.spazioFreccia, "spazio tra stemma e freccia").toBeGreaterThan(8);
+      expect(m.frecciaDentro, "freccia visibile").toBe(true);
+      expect(m.rossoNascosto, "rosso visibile solo scorrendo").toBe(true);
+    });
+  }
+});

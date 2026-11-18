@@ -43,3 +43,7 @@
   --breakpoint-tablet: 37.5rem;    /* 600px: da qui anche i pieghevoli aperti (es. iPhone Duo) */
   --breakpoint-computer: 56.25rem; /* 900px */
 }
+
+/* Schermi bassi (telefono in orizzontale, fino a 500px di altezza):
+   "basso:right-6" vale solo lì. Lo usa l'apertura della Home. */
+@custom-variant basso (@media (max-height: 31.25rem));

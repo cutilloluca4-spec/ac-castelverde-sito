@@ -175,12 +175,13 @@ function disegnaPiede() {
           `<p class="titolo-display text-[22px] text-acc-rosso">${testo(CLUB.motto)}</p>` +
           `<div class="flex gap-4">${linkSocial(LINK_PIEDE + " grid place-items-center w-11 h-11 border-2 border-acc-nero-3 hover:border-acc-rosso [&>svg]:w-5 [&>svg]:h-5")}</div>` +
         `</div>` +
-        // su smartphone le colonne del footer stanno una sotto l'altra
+        // su smartphone le colonne del footer stanno una sotto l'altra;
+        // da tablet due colonne con due gruppi ciascuna (Notizie e Squadre, Club e Contatti), da computer quattro in fila
         `<div class="grid grid-cols-1 tablet:grid-cols-2 computer:grid-cols-[1fr_1fr_1fr_1.45fr] gap-8">` +
           colonna("Notizie", [["Ultime notizie", "notizie.html"], ["Prima squadra", "notizie.html?categoria=Prima%20squadra"], ["Settore giovanile", "notizie.html?categoria=Settore%20giovanile"], ["Storia", "notizie.html?categoria=Storia"]]) +
           colonna("Squadre", squadre) +
           colonna("Club", [["La nostra storia", "societa.html#storia"], ["Dirigenza", "dirigenza.html"], ["Impianti", "societa.html#impianti"], ["Calendario", "calendario.html"]]) +
-          `<div class="tablet:col-span-2 computer:col-span-1">` +
+          `<div>` +
             `<h3 class="titolo-display text-[22px] text-white mb-4">Contatti</h3>` +
             `<ul class="flex flex-col gap-1 text-[15px] tablet:text-[14px] text-acc-grigio list-none p-0 m-0">` +
               `<li class="py-1">${testo(c.indirizzo)}<br>${testo(c.cap + " " + c.citta)}</li>` +
