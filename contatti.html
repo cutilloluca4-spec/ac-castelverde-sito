@@ -56,22 +56,31 @@
            Senza chiave apre il programma di posta con il messaggio già compilato. Vedi js/pagine/contatti.js -->
       <form id="moduloContatti" class="cornice angolo-rosso bg-white p-5 tablet:p-10 m-6 grid gap-5" novalidate data-entra>
         <div class="grid gap-5 tablet:grid-cols-2">
-          <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="nome">Nome e cognome</label><input class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="nome" name="nome" type="text" autocomplete="name" required /></div>
-          <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="telefono">Telefono</label><input class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="telefono" name="telefono" type="tel" autocomplete="tel" /></div>
+          <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="nome">Nome e cognome</label><input class="w-full px-3.5 py-[13px] text-[16px] leading-normal text-acc-nero bg-white border-2 border-acc-grigio rounded-none appearance-none transition-colors focus:outline-none focus:border-acc-rosso" id="nome" name="nome" type="text" autocomplete="name" required /></div>
+          <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="telefono">Telefono</label><input class="w-full px-3.5 py-[13px] text-[16px] leading-normal text-acc-nero bg-white border-2 border-acc-grigio rounded-none appearance-none transition-colors focus:outline-none focus:border-acc-rosso" id="telefono" name="telefono" type="tel" autocomplete="tel" /></div>
         </div>
-        <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="email">Email</label><input class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="email" name="email" type="email" autocomplete="email" required /></div>
+        <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="email">Email</label><input class="w-full px-3.5 py-[13px] text-[16px] leading-normal text-acc-nero bg-white border-2 border-acc-grigio rounded-none appearance-none transition-colors focus:outline-none focus:border-acc-rosso" id="email" name="email" type="email" autocomplete="email" required /></div>
         <div>
           <label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="motivo">Per cosa ci scrivi</label>
-          <select class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="motivo" name="motivo">
-            <option>Informazioni su una squadra</option>
-            <option>Tesseramenti e provini</option>
-            <option>Diventare partner</option>
-            <option>Altro</option>
-          </select>
+          <!-- appearance-none toglie lo stile del browser (Safari lo arrotonda e lo abbassa):
+               il menu è uguale agli altri campi e la freccia è disegnata qui sotto -->
+          <div class="relative">
+            <select class="w-full px-3.5 py-[13px] text-[16px] leading-normal text-acc-nero bg-white border-2 border-acc-grigio rounded-none appearance-none transition-colors focus:outline-none focus:border-acc-rosso pr-11 cursor-pointer" id="motivo" name="motivo">
+              <option>Informazioni su una squadra</option>
+              <option>Tesseramenti e provini</option>
+              <option>Diventare partner</option>
+              <option>Altro</option>
+            </select>
+            <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-acc-nero pointer-events-none" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M3 6l5 5 5-5" /></svg>
+          </div>
         </div>
-        <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="messaggio">Messaggio</label><textarea class="w-full px-3.5 py-[13px] text-[16px] bg-white border-2 border-acc-grigio rounded-none transition-colors focus:outline-none focus:border-acc-rosso" id="messaggio" name="messaggio" rows="5" required></textarea></div>
+        <div><label class="block font-acc-titoli font-bold uppercase text-[15px] tracking-[.03em] mb-1.5" for="messaggio">Messaggio</label><textarea class="w-full px-3.5 py-[13px] text-[16px] leading-normal text-acc-nero bg-white border-2 border-acc-grigio rounded-none appearance-none transition-colors focus:outline-none focus:border-acc-rosso" id="messaggio" name="messaggio" rows="5" required></textarea></div>
         <label class="flex items-start gap-3 text-[14px] leading-snug">
-          <input type="checkbox" name="privacy" required class="mt-0.5 w-6 h-6 flex-none accent-[var(--color-rosso)]" />
+          <!-- casella quadrata nello stile del sito: bordo grigio, rossa con la spunta bianca quando è selezionata -->
+          <span class="relative flex-none mt-0.5 w-6 h-6">
+            <input type="checkbox" name="privacy" required class="peer block w-6 h-6 m-0 appearance-none bg-white border-2 border-acc-grigio rounded-none cursor-pointer transition-colors hover:border-acc-rosso checked:bg-acc-rosso checked:border-acc-rosso focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acc-nero" />
+            <svg class="absolute inset-0 m-auto w-4 h-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" /></svg>
+          </span>
           <span>Ho letto l'<a href="privacy-cookie.html" class="underline">informativa privacy</a> e acconsento al trattamento dei dati per ricevere una risposta.</span>
         </label>
         <!-- antispam: campo invisibile alle persone; i programmi automatici lo spuntano e il messaggio viene scartato -->
