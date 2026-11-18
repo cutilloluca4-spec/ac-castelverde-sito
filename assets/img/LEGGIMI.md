@@ -18,7 +18,8 @@ Per le foto in cui compaiono **minorenni** serve la liberatoria dei genitori.
 | `avversari/<nome-squadra>.webp` | max 180×180, trasparente | stemmi delle squadre avversarie, uno per club (es. `polisportiva-san-giovanni.webp`), in WebP perché sono tanti e il calendario resta leggero. Presi dagli originali in alta risoluzione di Tuttocampo o dal sito ufficiale del club (Real Melegnano). Li scarica da solo `strumenti/aggiorna_risultati.py` quando arriva una squadra nuova; per mettere un logo migliore basta sostituire il file con lo stesso nome (va bene anche un `.png`) |
 | `partner/*.webp` | larghi 600 px, trasparenti | loghi degli sponsor (gli originali a 300 ppi della società sono in `materiale/`) |
 | `social/*.webp` | 600×1067 | le grafiche Instagram mostrate nella sezione social della Home |
-| `texture/texture-grigia.webp`, `texture-rossa.webp` | — | la trama "a graffi" delle grafiche, usata come sfondo (`trama-grigia`, `trama-rossa`) |
+| `texture/texture-grigia-continua.webp`, `texture-rossa-continua.webp` | — | la trama "a graffi" delle grafiche resa senza cuciture (si ripete senza righe di giunzione), usata come sfondo (`trama-grigia`, `trama-rossa`) |
+| `texture/texture-grigia.webp`, `texture-rossa.webp` | — | la trama originale; quella grigia la usa intera il menu da telefono |
 
 ## Foto facsimile (provvisorie)
 

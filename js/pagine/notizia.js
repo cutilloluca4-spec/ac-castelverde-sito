@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     `<header class="diagonali">` +
       `<div class="max-w-[1000px] mx-auto px-4 tablet:px-6 pt-12 computer:pt-16 pb-10">` +
         `<a href="notizie.html" class="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[.1em] text-acc-nero no-underline hover:text-acc-rosso"><span class="w-4 h-4">${ICONE.indietro}</span>Notizie</a>` +
-        `<div class="flex flex-wrap items-center gap-4 mt-8">` +
+        // gap-x-6: la pillola ha un'ombra a destra, la data resta staccata
+        `<div class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8">` +
           `<a href="notizie.html?categoria=${encodeURIComponent(n.categoria)}" class="pillola text-[15px] no-underline">${testo(n.categoria)}</a>` +
           `<span class="text-[13px] font-semibold uppercase tracking-[.1em] text-acc-testo-2">${dataLunga(n.data)}</span>` +
         `</div>` +

@@ -15,7 +15,8 @@
 <meta property="og:image" content="assets/og-image.jpg" />
 <script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
 <!-- Tutto lo stile: generato da Tailwind (css/tailwind.css → npm run build) -->
-<link rel="stylesheet" href="css/stile.min.css" />
+<link rel="preload" href="assets/font/D-DINCondensed-Bold.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/stile.min.css" />
 </head>
 <body data-pagina="dirigenza" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-clip">
 
@@ -40,16 +41,19 @@
   </section>
 
   <!-- ============ ALTRE FIGURE DIRIGENZIALI ============ -->
-  <section class="trama-grigia py-16 computer:py-24">
+  <!-- sfondo chiaro come la rosa della prima squadra: le schede hanno già la trama
+       (foto provvisoria), su un fondo a trama interromperebbero il disegno.
+       pt-0: continua lo stesso fondo della sezione sopra, basta il suo spazio -->
+  <section class="pb-16 computer:pb-24">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
-      <h2 class="titolo-sezione text-[34px] tablet:text-[80px] mb-8 tablet:mb-12" data-entra>Consiglio direttivo</h2>
+      <h2 class="titolo-display text-center text-[min(44px,10vw)] tablet:text-[min(80px,10vw)] mb-8 tablet:mb-12" data-entra>Consiglio <span class="titolo-contorno">direttivo</span></h2>
       <!-- schede centrate: 1 per riga su smartphone, 2 su tablet, 3 su computer -->
       <div id="dirigenti" class="flex flex-wrap justify-center gap-6 [&>*]:w-full tablet:[&>*]:w-[calc(50%-12px)] lg:[&>*]:w-[calc(33.333%-16px)]" data-entrano></div>
     </div>
   </section>
 
   <!-- ============ STAFF DELLE SQUADRE (da SQUADRE in js/dati/squadre.js) ============ -->
-  <section class="py-16 computer:py-24">
+  <section class="pb-16 computer:pb-24">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
       <h2 class="titolo-sezione titolo-sezione--sinistra text-[36px] tablet:text-[64px] mb-8 tablet:mb-10" data-entra>Staff delle squadre</h2>
       <div id="staffSquadre" class="grid gap-6 tablet:grid-cols-2 lg:grid-cols-4" data-entrano></div>

@@ -5,6 +5,7 @@
      2. Partner             → dentro <div id="partner"></div>
      3. Footer              → dentro <div id="piede"></div>
      4. Comandi del menu    (si accorcia scorrendo, menu mobile, torna su)
+     5. Trame allineate     (.trama-grigia/.trama-rossa continue tra sezioni vicine)
 
    Per aggiungere una pagina al menu: aggiungi una riga a VOCI_MENU.
    La voce evidenziata è quella con lo stesso "id" scritto in
@@ -27,6 +28,7 @@ function preparaLayout() {
   disegnaPartner();
   disegnaPiede();
   preparaComandiMenu();
+  allineaTrame();
 }
 
 /* 1. MENU --------------------------------------------------------- */
@@ -98,8 +100,15 @@ function disegnaMenu(pagina) {
       `<div class="h-[6px] bg-[linear-gradient(90deg,var(--color-grigio)_50%,var(--color-rosso)_50%)]"></div>` +
     `</header>` +
     // menu mobile
-    // menu-mobile (css/sito.css): chiuso sta fuori dallo schermo a destra; con is-aperto entra
-    `<div id="menuMobile" class="menu-mobile fixed inset-0 z-40 trama-grigia flex flex-col pt-[132px] pb-10 px-6 overflow-y-auto lg:hidden" aria-hidden="true">` +
+    // menu-mobile (css/sito.css): chiuso sta fuori dallo schermo a destra; con is-aperto entra.
+    // È alto quanto il suo contenuto (non tutto lo schermo): la trama copre il pannello
+    // con una sola immagine (bg-cover), senza ripetersi e senza righe di giunzione.
+    // Sul telefono in verticale è largo quanto lo schermo; da tablet (600px) e con il telefono
+    // in orizzontale (basso:) è un pannello di 416px sul lato destro.
+    // pt-[156px]: la prima voce parte 40px sotto lo stemma, che sporge sotto l'header.
+    // Sotto, un velo scuro: toccandolo il menu si chiude.
+    `<div id="veloMenu" class="fixed inset-0 z-30 bg-acc-nero/50 opacity-0 pointer-events-none transition-opacity duration-300 [.menu-aperto_&]:opacity-100 [.menu-aperto_&]:pointer-events-auto lg:hidden" aria-hidden="true"></div>` +
+    `<div id="menuMobile" class="menu-mobile fixed right-0 top-0 z-40 w-full tablet:max-w-[26rem] basso:max-w-[26rem] max-h-svh trama-grigia bg-[url(../assets/img/texture/texture-grigia.webp)] bg-cover bg-top flex flex-col pt-[156px] pb-10 px-6 overflow-y-auto shadow-[0_14px_30px_rgba(0,0,0,.25)] lg:hidden" aria-hidden="true">` +
       `<nav class="flex flex-col gap-3" aria-label="Menu">${vociMobile}</nav>` +
       (CLUB.social.instagram ? `<a href="${CLUB.social.instagram}" target="_blank" rel="noopener" class="btn btn--rosso self-start mt-8"><span class="w-5 h-5">${ICONE.instagram}</span>Seguici su Instagram</a>` : "") +
     `</div>`;
@@ -125,7 +134,8 @@ function disegnaPartner() {
   contenitore.innerHTML =
     `<section class="trama-grigia py-16" aria-labelledby="titoloPartner">` +
       `<div class="max-w-acc mx-auto px-4 tablet:px-6">` +
-        `<h2 id="titoloPartner" class="titolo-sezione text-[40px] tablet:text-[52px] mb-10">I nostri partner</h2>` +
+        // sopra la trama grigia: titolo centrato con la seconda parola a contorno (la linea grigia di .titolo-sezione non si vedrebbe)
+        `<h2 id="titoloPartner" class="titolo-display text-center text-[min(44px,11vw)] tablet:text-[64px] mb-10">I nostri <span class="titolo-contorno">partner</span></h2>` +
         `<div class="grid grid-cols-2 tablet:grid-cols-3 lg:grid-cols-4 gap-3 tablet:gap-4" data-entrano>` +
           loghi +
           `<a href="contatti.html?motivo=partner#scrivici" class="col-span-full flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-[3px] border-dashed border-acc-grigio-medio px-6 py-5 text-center no-underline text-acc-nero hover:border-acc-rosso hover:text-acc-rosso transition-colors">` +
@@ -248,9 +258,34 @@ function preparaComandiMenu() {
     pulsante.addEventListener("click", function () {
       apriChiudi(!menuMobile.classList.contains("is-aperto"));
     });
+    // toccando il velo scuro sotto il menu, il menu si chiude
+    const velo = document.getElementById("veloMenu");
+    if (velo) velo.addEventListener("click", function () { apriChiudi(false); });
     // il tasto Esc chiude il menu
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && menuMobile.classList.contains("is-aperto")) apriChiudi(false);
     });
   }
 }
+
+/* 5. TRAME ALLINEATE ---------------------------------------------- */
+// Ogni sezione a trama farebbe ripartire il disegno dal suo bordo in alto a sinistra:
+// due sezioni a trama una sotto l'altra mostrerebbero una riga di taglio. Qui la
+// trama di ogni elemento viene spostata come se partisse dall'angolo della pagina,
+// così il disegno continua da una sezione all'altra. Si ricalcola quando la pagina
+// cambia altezza (contenuti caricati, finestra ridimensionata).
+function allineaTrame() {
+  function allinea() {
+    document.querySelectorAll(".trama-grigia, .trama-rossa, .trama-scura").forEach(function (el) {
+      if (el.id === "menuMobile") return;          // il menu è fisso e usa la trama intera (bg-cover)
+      const r = el.getBoundingClientRect();
+      const x = -Math.round(r.left + window.scrollX), y = -Math.round(r.top + window.scrollY);
+      // .trama-scura ha due sfondi: il velo rosso (fermo) e la trama
+      el.style.backgroundPosition = el.classList.contains("trama-scura") ? `0 0, ${x}px ${y}px` : `${x}px ${y}px`;
+    });
+  }
+  allinea();
+  if (window.ResizeObserver) new ResizeObserver(allinea).observe(document.body);
+  window.addEventListener("load", allinea);
+}
+

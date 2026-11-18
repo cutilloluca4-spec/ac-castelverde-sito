@@ -97,7 +97,7 @@ ac-castelverde-sito/
 │
 ├── assets/
 │   ├── logo/                ← stemma (WebP trasparente in più misure), favicon e icona per iPhone (PNG)
-│   ├── font/                ← Barlow Condensed (riserva di DIN Condensed, licenza OFL)
+│   ├── font/                ← D-DIN Condensed, il carattere dei titoli (licenza libera OFL)
 │   ├── img/                 ← foto in WebP: vedi assets/img/LEGGIMI.md per l'elenco completo
 │   └── og-image.jpg         ← anteprima quando il link viene condiviso (1200×630)
 │
@@ -193,16 +193,29 @@ Tutto viene dallo **stemma** e dalle **grafiche Instagram** del club (Match day,
 | Elemento | Dove | Classe |
 | --- | --- | --- |
 | Rosso `#ff0000`, grigio `#d0d2d4`, nero, bianco | `design-system/colori.css` | `text-acc-rosso`, `bg-acc-grigio`… |
-| Titoli in DIN Condensed maiuscolo | `componenti.css` §2 | `titolo-display` |
+| Titoli in D-DIN Condensed maiuscolo | `componenti.css` §2 | `titolo-display` |
 | Titolo solo contorno ("FULL TIME") | §2 | `titolo-contorno` (`--bianco`, `--rosso`) |
-| Titolo con linea grigia/rossa ai lati | §2 | `titolo-sezione` |
+| Titolo con linea grigia/rossa ai lati (solo su fondo chiaro) | §2 | `titolo-sezione` (`--sinistra`: solo la linea rossa) |
+| Titolo sopra la trama grigia: seconda parola a contorno, centrato | §2 | `titolo-display text-center` + `titolo-contorno` |
 | Etichetta bianca con ombra ("SECONDA CATEGORIA") | §3 | `pillola` (`--rossa`, `--piccola`) |
-| Riquadro con bordo grigio e angolo rosso a L | §5 | `cornice angolo-rosso` |
-| Trama "a graffi" delle grafiche | §6 | `trama-grigia`, `trama-rossa`, `trama-scura` |
+| Riquadro con bordo grigio e angolo rosso a L | §5 | `cornice angolo-rosso` (`cornice--rossa`: bordo tutto rosso, es. modulo contatti) |
+| Due angoli a L staccati dalla foto (in alto a sinistra e in basso a destra) | §5 | `angoli` (grigi), `angoli angoli--rossi` (sulla trama) |
+| Cornice metà grigia e metà rossa (presidente) | `js/componenti.js` | `htmlCardDirigente(…, true)` |
+| Trama "a graffi" delle grafiche, senza righe di giunzione | §6 | `trama-grigia`, `trama-rossa`, `trama-scura` |
 | Fasce diagonali di sfondo | §6 | `diagonali` |
 | Fascia bianca con i due stemmi e il risultato | `js/componenti.js` | costante `FASCIA` (classi Tailwind) |
 
-**Font.** Le grafiche usano **DIN Condensed**, già installato su Mac/iPhone. Su Windows e Android il sito usa **Barlow Condensed** (in `assets/font/`, molto simile). Se la società ha la licenza web di DIN, basta aggiungere i file in `assets/font/` e il loro `@font-face` in `colori.css`.
+**Font.** I titoli usano **D-DIN Condensed** (di Datto, licenza libera SIL OFL 1.1), la versione libera del DIN Condensed delle grafiche Instagram. I file sono in `assets/font/` e il sito li carica da sé: il carattere è **identico su Mac, iPhone, Windows e Android** e non serve Google Fonts. Le pagine lo pre-caricano (`<link rel="preload">` nel `<head>`) così i titoli compaiono subito con il carattere giusto. I testi usano Helvetica Neue (Mac/iPhone) e Arial altrove.
+
+In `design-system/colori.css` ci sono anche due misure del carattere: `--scarto-maiuscole` (le linee di `titolo-sezione` stanno a metà delle maiuscole) e `--cima-maiuscole` (in Squadre l'angolo della foto parte all'altezza del nome della squadra). Se un giorno si cambia carattere, vanno ricalcolate con la formula scritta lì accanto.
+
+**Regole di stile da rispettare.**
+
+- **Sopra la trama grigia il grigio non si vede**: niente linee, bordi o cornici grigie. Si usano il bianco, il rosso o il titolo con la parola a contorno; le foto delle squadre hanno gli angoli rossi (`angoli--rossi`).
+- **Le trame sono allineate alla pagina** (`allineaTrame` in `js/layout.js`): due sezioni a trama una sotto l'altra sembrano un fondo unico. Le texture `texture-*-continua.webp` sono fatte per ripetersi senza giunzioni.
+- **Un'etichetta (`pillola`) ha un'ombra a destra**: il testo accanto va staccato di almeno 24 px (`gap-x-6`).
+- **Le parole a contorno hanno più spazio tra le lettere** (`letter-spacing` in `titolo-contorno`), altrimenti i contorni di lettere vicine si toccano. Nei titoli grandi la dimensione segue lo schermo (`text-[min(52px,13.5vw)]`) così restano su una riga anche sui telefoni stretti.
+- **Pagina Squadre (da computer)**: la colonna della foto è più larga e cambia lato a ogni squadra; l'angolo in alto della foto è alla stessa altezza del nome; se la tabella dello staff ha 9 righe o più, il pulsante "Calendario e risultati" va sotto la foto, in linea con il fondo della tabella.
 
 ### Dove si trova lo stile
 
@@ -232,6 +245,7 @@ Prefissi per le larghezze dello schermo:
 | `md:` | 768 px | `md:text-[96px]` |
 | `computer:` | 900 px | `hidden computer:flex` |
 | `lg:` | 1024 px | `lg:grid-cols-5` |
+| `basso:` | schermi alti al massimo 500 px (telefono in orizzontale) | `basso:right-6`: apertura della Home e menu laterale |
 | `@xl:` | contenitore largo 576 px (container query) | righe del calendario: si dispongono in colonne in base allo spazio della colonna che le contiene, non dello schermo |
 
 ---
@@ -257,6 +271,7 @@ Prefissi per le larghezze dello schermo:
 
 - **ogni pagina a 6 larghezze** (320, 390, 626 = iPhone Duo aperto, 768, 1024, 1440 px): nessun errore JavaScript, nessun file mancante, la pagina non scorre di lato, tutte le immagini si caricano e hanno `alt`;
 - **telefono**: il menu non lampeggia all'apertura delle pagine, si apre e si chiude (anche con Esc), le schede delle squadre stanno su una riga, filtri e "Carica altre" delle notizie, il modulo contatti vuoto non parte;
+- **apertura della Home in 17 formati** (telefoni in verticale e in orizzontale, pieghevoli, tablet, computer fino a 2560 px): lo stemma è al centro dello schermo visibile, non tocca la freccia né l'header, la freccia si vede e il rosso del Match Day compare solo scorrendo;
 - **tutti i link interni** portano a una pagina (e a un `#punto`) che esiste;
 - **dati e funzioni**: la pagina `test/index.html` deve essere tutta ✅ (vedi sotto).
 

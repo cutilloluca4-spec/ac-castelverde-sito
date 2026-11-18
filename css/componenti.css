@@ -9,7 +9,7 @@
      2. Titoli: .titolo-display, .titolo-contorno, .titolo-sezione
      3. Pillola: .pillola (l'etichetta bianca con l'ombra delle grafiche)
      4. Pulsanti: .btn, .btn--rosso, .btn--bianco, .btn--contorno
-     5. Cornice con angolo rosso: .cornice, .angolo-rosso
+     5. Cornice con angolo rosso: .cornice, .angolo-rosso, .angoli
      6. Trame e diagonali: .trama-grigia, .trama-rossa, .diagonali
      7. Scudo generico avversario: .scudo-iniziali
 
@@ -31,8 +31,6 @@
 html { scroll-behavior: smooth; overflow-x: clip; }
 body { font-family: var(--font-testo); }
 h1, h2, h3, .titolo-display { font-family: var(--font-titoli); }
-/* DIN Condensed ha le maiuscole più basse di Barlow: un ritocco per
-   avere la stessa resa su Mac e Windows */
 h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 
 /* 2. TITOLI -------------------------------------------------------- */
@@ -47,6 +45,9 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 .titolo-contorno {
   color: transparent;
   -webkit-text-stroke: 2px var(--color-nero);
+  /* spazio tra le lettere: senza, i contorni di lettere vicine (es. "ET", "TT")
+     si toccano e formano una linea doppia */
+  letter-spacing: .08em;
 }
 .titolo-contorno--bianco { -webkit-text-stroke-color: #fff; }
 .titolo-contorno--rosso  { -webkit-text-stroke-color: var(--color-rosso); }
@@ -60,11 +61,17 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 }
 .titolo-sezione::before, .titolo-sezione::after {
   content: ""; flex: 1; height: 6px; min-width: 24px;
+  /* a metà delle maiuscole: --scarto-maiuscole è in design-system/colori.css */
+  translate: 0 var(--scarto-maiuscole, 0);
 }
 .titolo-sezione::before { background: var(--color-grigio); }
 .titolo-sezione::after  { background: var(--color-rosso); }
+/* Le linee vanno usate su fondo chiaro o bianco: sopra la trama grigia la linea grigia
+   sparisce, lì si usa .titolo-display centrato con la seconda parola .titolo-contorno
+   (es. "I nostri partner"). */
 /* versione allineata a sinistra: solo la linea rossa dopo */
 .titolo-sezione--sinistra::before { display: none; }
+
 /* su smartphone le linee ai lati sono più corte, così il titolo sta su una riga */
 @media (max-width: 599px) {
   .titolo-sezione { gap: 12px; }
@@ -92,7 +99,7 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
   display: inline-flex; align-items: center; justify-content: center; gap: .55em;
   padding: 14px 26px 11px;
   font-family: var(--font-titoli); font-weight: 700; font-size: 18px;
-  text-transform: uppercase; letter-spacing: .04em; line-height: 1;
+  text-transform: uppercase; letter-spacing: .08em; line-height: 1;
   text-decoration: none; border: 2px solid transparent; cursor: pointer;
   transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
 }
@@ -112,7 +119,7 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 .link-freccia {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--font-titoli); font-weight: 700; font-size: 18px; text-transform: uppercase;
-  letter-spacing: .04em; color: inherit; text-decoration: none;
+  letter-spacing: .08em; color: inherit; text-decoration: none;
 }
 .link-freccia::after { content: "→"; color: var(--color-rosso); transition: transform .2s ease; }
 .link-freccia:hover::after { transform: translateX(4px); }
@@ -128,6 +135,17 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
   top: -14px; left: -14px; width: 72px; height: 72px;
   border-top: 10px solid var(--color-rosso); border-left: 10px solid var(--color-rosso);
 }
+/* Due angoli a "L" staccati dall'immagine (14px, come la cornice): in alto a sinistra e
+   in basso a destra. Grigi su fondo chiaro, .angoli--rossi sulla trama grigia.
+   Usati per le foto delle squadre; l'elemento deve avere un margine di almeno 24px (m-6). */
+.angoli { position: relative; --colore-angoli: var(--color-grigio); }
+.angoli--rossi { --colore-angoli: var(--color-rosso); }
+.angoli::before, .angoli::after {
+  content: ""; position: absolute; z-index: 2; pointer-events: none;
+  width: 72px; height: 72px; border: 0 solid var(--colore-angoli);
+}
+.angoli::before { top: -24px; left: -24px; border-top-width: 10px; border-left-width: 10px; }
+.angoli::after  { bottom: -24px; right: -24px; border-bottom-width: 10px; border-right-width: 10px; }
 /* versione grigia in basso a destra (come nelle storie Juniores) */
 .angolo-rosso--doppio::after {
   content: ""; position: absolute; z-index: 2; pointer-events: none;
@@ -136,20 +154,24 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 }
 
 /* 6. TRAME E DIAGONALI -------------------------------------------- */
-/* La trama "a graffi" delle grafiche, grigia o rossa */
+/* La trama "a graffi" delle grafiche, grigia o rossa.
+   texture-*-continua.webp è la texture originale resa "senza cuciture": i bordi sono
+   stati fusi con il disegno opposto, così ripetendola non si vedono righe di giunzione
+   (l'originale, texture-*.webp, resta per il menu da telefono che la usa intera). js/layout.js (allineaTrame)
+   allinea la trama alla pagina: due sezioni a trama una sotto l'altra sembrano un fondo unico. */
 .trama-grigia {
   background-color: var(--color-grigio);
-  background-image: url("../assets/img/texture/texture-grigia.webp");
+  background-image: url("../assets/img/texture/texture-grigia-continua.webp");
   background-size: 520px auto;
 }
 .trama-rossa {
   background-color: var(--color-rosso);
-  background-image: url("../assets/img/texture/texture-rossa.webp");
+  background-image: url("../assets/img/texture/texture-rossa-continua.webp");
   background-size: 520px auto;
 }
 .trama-scura {
   background-color: var(--color-rosso-profondo);
-  background-image: linear-gradient(rgba(110,10,10,.82), rgba(110,10,10,.82)), url("../assets/img/texture/texture-grigia.webp");
+  background-image: linear-gradient(rgba(110,10,10,.82), rgba(110,10,10,.82)), url("../assets/img/texture/texture-grigia-continua.webp");
   background-size: auto, 520px auto;
 }
 

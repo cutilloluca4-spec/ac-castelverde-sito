@@ -15,7 +15,8 @@
 <meta property="og:image" content="assets/og-image.jpg" />
 <script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
 <!-- Tutto lo stile: generato da Tailwind (css/tailwind.css → npm run build) -->
-<link rel="stylesheet" href="css/stile.min.css" />
+<link rel="preload" href="assets/font/D-DINCondensed-Bold.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/stile.min.css" />
 </head>
 <body data-pagina="societa" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-clip">
 
@@ -57,7 +58,7 @@
     <a href="dirigenza.html" class="group max-w-acc mx-auto px-4 tablet:px-6 flex flex-wrap items-center justify-between gap-6 no-underline text-acc-nero" data-entra>
       <span>
         <span class="pillola text-[15px]">Chi guida la società</span>
-        <span class="block titolo-display text-[64px] tablet:text-[96px] mt-5">La <span class="titolo-contorno group-hover:text-acc-rosso transition-colors">dirigenza</span></span>
+        <span class="block titolo-display text-[min(64px,15.5vw)] tablet:text-[96px] mt-5">La <span class="titolo-contorno">dirigenza</span></span>
       </span>
       <span class="btn btn--rosso">Scopri la dirigenza <span class="w-4 h-4">→</span></span>
     </a>

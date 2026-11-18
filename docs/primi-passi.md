@@ -11,7 +11,8 @@ Guida per chi apre il progetto per la prima volta. In 10 minuti: dove sta cosa e
 | un colore in tutto il sito | `design-system/colori.css` |
 | il nome Tailwind di un colore, un'ombra o una larghezza dello schermo (`tablet:`) | `design-system/tema.css` |
 | come è fatta una card (notizia, partita, giocatore) | `js/componenti.js` |
-| il menu o il footer | `js/layout.js` |
+| il menu o il footer | `js/layout.js` (il menu da telefono parte nascosto grazie a `css/sito.css`) |
+| titoli, pillole, cornici, angoli delle foto, trame | `css/componenti.css` (le regole d'uso sono nel README, sezione Design system) |
 | l'ordine o il contenuto delle sezioni della Home | `index.html` + `js/pagine/home.js` |
 | la velocità di un'animazione | `js/animazioni.js` (comparse) o `js/pagine/home-apertura.js` (apertura) |
 

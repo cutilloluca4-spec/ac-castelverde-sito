@@ -18,7 +18,8 @@
 <!-- Animazioni accese solo se il sistema non chiede "riduci movimento" (vedi css/animazioni.css) -->
 <script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
 <!-- Tutto lo stile: generato da Tailwind (css/tailwind.css → npm run build) -->
-<link rel="stylesheet" href="css/stile.min.css" />
+<link rel="preload" href="assets/font/D-DINCondensed-Bold.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/stile.min.css" />
 </head>
 <body data-pagina="home" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-clip">
 
@@ -82,7 +83,7 @@
   <section class="py-16 computer:py-24" aria-labelledby="titoloNotizie">
     <div class="max-w-acc mx-auto px-4 tablet:px-6">
       <div class="flex flex-wrap items-end justify-between gap-4 mb-10" data-entra>
-        <h2 id="titoloNotizie" class="titolo-display text-[52px] tablet:text-[72px]">Ultime <span class="titolo-contorno">notizie</span></h2>
+        <h2 id="titoloNotizie" class="titolo-display text-[min(52px,13.5vw)] tablet:text-[72px]">Ultime <span class="titolo-contorno">notizie</span></h2>
         <a href="notizie.html" class="link-freccia">Tutte le notizie</a>
       </div>
       <div id="ultimeNotizie" class="grid gap-3 tablet:gap-5 tablet:grid-cols-2 computer:grid-cols-4 computer:grid-rows-[auto_auto]" data-entrano></div>
@@ -135,8 +136,9 @@
     <div class="max-w-acc mx-auto px-4 tablet:px-6" data-carosello>
       <div class="flex flex-wrap items-end justify-between gap-5 mb-10" data-entra>
         <div>
-          <h2 id="titoloRosa" class="titolo-display text-[52px] tablet:text-[72px]">Prima <span class="titolo-contorno">squadra</span></h2>
-          <div class="flex flex-wrap items-center gap-3 mt-4">
+          <h2 id="titoloRosa" class="titolo-display text-[min(52px,13.5vw)] tablet:text-[72px]">Prima <span class="titolo-contorno">squadra</span></h2>
+          <!-- gap-x-6: la pillola ha un'ombra a destra, il nome dell'allenatore resta staccato -->
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-4">
             <span class="pillola text-[16px]">Seconda Categoria</span>
             <span id="allenatore" class="titolo-display text-[20px]"></span>
           </div>
@@ -200,7 +202,7 @@
   <section class="diagonali bg-acc-grigio-chiaro pt-16 pb-24 computer:pt-24 computer:pb-40" aria-labelledby="titoloSocial">
     <div class="max-w-acc mx-auto px-4 tablet:px-6 grid computer:grid-cols-[1fr_1.2fr] gap-10 items-center">
       <div data-entra>
-        <h2 id="titoloSocial" class="titolo-display text-[56px] tablet:text-[80px]">Match day,<br><span class="text-acc-rosso">full time</span>,<br><span class="titolo-contorno">starting XI</span></h2>
+        <h2 id="titoloSocial" class="titolo-display text-[min(56px,15.5vw)] tablet:text-[min(80px,8.4vw)] computer:text-[min(80px,7vw)]">Match day,<br><span class="text-acc-rosso">full time</span>,<br><span class="titolo-contorno">starting XI</span></h2>
         <p class="text-[17px] leading-relaxed mt-5 max-w-[460px]">Formazioni, risultati e grafiche di ogni partita, dalla prima squadra agli Under 15: seguici su Instagram.</p>
         <div id="pulsantiSocial" class="flex flex-wrap gap-3 mt-7"></div>
       </div>

@@ -26,6 +26,17 @@ function htmlSchedaSquadra(s, i) {
   }).join("");
 
   const partite = partiteDi(s.id);
+  // tabella lunga (es. Prima squadra, con tutto lo staff): da computer il pulsante
+  // "Calendario e risultati" va sotto la foto, con il fondo in linea con la tabella
+  const righe = (s.annate ? 1 : 0) + 1 + (s.staff || []).length + (s.sponsor ? 1 : 0);
+  const lunga = righe >= 9;
+  const pulsante = partite.length
+    ? `<a class="btn btn--nero w-full tablet:w-auto mt-8 ${lunga ? `computer:mt-0 computer:self-end computer:justify-self-start computer:row-start-2 ${i % 2 ? "computer:col-start-2" : "computer:col-start-1"}` : ""}" href="calendario.html?squadra=${s.id}">Calendario e risultati ${ICONE.freccia}</a>`
+    : "";
+  // colonne da computer: la foto (e il pulsante, se la tabella è lunga) a sinistra nelle
+  // squadre pari, a destra nelle dispari; il testo nell'altra colonna, alto due righe
+  const colFoto = i % 2 ? "computer:col-start-2" : "computer:col-start-1";
+  const colTesto = i % 2 ? "computer:col-start-1" : "computer:col-start-2";
   const rosa = s.rosa
     ? `<div class="mt-16" data-carosello>` +
         `<div class="flex items-end justify-between gap-4 mb-6 tablet:mb-8">` +
@@ -39,12 +50,20 @@ function htmlSchedaSquadra(s, i) {
   return (
     `<section id="${s.id}" class="scroll-mt-[128px] lg:scroll-mt-[150px] py-16 computer:py-24 ${scura ? "trama-grigia" : ""}">` +
       `<div class="max-w-acc mx-auto px-4 tablet:px-6">` +
-        `<div class="grid grid-cols-1 gap-8 tablet:gap-12 computer:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">` +
-          `<div class="cornice angolo-rosso m-6 ${i % 2 ? "computer:order-2" : ""}" data-entra>` +
+        // da computer l'angolo in alto della foto è alla stessa altezza delle lettere del nome
+        // della squadra: margine = etichetta (16px × 1,8) + 20px (mt-5) + dove inizia la maiuscola
+        // nel titolo da 96px (--cima-maiuscole, in design-system/colori.css) + 24px dell'angolo
+        // la colonna della foto è più larga (1.3fr): a sinistra nelle squadre pari, a destra nelle dispari
+        `<div class="grid grid-cols-1 gap-8 tablet:gap-12 ${i % 2 ? "computer:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]" : "computer:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]"} computer:grid-rows-[auto_1fr] computer:gap-x-16 computer:gap-y-0 items-start">` +
+          // due angoli a "L" (in alto a sinistra e in basso a destra), staccati dalla foto:
+          // grigi su fondo chiaro, rossi sulla trama (dove il grigio non si vedrebbe).
+          // Da computer la foto è a filo del contenuto (computer:mx-0), allineata a "La rosa"
+          // e alle card sotto; gli angoli sporgono nel margine della pagina
+          `<div class="angoli ${scura ? "angoli--rossi" : ""} m-6 computer:mx-0 computer:mt-[calc(28.8px+20px+96px*var(--cima-maiuscole)+24px)] computer:row-start-1 ${colFoto}" data-entra>` +
             `<img class="block w-full aspect-[4/3] object-cover" src="${testo(s.immagine)}" alt="${testo(s.nome)}" loading="lazy" />` +
           `</div>` +
-          `<div data-entra data-ritardo=".1">` +
-            `<span class="pillola text-[16px]">${testo(s.campionato)}</span>` +
+          `<div class="computer:row-start-1 computer:row-span-2 ${colTesto}" data-entra data-ritardo=".1">` +
+            `<span class="pillola text-[min(16px,4.3vw)] tablet:text-[16px]">${testo(s.campionato)}</span>` +
             `<h2 class="titolo-display text-[56px] tablet:text-[96px] mt-5">${testo(s.nome)}</h2>` +
             `<p class="text-[17px] leading-relaxed mt-4 max-w-[520px]">${testo(s.descrizione)}</p>` +
             `<ul class="list-none p-0 m-0 mt-8 bg-white px-5 text-[15px]">` +
@@ -53,8 +72,9 @@ function htmlSchedaSquadra(s, i) {
               staff +
               (s.sponsor ? `<li class="flex flex-col gap-0.5 tablet:flex-row tablet:justify-between tablet:gap-4 py-3 border-t border-acc-linea"><span class="text-acc-testo-2">Sponsor</span><strong class="text-acc-rosso-scuro">${testo(s.sponsor)}</strong></li>` : "") +
             `</ul>` +
-            (partite.length ? `<a class="btn btn--nero w-full tablet:w-auto mt-8" href="calendario.html?squadra=${s.id}">Calendario e risultati ${ICONE.freccia}</a>` : "") +
+            (lunga ? "" : pulsante) +
           `</div>` +
+          (lunga ? pulsante : "") +
         `</div>` +
         rosa +
       `</div>` +

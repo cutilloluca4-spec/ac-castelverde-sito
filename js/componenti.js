@@ -34,7 +34,7 @@ const CARD_NOTIZIA = {
 
 // La fascia bianca del risultato: i due stemmi con il punteggio (o la "V") in mezzo
 const FASCIA = {
-  riga: "grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-white",
+  riga: "grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 bg-white",   // minmax(0,…): sui telefoni stretti i nomi vanno a capo invece di allargare la fascia
   squadra: "flex flex-col items-center gap-2 text-center",
   stemma: "w-[72px] h-[72px] object-contain",
   nome: "titolo-display text-[17px] leading-none tracking-[.02em]",
@@ -301,8 +301,14 @@ function htmlCardDirigente(d, grande) {
   if (grande) {
     return (
       `<article class="grid gap-10 computer:grid-cols-[minmax(0,420px)_1fr] items-center">` +
-        `<div class="cornice angolo-rosso angolo-rosso--doppio m-6 trama-grigia aspect-[4/5] relative overflow-hidden">` +
-          `<img class="absolute inset-x-0 bottom-0 w-full h-[92%] object-cover object-top ${d.foto ? "" : "!object-contain object-bottom"}" src="${testo(foto)}" alt="${testo(d.nome)}" />` +
+        // cornice metà grigia e metà rossa (come lo stemma): fascia esterna di 10px,
+        // poi 14px del colore della pagina, poi la foto
+        `<div class="p-[10px] bg-[linear-gradient(90deg,var(--color-grigio)_50%,var(--color-rosso)_50%)]">` +
+          `<div class="p-[14px] bg-acc-carta">` +
+            `<div class="trama-grigia aspect-[4/5] relative overflow-hidden">` +
+              `<img class="absolute inset-x-0 bottom-0 w-full h-[92%] object-cover object-top ${d.foto ? "" : "!object-contain object-bottom"}" src="${testo(foto)}" alt="${testo(d.nome)}" />` +
+            `</div>` +
+          `</div>` +
         `</div>` +
         `<div class="flex flex-col items-start gap-5">` +
           `<div class="flex flex-wrap gap-3">${ruoli}</div>` +

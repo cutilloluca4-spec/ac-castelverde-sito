@@ -38,10 +38,10 @@ function disegnaProssimaPartita() {
   const nome = "titolo-display text-[20px] leading-none tracking-[.02em]";
 
   box.innerHTML =
-    `<div class="grid computer:grid-cols-[auto_1.2fr_auto] items-center gap-8 computer:gap-12">` +
+    `<div class="grid grid-cols-[minmax(0,1fr)] computer:grid-cols-[auto_1.2fr_auto] items-center gap-8 computer:gap-12">` +
       `<div data-entra>` +
         `<p class="text-[13px] font-semibold uppercase tracking-[.14em] flex items-center gap-2"><span class="lampeggia w-2.5 h-2.5 rounded-full bg-white"></span>${testo(squadra.nome)}</p>` +
-        `<h2 id="titoloProssima" class="titolo-display text-[56px] tablet:text-[72px] mt-2">Match <span class="titolo-contorno titolo-contorno--bianco">day</span></h2>` +
+        `<h2 id="titoloProssima" class="titolo-display text-[min(56px,15vw)] tablet:text-[72px] mt-2">Match <span class="titolo-contorno titolo-contorno--bianco">day</span></h2>` +
         `<span class="pillola text-[16px] mt-3">${testo(p.competizione)}</span>` +
       `</div>` +
       `<div class="${FASCIA.riga} text-acc-nero px-4 py-6 shadow-[8px_10px_0_rgba(0,0,0,.18)]" data-entra data-ritardo=".1">` +
@@ -183,7 +183,7 @@ function disegnaRosa() {
     return k < 6 ? html : html.replace(`<article class="`, `<article class="max-tablet:hidden `);
   }).join("");
   const mister = squadra.staff.find(function (p) { return p.ruolo === "Allenatore"; });
-  if (mister) document.getElementById("allenatore").innerHTML = `<span class="text-acc-testo-2">All.</span> ${testo(mister.nome)}`;
+  if (mister) document.getElementById("allenatore").innerHTML = `All. ${testo(mister.nome)}`;
 }
 
 /* 07 · NUMERI ----------------------------------------------------- */
