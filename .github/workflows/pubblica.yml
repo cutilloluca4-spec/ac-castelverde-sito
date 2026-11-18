@@ -1,0 +1,71 @@
+# ==================================================================
+# A.C. Castelverde — pubblicazione automatica su GitHub Pages
+# A ogni push sul ramo main (es. "Sincronizza modifiche" in VS Code):
+#   1. costruisce il sito (npm run build → cartella _site)
+#   2. lo pubblica su GitHub Pages
+#   3. intanto, in parallelo, lancia i controlli automatici (npm test)
+# I controlli non bloccano la pubblicazione (così l'aggiornamento dei
+# risultati del lunedì va sempre online), ma se qualcosa non va GitHub
+# segna il push con una ❌ e manda un'email.
+# Una tantum: Settings → Pages → Source: "GitHub Actions".
+# ==================================================================
+name: Pubblica il sito
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  costruisci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  pubblica:
+    needs: costruisci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pubblicazione.outputs.page_url }}
+    steps:
+      - id: pubblicazione
+        uses: actions/deploy-pages@v4
+
+  controlli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: rapporto-controlli
+          path: playwright-report/
+          retention-days: 14

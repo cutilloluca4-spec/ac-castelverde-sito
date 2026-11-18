@@ -9,6 +9,7 @@ Guida per chi apre il progetto per la prima volta. In 10 minuti: dove sta cosa e
 | una notizia, una partita, un giocatore, un contatto | `js/dati/` (vedi [aggiornare-i-contenuti.md](aggiornare-i-contenuti.md)) |
 | un testo fisso (es. l'apertura della Home, le card "Dal 1987") | la pagina `.html`, cercando il commento `<!-- ===== … ===== -->` della sezione |
 | un colore in tutto il sito | `design-system/colori.css` |
+| il nome Tailwind di un colore, un'ombra o una larghezza dello schermo (`tablet:`) | `design-system/tema.css` |
 | come è fatta una card (notizia, partita, giocatore) | `js/componenti.js` |
 | il menu o il footer | `js/layout.js` |
 | l'ordine o il contenuto delle sezioni della Home | `index.html` + `js/pagine/home.js` |
@@ -44,9 +45,19 @@ Esempio: la card di una partita, in `js/componenti.js` → `htmlCardPartita(p)`.
 - Al centro la fascia bianca con i due stemmi (classi nella costante `FASCIA`, in cima al file): chi gioca in casa a sinistra, come nelle grafiche Instagram.
 - Se l'avversario non ha lo stemma, `htmlStemma()` disegna uno scudo con le iniziali.
 
-## 4. Controlli dopo una modifica
+## 4. Come si lavora
 
-1. Apri la pagina con Live Server e guarda la **console** del browser (F12 → Console): non devono esserci errori rossi.
-2. Prova la pagina **stretta** (F12 → icona del telefono): niente scorrimento orizzontale, testi leggibili.
-3. Aggiungi `?statico` all'indirizzo per vedere tutto senza animazioni.
-4. Un errore tipico nei file `js/dati/`: una **virgola mancante** tra due blocchi `{ … }` o una virgoletta `"` dentro un testo. Nei testi usa `\"` oppure le virgolette tipografiche « ».
+```
+npm install     # la prima volta
+npm run dev     # apri http://localhost:8000: a ogni salvataggio Tailwind rigenera lo stile, ricarica la pagina
+```
+
+Le classi Tailwind si scrivono nell'HTML (o nell'HTML dentro `js/`) come sempre; Tailwind le trova e le mette in `css/stile.min.css`. Scrivile **intere**: `bg-acc-rosso`, non `"bg-acc-" + colore` (Tailwind non le troverebbe).
+
+## 5. Controlli dopo una modifica
+
+1. **`npm test`**: prova tutte le pagine a 6 larghezze, il menu, le schede, i link e i dati. Deve essere tutto verde.
+2. Apri la pagina e guarda la **console** del browser (F12 → Console): non devono esserci errori rossi.
+3. Prova la pagina **stretta** (F12 → icona del telefono): niente scorrimento orizzontale, testi leggibili. Per l'iPhone Duo aperto: 626 × 890.
+4. Aggiungi `?statico` all'indirizzo per vedere tutto senza animazioni.
+5. Un errore tipico nei file `js/dati/`: una **virgola mancante** tra due blocchi `{ … }` o una virgoletta `"` dentro un testo. Nei testi usa `\"` oppure le virgolette tipografiche « ».

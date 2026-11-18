@@ -53,7 +53,7 @@ gruppo("Date", function () {
 });
 
 gruppo("Testi", function () {
-  verifica("testo() protegge i caratteri speciali", testo('<b>"A&B"</b>'), "&lt;b&gt;&quot;A&amp;B&quot;&lt;/b&gt;");
+  verifica("testo() protegge i caratteri speciali", testo(`<b>"A&B"</b>`), "&lt;b&gt;&quot;A&amp;B&quot;&lt;/b&gt;");
   verifica("testo() di un valore vuoto è una stringa vuota", testo(null), "");
   verifica("iniziali di un nome di squadra", iniziali("Canottieri Baldesio"), "CB");
   verifica("iniziali ignorano numeri e simboli", iniziali("Ciria Calcio 2020"), "CC");
@@ -146,7 +146,7 @@ gruppo("Squadre e staff", function () {
 // 5. COMPONENTI (js/componenti.js)
 gruppo("Componenti", function () {
   const prova = { squadra: SQUADRE[0].id, giornata: 1, data: "2026-09-13", ora: "15:30", competizione: "Prova", casa: true,
-    avversario: "Squadra <Prova>", stemma: "", campo: "Campo di prova", golNostri: 2, golLoro: 1 };
+    avversario: `Squadra <Prova>`, stemma: "", campo: "Campo di prova", golNostri: 2, golLoro: 1 };
   const card = htmlCardPartita(prova);
   verifica("la card partita protegge il nome dell'avversario", card.indexOf("Squadra &lt;Prova&gt;") > -1, true);
   verifica("la card di una partita giocata mostra il risultato", card.indexOf("2 - 1") > -1, true);
@@ -197,11 +197,11 @@ function mostraRisultati() {
   let ultimo = "";
   risultatiControlli.forEach(function (r) {
     if (r.gruppo !== ultimo) {
-      html += '<h2 class="mt-8 mb-2 text-lg font-bold">' + testo(r.gruppo) + "</h2>";
+      html += `<h2 class="mt-8 mb-2 text-lg font-bold">${testo(r.gruppo)}</h2>`;
       ultimo = r.gruppo;
     }
-    html += '<p class="py-1.5 border-b border-acc-linea text-sm">' + (r.ok ? "✅ " : "❌ ") + testo(r.descrizione) +
-      (r.dettaglio ? '<br><span class="text-acc-rosso-scuro">' + testo(r.dettaglio) + "</span>" : "") + "</p>";
+    html += `<p class="py-1.5 border-b border-acc-linea text-sm">` + (r.ok ? "✅ " : "❌ ") + testo(r.descrizione) +
+      (r.dettaglio ? `<br><span class="text-acc-rosso-scuro">${testo(r.dettaglio)}</span>` : "") + `</p>`;
   });
   document.getElementById("elenco").innerHTML = html;
 }

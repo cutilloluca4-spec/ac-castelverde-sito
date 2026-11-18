@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fatte = risultati(scelta);
     document.getElementById("risultati").innerHTML = fatte.length
       ? fatte.map(htmlRigaRisultato).join("")
-      : '<li class="py-8 text-center text-acc-testo-2">Nessun risultato ancora.</li>';
+      : `<li class="py-8 text-center text-acc-testo-2">Nessun risultato ancora.</li>`;
 
     // Classifica del girone della squadra scelta (CLASSIFICHE in js/dati/partite.js)
     const classifica = document.getElementById("classifica");

@@ -27,7 +27,7 @@ const NOTIZIE = [
     categoria: "Società",
     titolo: "Stagione 2026/27: quattro squadre in campo",
     sommario: "Prima squadra in Seconda Categoria, Juniores nel regionale Under 19, Allievi e Giovanissimi nei provinciali cremonesi.",
-    immagine: "assets/img/notizie/apertura-01.jpg",
+    immagine: "assets/img/notizie/apertura-01.webp",
     apertura: true,
     esempio: false,
     testo: [
@@ -45,7 +45,7 @@ const NOTIZIE = [
     categoria: "Storia",
     titolo: "Dal 1987 a oggi: la nostra storia",
     sommario: "Tutto è nato dal desiderio di alcuni ragazzi di tornare a giocare a calcio nel proprio paese.",
-    immagine: "assets/img/club/storia-1987.jpg",
+    immagine: "assets/img/club/storia-1987.webp",
     apertura: false,
     esempio: false,
     testo: [
@@ -60,7 +60,7 @@ const NOTIZIE = [
     categoria: "Prima squadra",
     titolo: "Castelverde - Primavera Bassa 2-1",
     sommario: "Ottava giornata: a Castelverde decidono Piazzi e Galimberti. Quarta vittoria in campionato.",
-    immagine: "assets/img/notizie/apertura-02.jpg",
+    immagine: "assets/img/notizie/apertura-02.webp",
     apertura: true,
     esempio: false,
     testo: [
@@ -75,7 +75,7 @@ const NOTIZIE = [
     categoria: "Settore giovanile",
     titolo: "Juniores, 2-1 a Spino d'Adda",
     sommario: "Vittoria in trasferta sul campo dello Spinese Oratorio: a segno Longo e Gagliardi.",
-    immagine: "assets/img/notizie/apertura-03.jpg",
+    immagine: "assets/img/notizie/apertura-03.webp",
     apertura: true,
     esempio: false,
     testo: [
@@ -90,7 +90,7 @@ const NOTIZIE = [
     categoria: "Prima squadra",
     titolo: "Castelverde - Canottieri Baldesio 1-1",
     sommario: "Allo Stadio Comunale N.1 finisce in parità: per i nostri a segno Rozzi.",
-    immagine: "assets/img/notizie/notizia-07.jpg",
+    immagine: "assets/img/notizie/notizia-07.webp",
     apertura: false,
     esempio: false,
     testo: [
@@ -105,7 +105,7 @@ const NOTIZIE = [
     categoria: "Settore giovanile",
     titolo: "Allievi, 12-0 al San Luigi",
     sommario: "Ancora imbattuti gli Under 17: cinque vittorie e un pareggio, 50 gol segnati in sei partite.",
-    immagine: "assets/img/notizie/apertura-04.jpg",
+    immagine: "assets/img/notizie/apertura-04.webp",
     apertura: true,
     esempio: false,
     testo: [
@@ -121,7 +121,7 @@ const NOTIZIE = [
     categoria: "Settore giovanile",
     titolo: "Juniores, 2-0 alla Verolese",
     sommario: "Vittoria casalinga per gli Under 19 nel Campionato Regionale.",
-    immagine: "assets/img/notizie/notizia-08.jpg",
+    immagine: "assets/img/notizie/notizia-08.webp",
     apertura: false,
     esempio: false,
     testo: [
@@ -135,7 +135,7 @@ const NOTIZIE = [
     categoria: "Storia",
     titolo: "Il campo di via dei Gerani compie 29 anni",
     sommario: "Fino al 1997 la prima squadra giocava sul campo dell'oratorio. Poi il Comune ha costruito l'impianto di oggi.",
-    immagine: "assets/img/notizie/notizia-01.jpg",
+    immagine: "assets/img/notizie/notizia-01.webp",
     apertura: false,
     esempio: false,
     testo: [
@@ -150,7 +150,7 @@ const NOTIZIE = [
     categoria: "Storia",
     titolo: "Quando il \"magico\" Chiorri giocava a Castelverde",
     sommario: "Nel 1993/94 arrivò in paese una stella del calcio nazionale. Uno spettacolo mai visto nei nostri campionati.",
-    immagine: "assets/img/notizie/notizia-03.jpg",
+    immagine: "assets/img/notizie/notizia-03.webp",
     apertura: false,
     esempio: false,
     testo: [
@@ -164,7 +164,7 @@ const NOTIZIE = [
     categoria: "Storia",
     titolo: "Hall of Fame: il ritorno delle vecchie glorie",
     sommario: "Sabato 16 maggio, alle 17, le vecchie glorie del Castelverde tornano sul prato di via dei Gerani.",
-    immagine: "assets/img/notizie/notizia-06.jpg",
+    immagine: "assets/img/notizie/notizia-06.webp",
     apertura: false,
     esempio: false,
     testo: [
@@ -178,7 +178,7 @@ const NOTIZIE = [
     categoria: "Società",
     titolo: "Diventa partner del Castelverde",
     sommario: "Le aziende del territorio che sostengono la società hanno il loro marchio sul sito e sulle grafiche delle partite. C'è posto anche per te.",
-    immagine: "assets/img/notizie/notizia-04.jpg",
+    immagine: "assets/img/notizie/notizia-04.webp",
     apertura: false,
     esempio: false,
     testo: [

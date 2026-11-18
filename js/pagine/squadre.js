@@ -27,38 +27,38 @@ function htmlSchedaSquadra(s, i) {
 
   const partite = partiteDi(s.id);
   const rosa = s.rosa
-    ? '<div class="mt-16" data-carosello>' +
-        '<div class="flex items-end justify-between gap-4 mb-6 tablet:mb-8">' +
-          '<h3 class="titolo-display text-[40px] tablet:text-[56px]">La <span class="titolo-contorno">rosa</span></h3>' +
+    ? `<div class="mt-16" data-carosello>` +
+        `<div class="flex items-end justify-between gap-4 mb-6 tablet:mb-8">` +
+          `<h3 class="titolo-display text-[40px] tablet:text-[56px]">La <span class="titolo-contorno">rosa</span></h3>` +
           `<div class="hidden tablet:flex gap-2"><button type="button" class="${CLASSI_FRECCIA}" data-scorri-indietro aria-label="Indietro">⟵</button><button type="button" class="${CLASSI_FRECCIA}" data-scorri-avanti aria-label="Avanti">⟶</button></div>` +
-        "</div>" +
+        `</div>` +
         `<div class="scorri scorri--griglia" tabindex="0" aria-label="Rosa: ${testo(s.nome)} (si scorre con le frecce della tastiera)">${s.rosa.map(htmlCardGiocatore).join("")}</div>` +
-      "</div>"
+      `</div>`
     : "";
 
   return (
     `<section id="${s.id}" class="scroll-mt-[128px] lg:scroll-mt-[150px] py-16 computer:py-24 ${scura ? "trama-grigia" : ""}">` +
-      '<div class="max-w-acc mx-auto px-4 tablet:px-6">' +
-        '<div class="grid grid-cols-1 gap-8 tablet:gap-12 computer:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">' +
+      `<div class="max-w-acc mx-auto px-4 tablet:px-6">` +
+        `<div class="grid grid-cols-1 gap-8 tablet:gap-12 computer:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">` +
           `<div class="cornice angolo-rosso m-6 ${i % 2 ? "computer:order-2" : ""}" data-entra>` +
             `<img class="block w-full aspect-[4/3] object-cover" src="${testo(s.immagine)}" alt="${testo(s.nome)}" loading="lazy" />` +
-          "</div>" +
-          '<div data-entra data-ritardo=".1">' +
+          `</div>` +
+          `<div data-entra data-ritardo=".1">` +
             `<span class="pillola text-[16px]">${testo(s.campionato)}</span>` +
             `<h2 class="titolo-display text-[56px] tablet:text-[96px] mt-5">${testo(s.nome)}</h2>` +
             `<p class="text-[17px] leading-relaxed mt-4 max-w-[520px]">${testo(s.descrizione)}</p>` +
-            '<ul class="list-none p-0 m-0 mt-8 bg-white px-5 text-[15px]">' +
+            `<ul class="list-none p-0 m-0 mt-8 bg-white px-5 text-[15px]">` +
               (s.annate ? `<li class="flex flex-col gap-0.5 tablet:flex-row tablet:justify-between tablet:gap-4 py-3"><span class="text-acc-testo-2">Annate</span><strong>${testo(s.annate)}</strong></li>` : "") +
               `<li class="flex flex-col gap-0.5 tablet:flex-row tablet:justify-between tablet:gap-4 py-3 ${s.annate ? "border-t border-acc-linea" : ""}"><span class="text-acc-testo-2">Allenamenti</span><strong class="tablet:text-right">${testo(s.allenamenti)}</strong></li>` +
               staff +
               (s.sponsor ? `<li class="flex flex-col gap-0.5 tablet:flex-row tablet:justify-between tablet:gap-4 py-3 border-t border-acc-linea"><span class="text-acc-testo-2">Sponsor</span><strong class="text-acc-rosso-scuro">${testo(s.sponsor)}</strong></li>` : "") +
-            "</ul>" +
+            `</ul>` +
             (partite.length ? `<a class="btn btn--nero w-full tablet:w-auto mt-8" href="calendario.html?squadra=${s.id}">Calendario e risultati ${ICONE.freccia}</a>` : "") +
-          "</div>" +
-        "</div>" +
+          `</div>` +
+        `</div>` +
         rosa +
-      "</div>" +
-    "</section>"
+      `</div>` +
+    `</section>`
   );
 }
 

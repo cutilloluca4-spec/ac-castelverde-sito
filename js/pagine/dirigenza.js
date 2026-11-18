@@ -19,13 +19,13 @@ document.addEventListener("DOMContentLoaded", function () {
       return `<li class="flex flex-col gap-0.5 py-3 border-t border-acc-linea first:border-t-0"><span class="text-[12px] font-semibold uppercase tracking-[.08em] text-acc-testo-2">${testo(p.ruolo)}</span><strong class="text-[16px]">${testo(p.nome)}</strong></li>`;
     }).join("");
     return (
-      '<article class="bg-white flex flex-col">' +
+      `<article class="bg-white flex flex-col">` +
         `<a href="squadre.html#${s.id}" class="trama-rossa text-white p-6 no-underline">` +
           `<span class="text-[12px] font-semibold uppercase tracking-[.1em] opacity-90">${testo(s.categoria)}${s.livello ? " · " + testo(s.livello) : ""}</span>` +
           `<span class="block titolo-display text-[40px] mt-1">${testo(s.nome)}</span>` +
-        "</a>" +
+        `</a>` +
         `<ul class="list-none m-0 px-6 pb-4 pt-3">${righe}</ul>` +
-      "</article>"
+      `</article>`
     );
   }).join("");
 

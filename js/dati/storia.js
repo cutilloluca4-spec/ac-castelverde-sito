@@ -11,7 +11,7 @@ const STORIA = [
   {
     anno: "1987",
     titolo: "La fondazione",
-    immagine: "assets/img/club/storia-1987.jpg",
+    immagine: "assets/img/club/storia-1987.webp",
     credito: "Il municipio e il campanile di Castelverde · Foto Grasso83, CC BY-SA 3.0, Wikimedia Commons",
     testo: "Nel luglio 1987 alcuni giovani di Castelverde fondano l'Associazione Calcio per tornare a giocare nel proprio paese: a parte una breve apparizione nel 1977, non c'era mai stata una squadra iscritta ai campionati F.I.G.C. La squadra viene presentata in piazza; a darle il battesimo arrivano il presidente dell'U.S. Cremonese Domenico Luzzara, il suo vice Giuseppe Miglioli, socio fondatore, il direttore sportivo Erminio Favalli e l'allenatore Mazzia. Primo presidente è Giovanni Giovanardi, con i vice Ulisse Caccialanza e Giuseppe Taietti; direttore sportivo Giuseppe Miglioli, allenatore Biddau. Il primo campionato di Terza Categoria si chiude con un onorevole quarto posto."
   },
@@ -48,7 +48,7 @@ const STORIA = [
   {
     anno: "1997",
     titolo: "Il nuovo campo",
-    immagine: "assets/img/club/storia-campo-1997.jpg",
+    immagine: "assets/img/club/storia-campo-1997.webp",
     testo: "Fino ad allora la prima squadra giocava sul campo dell'oratorio, concesso dalla Parrocchia, e i giovani a Costa Sant'Abramo. Il Comune di Castelverde costruisce l'attuale impianto sportivo di via dei Gerani e ne affida la gestione alla società."
   },
   {
@@ -66,7 +66,7 @@ const STORIA = [
   {
     anno: "2020",
     titolo: "Di nuovo in Prima Categoria",
-    immagine: "assets/img/club/storia-2020.jpg",
+    immagine: "assets/img/club/storia-2020.webp",
     credito: "La prima squadra 2019/20 al campo di via dei Gerani",
     testo: "La stagione 2019/20 si ferma a marzo per l'emergenza Covid-19. Quando la Federazione rende ufficiali le classifiche, il Castelverde è primo nel suo girone di Seconda Categoria e viene promosso in Prima Categoria."
   },
@@ -79,7 +79,7 @@ const STORIA = [
   {
     anno: "Oggi",
     titolo: "Cresciamo insieme",
-    immagine: "assets/img/club/storia-oggi.jpg",
+    immagine: "assets/img/club/storia-oggi.webp",
     credito: "La prima squadra 2026/27",
     testo: "Il Castelverde scende in campo con quattro squadre agonistiche: la prima squadra in Seconda Categoria, la Juniores nel Campionato Regionale Under 19, Allievi e Giovanissimi nei provinciali cremonesi. Lo spirito è sempre quello del 1987: pazienza, forza e volontà, al servizio del paese e del territorio."
   }

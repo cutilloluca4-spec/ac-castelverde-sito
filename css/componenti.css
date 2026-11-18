@@ -139,17 +139,17 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 /* La trama "a graffi" delle grafiche, grigia o rossa */
 .trama-grigia {
   background-color: var(--color-grigio);
-  background-image: url("../assets/img/texture/texture-grigia.jpg");
+  background-image: url("../assets/img/texture/texture-grigia.webp");
   background-size: 520px auto;
 }
 .trama-rossa {
   background-color: var(--color-rosso);
-  background-image: url("../assets/img/texture/texture-rossa.jpg");
+  background-image: url("../assets/img/texture/texture-rossa.webp");
   background-size: 520px auto;
 }
 .trama-scura {
   background-color: var(--color-rosso-profondo);
-  background-image: linear-gradient(rgba(110,10,10,.82), rgba(110,10,10,.82)), url("../assets/img/texture/texture-grigia.jpg");
+  background-image: linear-gradient(rgba(110,10,10,.82), rgba(110,10,10,.82)), url("../assets/img/texture/texture-grigia.webp");
   background-size: auto, 520px auto;
 }
 

@@ -61,7 +61,7 @@ const SQUADRE = [
     categoria: "Seconda Categoria",
     campionato: "Seconda Categoria",
     annate: "",
-    immagine: "assets/img/squadre/prima-squadra.jpg",
+    immagine: "assets/img/squadre/prima-squadra.webp",
     descrizione: "La squadra che rappresenta Castelverde nei campionati dilettantistici della F.I.G.C. dal 1987.",
     staff: [
       { ruolo: "Allenatore", nome: "Salvatore Puzone" },
@@ -84,7 +84,7 @@ const SQUADRE = [
     livello: "Regionale",
     campionato: "Campionato Regionale Under 19",
     annate: "2007 - 2008 - 2009",
-    immagine: "assets/img/squadre/juniores.jpg",
+    immagine: "assets/img/squadre/juniores.webp",
     descrizione: "Gli Under 19 nel campionato regionale lombardo: l'ultimo passo prima della prima squadra.",
     sponsor: "Selica Costruzioni",
     staff: [
@@ -102,7 +102,7 @@ const SQUADRE = [
     livello: "Provinciale",
     campionato: "Campionato Provinciale Cremonese Under 17",
     annate: "2010 - 2011",
-    immagine: "assets/img/squadre/allievi.jpg",
+    immagine: "assets/img/squadre/allievi.webp",
     descrizione: "Gli Under 17 nel campionato provinciale di Cremona.",
     sponsor: "DD Sistemi",
     staff: [
@@ -121,7 +121,7 @@ const SQUADRE = [
     livello: "Provinciale",
     campionato: "Campionato Provinciale Cremonese Under 15",
     annate: "2012 - 2013 - 2014",
-    immagine: "assets/img/squadre/giovanissimi.jpg",
+    immagine: "assets/img/squadre/giovanissimi.webp",
     descrizione: "Gli Under 15 nel campionato provinciale di Cremona.",
     sponsor: "Unical",
     staff: [

@@ -14,7 +14,7 @@ In `js/dati/notizie.js` copia un blocco `{ … },` e incollalo **in cima** alla 
   categoria: "Prima squadra",              // Società · Prima squadra · Settore giovanile · Storia
   titolo: "Castelverde - Rapid United 2-0",
   sommario: "Una o due righe che compaiono nelle card.",
-  immagine: "assets/img/notizie/castelverde-rapid-united.jpg",
+  immagine: "assets/img/notizie/castelverde-rapid-united.webp",
   apertura: true,                          // true = card grande delle "Ultime notizie" in Home
   esempio: false,
   testo: [
@@ -35,7 +35,7 @@ cd strumenti
 python3 aggiorna_risultati.py
 ```
 
-Dopo l'aggiornamento apri `test/index.html` con Live Server: se è tutto ✅ classifiche, date e stemmi sono coerenti.
+Dopo l'aggiornamento lancia `npm test` (o apri `test/index.html` con Live Server): se è tutto ✅ classifiche, date e stemmi sono coerenti.
 
 Non modificare `js/dati/partite.js` a mano: viene riscritto a ogni aggiornamento. Per correggere un campo, un orario o escludere una squadra ritirata si cambia `strumenti/calendari_lnd.py` e si rilancia con `--solo-archivio`.
 
@@ -65,7 +65,7 @@ In `js/dati/partner.js` aggiungi una riga con nome, logo e (facoltativo) sito; i
 In `js/dati/club.js`, lista `organigramma`, una riga per persona:
 
 ```js
-{ nome: "Luca Carnevali", ruoli: ["Vicepresidente", "Direttore sportivo"], foto: "assets/img/dirigenti/carnevali.jpg", email: "" },
+{ nome: "Luca Carnevali", ruoli: ["Vicepresidente", "Direttore sportivo"], foto: "assets/img/dirigenti/carnevali.webp", email: "" },
 ```
 
 La prima persona della lista ha la scheda grande nella pagina Dirigenza. Foto: JPG verticale 800×1000 px, mezzo busto; senza foto compare la sagoma.

@@ -1,0 +1,24 @@
+{
+  "name": "ac-castelverde-sito",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sito ufficiale dell'A.C. Castelverde: HTML, Tailwind CSS e JavaScript senza framework.",
+  "homepage": "https://cutilloluca4-spec.github.io/ac-castelverde-sito/",
+  "author": "Luca Cutillo",
+  "scripts": {
+    "dev": "node strumenti/dev.mjs",
+    "css": "tailwindcss -i ./css/tailwind.css -o ./css/stile.min.css --minify",
+    "build": "npm run css && node strumenti/build.mjs",
+    "preview": "node strumenti/server.mjs _site 8080",
+    "test": "playwright test",
+    "test:aggiorna-foto": "playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@tailwindcss/cli": "4.3.3",
+    "tailwindcss": "4.3.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

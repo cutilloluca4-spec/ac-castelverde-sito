@@ -3,7 +3,9 @@
 **Il sito della società di calcio di Castelverde (CR), dal 1987.**
 Stagione 2026/27: quattro squadre agonistiche (Prima squadra in Seconda Categoria, Juniores Under 19 nel Campionato Regionale, Allievi Under 17 e Giovanissimi Under 15 nei provinciali cremonesi). Notizie, calendario e risultati, storia, dirigenza, contatti e partner.
 
-> **Stato:** prima versione completa (ottobre 2026). Tutte le pagine funzionano; mancano le foto vere (al loro posto ci sono segnaposto con il nome del file da sostituire) e alcuni dati da verificare (vedi [Prima di pubblicare](#prima-di-pubblicare)).
+> **Stato:** versione completa e responsive (novembre 2026), pubblicata su GitHub Pages: <https://cutilloluca4-spec.github.io/ac-castelverde-sito/>. Mancano le foto vere (al loro posto ci sono segnaposto) e alcuni dati da verificare (vedi [Prima di pubblicare](#prima-di-pubblicare)).
+>
+> **In breve per chi sviluppa:** HTML + [Tailwind CSS 4](https://tailwindcss.com) + JavaScript senza framework. `npm install`, poi `npm run dev` per lavorare, `npm test` per i controlli, `npm run build` per il sito da pubblicare (lo fa da solo GitHub Actions a ogni push su `main`).
 >
 > **Progetto:** Luca Cutillo, segretario e responsabile del settore giovanile. Stessa impostazione del progetto Digital Sports Desk (HTML + Tailwind + JavaScript semplice), con lo stile delle grafiche Instagram del club. Reference di struttura: [acmilan.com](https://www.acmilan.com/it).
 
@@ -28,17 +30,24 @@ Stagione 2026/27: quattro squadre agonistiche (Prima squadra in Seconda Categori
 
 ## Avvio rapido
 
-Non c'è niente da installare: è HTML, CSS e JavaScript semplice. Tailwind e GSAP sono già nella cartella `js/vendor/`, caricati con un normale `<script>` come visto nel corso (funziona anche senza internet).
+Serve [Node.js](https://nodejs.org) 20 o più recente. Nella cartella del progetto:
 
-**Modo consigliato: Visual Studio Code + Live Server**
+```
+npm install        # una volta: installa Tailwind e Playwright (in node_modules/, fuori da Git)
+npm run dev        # mentre si lavora: http://localhost:8000, lo stile si rigenera a ogni salvataggio
+npm test           # controlli automatici (pagine, larghezze, menu, link, dati)
+npm run build      # il sito da pubblicare, nella cartella _site/
+npm run preview    # guarda _site/ su http://localhost:8080
+```
 
-1. Apri la cartella `ac-castelverde-sito` in Visual Studio Code.
-2. Installa l'estensione **Live Server** (di Ritwick Dey): VS Code la propone da solo, è tra le estensioni consigliate del progetto.
-3. Clic destro su `index.html` → **Open with Live Server**. Ogni volta che salvi un file, la pagina nel browser si ricarica da sola.
+| Comando | Cosa fa |
+| --- | --- |
+| `npm run dev` | Tailwind in ascolto (riscrive `css/stile.min.css` quando cambi una classe) + server locale. Ricarica la pagina per vedere le modifiche. |
+| `npm run css` | Rigenera solo `css/stile.min.css`. |
+| `npm run build` | Rigenera lo stile e prepara `_site/`: solo i file pubblici, l'impronta su ogni CSS e JS (niente cache vecchia), `sitemap.xml` e `robots.txt`. Vedi `strumenti/build.mjs`. |
+| `npm test` | Apre il sito in un browser vero (Playwright) e lo controlla: vedi [Controlli automatici](#controlli-automatici). |
 
-**In alternativa, da terminale** (nella cartella del progetto): `python3 -m http.server 8000`, poi apri <http://localhost:8000>.
-
-> Aprire `index.html` con doppio clic funziona quasi del tutto, ma alcuni browser bloccano parti del JavaScript sui file locali: meglio Live Server.
+**Senza Node** il sito si vede lo stesso: `css/stile.min.css` è già pronto nel repository, quindi basta **Live Server** in VS Code (clic destro su `index.html` → *Open with Live Server*) o `python3 -m http.server`. Solo se si cambiano le classi Tailwind serve rigenerarlo (`npm run css`); online lo rigenera comunque GitHub Actions.
 
 ---
 
@@ -60,11 +69,13 @@ ac-castelverde-sito/
 │
 ├── design-system/
 │   ├── colori.css           ← ⭐ colori, font e misure: unico punto da cambiare
-│   └── tema-tailwind.js     ← colori, ombre e larghezze come classi Tailwind (text-acc-rosso, shadow-acc-card, max-w-acc…)
+│   └── tema.css             ← i nomi Tailwind del club (text-acc-rosso, shadow-acc-card, max-w-acc, tablet:, computer:)
 │
 ├── css/
+│   ├── tailwind.css         ← ⭐ il file di partenza dello stile: Tailwind lo legge e scrive stile.min.css
+│   ├── stile.min.css        ← GENERATO (npm run css / dev / build): l'unico CSS che le pagine caricano
 │   ├── componenti.css       ← i mattoncini del design system: titoli, pillola, pulsanti, cornice, trame
-│   ├── sito.css             ← le fasce diagonali delle intestazioni e i caroselli (il resto è Tailwind)
+│   ├── sito.css             ← menu da telefono, fasce diagonali delle intestazioni, caroselli
 │   └── animazioni.css       ← stati iniziali delle animazioni
 │
 ├── js/
@@ -82,16 +93,20 @@ ac-castelverde-sito/
 │   ├── pallone-3d.js        ← il pallone dello stemma disegnato in 3D su canvas (solo apertura della Home)
 │   ├── pagine/              ← un file per pagina: home.js, notizie.js, squadre.js…
 │   │   └── home-apertura.js ← l'apertura interattiva della Home (pallone, fascia, stemma)
-│   └── vendor/              ← Tailwind, GSAP e ScrollTrigger (librerie esterne: non modificare)
+│   └── vendor/              ← GSAP e ScrollTrigger 3.12.5 (librerie esterne: non modificare, vedi LEGGIMI.md)
 │
 ├── assets/
-│   ├── logo/                ← stemma (PNG trasparente in più misure), favicon
+│   ├── logo/                ← stemma (WebP trasparente in più misure), favicon e icona per iPhone (PNG)
 │   ├── font/                ← Barlow Condensed (riserva di DIN Condensed, licenza OFL)
-│   ├── img/                 ← foto: vedi assets/img/LEGGIMI.md per l'elenco completo
+│   ├── img/                 ← foto in WebP: vedi assets/img/LEGGIMI.md per l'elenco completo
 │   └── og-image.jpg         ← anteprima quando il link viene condiviso (1200×630)
 │
-├── test/                    ← controlli automatici: apri test/index.html con Live Server
-├── strumenti/               ← aggiornamento automatico di calendario e risultati
+├── test/
+│   ├── sito.spec.js         ← controlli automatici con Playwright (npm test)
+│   ├── index.html, test.js  ← controlli di dati e funzioni (si aprono anche nel browser)
+├── strumenti/
+│   ├── dev.mjs, server.mjs  ← npm run dev / preview: Tailwind in ascolto e server locale
+│   ├── build.mjs            ← npm run build: prepara _site/ (impronte dei file, sitemap, robots)
 │   ├── aggiorna_risultati.py ← ⭐ da lanciare ogni settimana (lo fa da solo un'attività pianificata)
 │   ├── calendari_lnd.py     ← calendari ufficiali LND 2026/27: date, campi, orari, squadre ritirate
 │   ├── tuttocampo.py        ← lettura dei risultati da Tuttocampo
@@ -101,9 +116,13 @@ ac-castelverde-sito/
 │   ├── primi-passi.md       ← ⭐ da leggere per primo
 │   └── aggiornare-i-contenuti.md ← notizie, partite, foto, partner passo per passo
 │
-├── .vscode/                 ← estensioni consigliate (Live Server, EditorConfig)
+├── .github/workflows/
+│   └── pubblica.yml         ← a ogni push su main: build, pubblicazione su GitHub Pages e controlli
+├── package.json             ← comandi (npm run …) e versioni di Tailwind e Playwright
+├── playwright.config.js     ← configurazione dei controlli automatici
+├── .vscode/                 ← estensioni consigliate (Tailwind CSS IntelliSense, Live Server, Playwright, EditorConfig)
 ├── .editorconfig            ← stesso formato del codice in ogni editor
-└── .gitignore
+└── .gitignore               ← fuori da Git: node_modules/, _site/, materiale/, rapporti dei test
 ```
 
 ---
@@ -158,7 +177,7 @@ python3 aggiorna_risultati.py --solo-archivio  # rifà partite.js con i dati gi�
 
 Ogni **lunedì mattina** un'attività pianificata lo esegue sul Mac della società e manda un riepilogo dei risultati del weekend (il Mac deve essere acceso). Va bene anche un qualsiasi pianificatore: `cron` su Mac/Linux, Utilità di pianificazione su Windows, o una GitHub Action.
 
-Dopo ogni aggiornamento conviene aprire **`test/index.html`** (vedi [Controlli automatici](#controlli-automatici)): verifica che classifiche, date e stemmi del nuovo `partite.js` siano coerenti.
+Dopo ogni aggiornamento conviene lanciare **`npm test`** (o aprire `test/index.html`, vedi [Controlli automatici](#controlli-automatici)): verifica che classifiche, date e stemmi del nuovo `partite.js` siano coerenti. Online i controlli partono da soli a ogni push.
 
 Cose da sapere:
 - Tuttocampo **blocca chi fa troppe richieste** (oltre ~20 di fila): il programma va piano apposta (8 s tra una richiesta e l'altra) e rilegge solo le giornate recenti. Se viene bloccato si ferma, salva quello che ha letto e riparte da lì al giro dopo. Non abbassare la pausa.
@@ -189,14 +208,16 @@ Tutto viene dallo **stemma** e dalle **grafiche Instagram** del club (Match day,
 
 **Quasi tutto è scritto con Tailwind, direttamente nell'HTML** (e nelle funzioni di `js/componenti.js` e `js/layout.js`, che scrivono l'HTML delle parti ripetute). Per cambiare l'aspetto di una card o di una sezione si modificano le sue classi.
 
-- **Colori, ombre e larghezza massima** hanno un nome del club, definito in `design-system/tema-tailwind.js` (i valori sono in `colori.css`): `bg-acc-rosso`, `text-acc-testo-2`, `shadow-acc-card`, `shadow-acc-grafica`, `drop-shadow-acc-stemma`, `max-w-acc` (1320 px). Si cambia un valore in `colori.css` e cambia in tutto il sito.
+- **Colori, ombre e larghezza massima** hanno un nome del club, definito in `design-system/tema.css` (i valori sono in `colori.css`): `bg-acc-rosso`, `text-acc-testo-2`, `shadow-acc-card`, `shadow-acc-grafica`, `drop-shadow-acc-stemma`, `max-w-acc` (1320 px). Si cambia un valore in `colori.css` e cambia in tutto il sito.
 - **Classi ripetute in più punti** sono raccolte in costanti in cima a `js/componenti.js` (`CARD_NOTIZIA`, `FASCIA`, `COLORE_ESITO`, `LARGHEZZA_CARD_PARTITA`, `CLASSI_SCHEDA`, `CLASSI_FRECCIA`) e `js/layout.js` (`LINK_PIEDE`): si cambiano lì una volta sola.
 - **Effetti al passaggio del mouse** con `group` / `group-hover:` (card notizia, giocatore, "Dal 1987"); righe e pallini decorativi con `before:` / `after:` (menu, linea del tempo, avviso "Risultati aggiornati").
+
+**Come arriva lo stile alla pagina.** Le pagine caricano un solo file, `css/stile.min.css`, generato dalla [Tailwind CLI](https://tailwindcss.com/docs/installation/tailwind-cli) a partire da `css/tailwind.css`: Tailwind legge le pagine HTML e i file in `js/`, trova le classi usate e scrive solo il CSS che serve, insieme al tema del club e ai file qui sotto. **Le classi vanno scritte intere e staccate dal resto**, altrimenti Tailwind non le trova: sì `p-4 ${attivo ? "bg-acc-rosso" : ""}`, no `p-4${…}` o `"bg-acc-" + colore`.
 
 **Nei file CSS resta solo quello che Tailwind non fa, o che nell'HTML sarebbe illeggibile** (stessa regola del DSD):
 
 - i **componenti del design system** (`componenti.css`): titoli, pillole, pulsanti, cornice con angolo rosso, trame, fasce diagonali;
-- le **forme lunghe** (`clip-path` delle intestazioni) e i pezzi ripetuti in molte pagine (caroselli che su smartphone diventano elenchi), in `sito.css`;
+- in `sito.css`: il **menu da telefono** (deve essere già nascosto prima che la pagina compaia), le **forme lunghe** (`clip-path` delle intestazioni) e i pezzi ripetuti in molte pagine (caroselli che su smartphone diventano elenchi);
 - le **animazioni** (`animazioni.css`): stati iniziali di GSAP e `@keyframes` (`rimbalzo`, `lampeggio`).
 
 Una classe con un nome "parlante" (`apertura__stemma`, `linea-tempo__progresso`, `intestazione`) ha una parte di stile in `css/` oppure la usa il JavaScript per trovare l'elemento: cercala lì. Gli stati cambiati dal JavaScript sono classi `is-…` (es. `is-aperto`, `is-attiva`, `is-scorso`): lo stile che ne dipende è scritto direttamente sull'elemento, con le varianti di Tailwind (`[&.is-aperto]:translate-x-0`, `group-[.is-aperto]:rotate-45`).
@@ -206,10 +227,12 @@ Prefissi per le larghezze dello schermo:
 | Prefisso | Da | Esempio |
 | --- | --- | --- |
 | (nessuno) | smartphone | `text-[52px]` |
-| `sm:` | 640 px | `sm:grid-cols-2` |
-| `tablet:` | 600 px (anche i telefoni pieghevoli aperti) | `tablet:grid-cols-2` |
+| `tablet:` | 600 px (anche i telefoni pieghevoli aperti, es. iPhone Duo) | `tablet:grid-cols-2` |
+| `sm:` | 640 px | `sm:inline` (solo dove non c'è anche `tablet:` sulla stessa proprietà) |
+| `md:` | 768 px | `md:text-[96px]` |
 | `computer:` | 900 px | `hidden computer:flex` |
 | `lg:` | 1024 px | `lg:grid-cols-5` |
+| `@xl:` | contenitore largo 576 px (container query) | righe del calendario: si dispongono in colonne in base allo spazio della colonna che le contiene, non dello schermo |
 
 ---
 
@@ -218,18 +241,28 @@ Prefissi per le larghezze dello schermo:
 - **Classi CSS in italiano**, schema `blocco__parte--variante`: `titolo-contorno--bianco`, `pillola--rossa`, `apertura__stemma`. Se una classe ha un nome "parlante", una parte del suo stile è in `css/` o il JavaScript la usa: cercala lì.
 - `is-…` = **stato** acceso dal JavaScript (`is-attiva`, `is-aperto`, `is-scorso`, `is-visibile`).
 - `data-…` = attributi letti dal JavaScript: `data-entra` / `data-entrano` (compaiono scorrendo), `data-conta` (numero che sale), `data-carosello` (frecce del carosello).
-- **HTML nel JavaScript con i template literal**: `` `<a class="${classe}" href="${link}">${testo(nome)}</a>` `` (le parti tra `${…}` sono i dati). Le righe lunghe sono unite con `+`, una riga per elemento, così l'HTML si legge come nelle pagine.
-- **JavaScript semplice** (niente framework, niente build), funzioni con nomi italiani che dicono cosa fanno: `disegnaApertura()`, `prossimePartite()`, `htmlCardGiocatore()`.
+- **HTML nel JavaScript sempre tra backtick** (template literal): `` `<a class="${classe}" href="${link}">${testo(nome)}</a>` `` (le parti tra `${…}` sono i dati). Gli elementi lunghi vanno una riga per elemento, unite con `+`: l'HTML si legge indentato come nelle pagine e non nascono spazi indesiderati tra gli elementi. Le stringhe che non sono HTML usano le virgolette doppie.
+- **JavaScript semplice** (niente framework), funzioni con nomi italiani che dicono cosa fanno: `disegnaApertura()`, `prossimePartite()`, `htmlCardGiocatore()`. Gli script sono normali `<script>` caricati in ordine (vedi sopra): le funzioni sono globali, così le pagine si aprono anche senza server.
 - I testi che arrivano dai dati passano sempre da `testo()` (in `utilita.js`), che evita che un carattere `<` rompa la pagina.
 - Commento in cima a ogni file con cosa contiene; commento `<!-- ===== NOME ===== -->` prima di ogni sezione dell'HTML.
 - **Versione ferma**: aggiungi `?statico` all'indirizzo (es. `index.html?statico`) per vedere tutto senza animazioni, utile per controllare i testi o importare le pagine in Figma (html.to.design).
-- **Versione dei file (`?v=1`)**: CSS e JS sono richiamati con `?v=1`, così a ogni pubblicazione si può obbligare i browser a scaricare i file nuovi. Prima di pubblicare una versione con CSS o JS cambiati, porta il numero a `?v=2` (poi `?v=3`…) in **tutte** le pagine: in VS Code, Cerca e sostituisci in tutti i file (Cmd/Ctrl+Maiusc+H) `?v=1` → `?v=2`.
-- **Parti ripetute nelle pagine HTML (scelta voluta)**: menu, partner e footer sono scritti una volta sola da `js/layout.js`, ma il `<head>` (titolo, descrizione, anteprima social, CSS) e l'elenco degli `<script>` in fondo sono copiati in ognuna delle 9 pagine. Senza un passaggio di build è il modo più semplice e leggibile: ogni pagina si apre e si capisce da sola. Chi cambia un file comune (es. aggiunge un CSS) deve aggiungerlo in tutte le pagine; per aggiungere una pagina si copia la più simile.
+- **Versione dei file**: non si scrive a mano. `npm run build` aggiunge a ogni CSS e JS l'impronta del contenuto (`stile.min.css?v=bb510293`): quando un file cambia cambia l'impronta, e i browser scaricano quello nuovo.
+- **Parti ripetute nelle pagine HTML (scelta voluta)**: menu, partner e footer sono scritti una volta sola da `js/layout.js`, ma il `<head>` (titolo, descrizione, anteprima social, CSS) e l'elenco degli `<script>` in fondo sono copiati in ognuna delle 10 pagine: ogni pagina si apre e si capisce da sola. Chi aggiunge uno script comune lo aggiunge in tutte le pagine; per aggiungere una pagina si copia la più simile.
+- **Immagini in WebP** (`assets/img/`): pesano circa la metà dei JPG. Le nuove foto vanno convertite prima di caricarle (es. [Squoosh](https://squoosh.app), qualità 80, larghe al massimo 1600 px). Restano PNG/JPG solo favicon, icona per iPhone e `og-image.jpg`, perché social e sistemi operativi li vogliono così.
 - **Accessibilità**: ogni pagina ha un solo `<h1>` (in Home è nascosto, l'apertura è grafica), i caroselli si selezionano con Tab e si scorrono con le frecce, le immagini decorative hanno `alt=""`. Controllato con axe (lo strumento di Lighthouse): resta solo il contrasto del testo bianco piccolo sul rosso `#ff0000` (4:1, il minimo consigliato è 4,5:1), una scelta di stile del club.
 
 ### Controlli automatici
 
-`test/index.html` (aprire con Live Server) carica dati e funzioni del sito e li prova: date, testi, esiti delle partite, coerenza di `partite.js` (punti = 3 × vittorie + pareggi, gol fatti = gol subiti nel girone, prossime partite davvero future), notizie e squadre senza doppioni, componenti che proteggono i testi, e che **ogni immagine citata nei dati esista davvero**. Se compare una ❌, la riga dice cosa si aspettava e cosa ha trovato. Per aggiungere un controllo: `verifica("descrizione", ottenuto, atteso)` in `test/test.js`.
+**`npm test`** apre il sito in Chromium con [Playwright](https://playwright.dev) e controlla (file `test/sito.spec.js`):
+
+- **ogni pagina a 6 larghezze** (320, 390, 626 = iPhone Duo aperto, 768, 1024, 1440 px): nessun errore JavaScript, nessun file mancante, la pagina non scorre di lato, tutte le immagini si caricano e hanno `alt`;
+- **telefono**: il menu non lampeggia all'apertura delle pagine, si apre e si chiude (anche con Esc), le schede delle squadre stanno su una riga, filtri e "Carica altre" delle notizie, il modulo contatti vuoto non parte;
+- **tutti i link interni** portano a una pagina (e a un `#punto`) che esiste;
+- **dati e funzioni**: la pagina `test/index.html` deve essere tutta ✅ (vedi sotto).
+
+Se un controllo fallisce, `npx playwright show-report` apre il rapporto con la foto del momento. Online gli stessi controlli partono a ogni push (GitHub Actions): non bloccano la pubblicazione, ma il push viene segnato con una ❌ e GitHub manda un'email.
+
+`test/index.html` (si apre anche da solo, con Live Server) carica dati e funzioni del sito e li prova: date, testi, esiti delle partite, coerenza di `partite.js` (punti = 3 × vittorie + pareggi, gol fatti = gol subiti nel girone, prossime partite davvero future), notizie e squadre senza doppioni, componenti che proteggono i testi, e che **ogni immagine citata nei dati esista davvero**. Se compare una ❌, la riga dice cosa si aspettava e cosa ha trovato. Per aggiungere un controllo: `verifica("descrizione", ottenuto, atteso)` in `test/test.js`.
 
 ---
 
@@ -242,8 +275,8 @@ Prefissi per le larghezze dello schermo:
 - [ ] **Modulo contatti**: creare la chiave gratuita su [web3forms.com](https://web3forms.com) con l'email della società e incollarla in `js/dati/club.js` → `modulo.chiaveWeb3Forms`. Finché è vuota, "Invia" apre il programma di posta con il messaggio già scritto (non si perde niente). Fare un invio di prova.
 - [ ] **Privacy** (`privacy-cookie.html`): scrivere il nome del servizio di hosting dove indicato nel commento (sezione 2) e aggiornare la data "Ultimo aggiornamento". Farla rileggere a chi segue la privacy della società.
 - [ ] **Partner**: i loghi sono quelli originali; se si vuole che portino al sito dell'azienda, scrivere l'indirizzo in `sito:` (`js/dati/partner.js`).
-- [ ] **Controlli**: aprire `test/index.html` e verificare che sia tutto ✅; cambiare `?v=1` in tutte le pagine se CSS o JS sono cambiati dall'ultima pubblicazione.
-- [ ] **Anteprima dei link** (`og:image` in ogni pagina): con il dominio definitivo scrivere l'indirizzo completo.
+- [ ] **Controlli**: `npm test` tutto verde.
+- [ ] **Dominio definitivo**: scriverlo in `package.json` → `homepage` (lo usano `sitemap.xml` e `robots.txt`) e come indirizzo completo in `og:image` di ogni pagina (anteprima dei link). `robots.txt` funziona solo alla radice di un dominio: con l'indirizzo `github.io/ac-castelverde-sito` i motori di ricerca non lo leggono, con un dominio proprio sì.
 
 **Cookie**: il sito non usa cookie né salva dati nel browser (niente `localStorage`), carica tutto da sé (font compresi) e Instagram e Google Maps sono semplici link, non incorporati: per le linee guida del Garante (2021) il banner non serve. Diventa necessario se si aggiungono Google Analytics, mappe o video **incorporati** nelle pagine: in quel caso aggiornare anche la sezione 6 della privacy.
 
@@ -251,9 +284,11 @@ Prefissi per le larghezze dello schermo:
 
 ## Pubblicare su GitHub Pages
 
-1. Crea un repository su GitHub e carica la cartella (da VS Code: **Source Control** → **Publish to GitHub**).
-2. Su GitHub: **Settings** → **Pages** → *Source*: `Deploy from a branch`, branch `main`, cartella `/ (root)`.
-3. Dopo un minuto il sito è online all'indirizzo che GitHub mostra in quella pagina. Per un dominio proprio (es. `castelverdecalcio1987.it`) si imposta in *Custom domain*.
+Il sito si pubblica da solo con **GitHub Actions** (`.github/workflows/pubblica.yml`): a ogni push sul ramo `main` (in VS Code: *Sincronizza modifiche*) GitHub esegue `npm run build` e pubblica la cartella `_site/`. L'avanzamento si vede nella scheda **Actions** del repository.
+
+Una volta sola, su GitHub: **Settings** → **Pages** → *Build and deployment* → *Source*: **GitHub Actions**.
+
+Per un dominio proprio (es. `castelverdecalcio1987.it`): *Settings → Pages → Custom domain*, poi aggiornare `homepage` in `package.json`.
 
 La cartella `materiale/` (grafiche Instagram e file del vecchio sito usati come riferimento) è esclusa da Git in `.gitignore`.
 
@@ -265,4 +300,5 @@ La cartella `materiale/` (grafiche Instagram e file del vecchio sito usati come 
 - **Calendario automatico** dai comunicati del Comitato LND.
 - **Pagina del giocatore** (`giocatore.html?numero=10`), come il "Vedi profilo giocatore" della reference.
 - **Galleria foto** per partita.
-- **Tailwind compilato**: oggi Tailwind è lo script nel browser (`js/vendor/tailwind-browser.js`), come nel corso e nel DSD: comodo, ma la documentazione di Tailwind lo indica per sviluppo e prototipi (genera il CSS mentre la pagina si apre). Per la versione online si può generare un unico file CSS con la Tailwind CLI (`npx @tailwindcss/cli -i … -o css/tailwind.css --minify`, oppure il programma singolo senza Node): le classi nell'HTML restano le stesse, cambia solo come vengono caricate.
+- **Moduli JavaScript** (`import` / `export`) al posto delle funzioni globali: più ordine tra i file, ma le pagine non si aprirebbero più con il doppio clic (serve sempre un server). Con un bundler (es. Vite) si potrebbero anche unire `<head>` e script ripetuti nelle 10 pagine.
+- **Immagini in più misure** (`srcset`) per i telefoni, generate dalla build.

@@ -18,3 +18,11 @@ config.locale.js
 # File di lavoro dell'aggiornamento risultati (si rigenerano da soli)
 strumenti/__pycache__/
 strumenti/archivio/
+
+# Librerie installate da npm (si reinstallano con npm install)
+node_modules/
+# Il sito costruito da npm run build (lo pubblica GitHub Actions)
+_site/
+# Rapporti dei controlli automatici (npm test)
+playwright-report/
+test-results/

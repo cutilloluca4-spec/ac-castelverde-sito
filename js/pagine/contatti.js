@@ -27,7 +27,7 @@ function disegnaRecapiti() {
   };
 
   let html =
-    card(ICONE.luogo, "Sede", testo(c.indirizzo) + "<br>" + testo(c.citta), c.mappa, true) +
+    card(ICONE.luogo, "Sede", `${testo(c.indirizzo)}<br>${testo(c.citta)}`, c.mappa, true) +
     card(ICONE.telefono, "Telefono", testo(c.telefono), `tel:${c.telefonoLink}`) +
     card(ICONE.posta, "Email", `<span class="font-acc-testo normal-case font-bold text-[17px] break-all">${testo(c.email)}</span>`, `mailto:${c.email}`);
   if (CLUB.social.instagram) html += card(ICONE.instagram, "Instagram", `<span class="font-acc-testo normal-case font-bold text-[17px] break-all">${testo(CLUB.social.instagramNome)}</span>`, CLUB.social.instagram);
@@ -39,12 +39,12 @@ function disegnaCampi() {
     return (
       `<a href="${c.mappa}" target="_blank" rel="noopener" class="group flex items-center gap-6 bg-acc-grigio-chiaro p-7 no-underline text-acc-nero hover:bg-acc-nero hover:text-white transition-colors">` +
         `<span class="grid place-items-center w-16 h-16 flex-none bg-acc-rosso text-white"><span class="w-8 h-8">${ICONE.luogo}</span></span>` +
-        '<span class="flex flex-col gap-1">' +
+        `<span class="flex flex-col gap-1">` +
           `<span class="titolo-display text-[34px]">${testo(c.nome)}</span>` +
           `<span class="text-[15px] opacity-80">${testo(c.indirizzo)}</span>` +
-        "</span>" +
+        `</span>` +
         `<span class="w-7 h-7 ml-auto flex-none text-acc-rosso">${ICONE.freccia}</span>` +
-      "</a>"
+      `</a>`
     );
   }).join("");
 }

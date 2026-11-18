@@ -1,7 +1,8 @@
 {
   "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "ms-playwright.playwright",
     "ritwickdey.LiveServer",
-    "EditorConfig.EditorConfig",
-    "bradlc.vscode-tailwindcss"
+    "EditorConfig.EditorConfig"
   ]
 }

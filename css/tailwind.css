@@ -1,0 +1,27 @@
+/* ==================================================================
+   A.C. Castelverde — css/tailwind.css
+   Il file di partenza dello stile. NON si collega alle pagine:
+   Tailwind lo legge, trova le classi usate nell'HTML e nel JavaScript
+   e scrive css/stile.min.css, l'unico CSS che le pagine caricano.
+
+     npm run dev    → rigenera lo stile a ogni salvataggio (mentre si lavora)
+     npm run build  → lo rigenera una volta e prepara il sito da pubblicare
+
+   Ordine: Tailwind, poi colori e tema del club, poi i componenti
+   (pillole, pulsanti, cornici…), le poche regole del sito e le animazioni.
+   ================================================================== */
+
+/* source(none): Tailwind cerca le classi solo nei file indicati qui sotto.
+   Le legge come testo: ogni classe va scritta intera e staccata dal resto
+   (sì: `p-4 ${attivo ? "bg-acc-rosso" : ""}` — no: `p-4${…}` o "bg-acc-" + colore). */
+@import "tailwindcss" source(none);
+@source "../*.html";
+@source "../js";
+@source not "../js/vendor";
+@source "../test";
+
+@import "../design-system/colori.css";
+@import "../design-system/tema.css";
+@import "./componenti.css";
+@import "./sito.css";
+@import "./animazioni.css";
