@@ -43,10 +43,12 @@ const temaTailwind = `
   }
 
   /* Larghezze dello schermo in aggiunta a quelle di Tailwind
-     (sm 640, md 768, lg 1024, xl 1280).
-     "computer:flex" = da 900px in su. */
+     (sm 640, md 768, lg 1024, xl 1280). In ordine: tablet 600 → sm 640 → md 768
+     → computer 900 → lg 1024. "computer:flex" = da 900px in su.
+     Attenzione: tablet viene prima di sm, quindi non usare sm: insieme a tablet:
+     sulla stessa proprietà (sm: vincerebbe da 640 px in su). */
   @theme {
-    --breakpoint-tablet: 43.75rem;   /* 700px */
+    --breakpoint-tablet: 37.5rem;    /* 600px: da qui anche i pieghevoli aperti (es. iPhone Duo) */
     --breakpoint-computer: 56.25rem; /* 900px */
   }
 `;

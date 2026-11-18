@@ -207,7 +207,7 @@ Prefissi per le larghezze dello schermo:
 | --- | --- | --- |
 | (nessuno) | smartphone | `text-[52px]` |
 | `sm:` | 640 px | `sm:grid-cols-2` |
-| `tablet:` | 700 px | `tablet:grid-cols-2` |
+| `tablet:` | 600 px (anche i telefoni pieghevoli aperti) | `tablet:grid-cols-2` |
 | `computer:` | 900 px | `hidden computer:flex` |
 | `lg:` | 1024 px | `lg:grid-cols-5` |
 

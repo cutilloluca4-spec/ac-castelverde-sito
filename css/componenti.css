@@ -66,7 +66,7 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 /* versione allineata a sinistra: solo la linea rossa dopo */
 .titolo-sezione--sinistra::before { display: none; }
 /* su smartphone le linee ai lati sono più corte, così il titolo sta su una riga */
-@media (max-width: 699px) {
+@media (max-width: 599px) {
   .titolo-sezione { gap: 12px; }
   .titolo-sezione::before, .titolo-sezione::after { min-width: 14px; height: 5px; }
 }

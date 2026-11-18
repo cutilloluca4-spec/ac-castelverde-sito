@@ -167,23 +167,26 @@ function htmlRigaRisultato(p) {
   const s = squadreInOrdine(p);
   const e = esito(p);
   return (
-    '<li class="grid grid-cols-1 tablet:grid-cols-[110px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
-      `<div class="titolo-display text-[18px] leading-tight">${dataCorta(p.data)}<br class="hidden tablet:block"><span class="tablet:hidden"> · </span><span class="text-acc-testo-2 text-[15px]">${testo(p.competizione)}</span></div>` +
-      '<div class="flex items-center gap-3 tablet:gap-4 min-w-0">' +
-        `<span class="titolo-display text-[19px] tablet:text-[24px] leading-none text-right flex-1 min-w-0 break-words">${testo(s[0].nome)}</span>` +
+    '<li class="grid grid-cols-1 @xl:grid-cols-[110px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
+      `<div class="titolo-display text-[18px] leading-tight">${dataCorta(p.data)}<br class="hidden @xl:block"><span class="@xl:hidden"> · </span><span class="text-acc-testo-2 text-[15px]">${testo(p.competizione)}</span></div>` +
+      '<div class="flex items-center gap-3 @xl:gap-4 min-w-0">' +
+        `<span class="titolo-display text-[19px] @xl:text-[24px] leading-none text-right flex-1 min-w-0 break-words">${testo(s[0].nome)}</span>` +
         `<span class="titolo-display text-[30px] bg-acc-nero text-white px-3 pt-1.5 pb-0.5 whitespace-nowrap">${s[0].gol} - ${s[1].gol}</span>` +
-        `<span class="titolo-display text-[19px] tablet:text-[24px] leading-none flex-1 min-w-0 break-words">${testo(s[1].nome)}</span>` +
+        `<span class="titolo-display text-[19px] @xl:text-[24px] leading-none flex-1 min-w-0 break-words">${testo(s[1].nome)}</span>` +
       "</div>" +
       `<span class="${COLORE_ESITO[e]} justify-self-start text-white text-[12px] font-bold uppercase tracking-[.08em] px-2.5 py-1">${ETICHETTE_ESITO[e]}</span>` +
     "</li>"
   );
 }
 
-// Riga compatta di una partita da giocare (resto del calendario)
+// Riga compatta di una partita da giocare (resto del calendario).
+// Le due righe compatte usano le "container query" (@xl: = quando l'elenco che le
+// contiene è largo almeno 576 px, vedi @container in calendario.html): si dispongono
+// in colonne solo se c'è spazio, a qualunque larghezza dello schermo.
 function htmlRigaCalendario(p) {
   return (
-    '<li class="grid grid-cols-1 tablet:grid-cols-[150px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
-      `<div class="titolo-display text-[19px] leading-tight">${dataCorta(p.data)}<br class="hidden tablet:block"><span class="tablet:hidden"> · </span><span class="text-acc-testo-2 text-[15px]">${testoOra(p)}</span></div>` +
+    '<li class="grid grid-cols-1 @xl:grid-cols-[150px_1fr_auto] items-center gap-x-5 gap-y-2 py-4 border-t border-acc-linea">' +
+      `<div class="titolo-display text-[19px] leading-tight">${dataCorta(p.data)}<br class="hidden @xl:block"><span class="@xl:hidden"> · </span><span class="text-acc-testo-2 text-[15px]">${testoOra(p)}</span></div>` +
       '<div class="flex items-center gap-3 min-w-0">' +
         htmlStemma(p, "loro", "w-9 h-9 object-contain flex-none").replace("scudo-iniziali", "scudo-iniziali !w-9 !h-9 !text-[13px] !border-2 flex-none") +
         `<div class="min-w-0"><p class="titolo-display text-[22px] leading-none">${p.casa ? "Castelverde - " + testo(p.avversario) : testo(p.avversario) + " - Castelverde"}</p>` +

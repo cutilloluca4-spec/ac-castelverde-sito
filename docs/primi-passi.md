@@ -18,7 +18,7 @@ Guida per chi apre il progetto per la prima volta. In 10 minuti: dove sta cosa e
 
 **Cambiare lo spazio sopra un titolo.** Nell'HTML il titolo ha classi Tailwind come `mt-5` (margine sopra). `mt-5` = 20 px, `mt-8` = 32 px, `mt-[50px]` = esattamente 50 px.
 
-**Cambiare la grandezza di un titolo.** `text-[52px] tablet:text-[72px]` = 52 px su smartphone, 72 px da 700 px in su. Cambia i numeri.
+**Cambiare la grandezza di un titolo.** `text-[52px] tablet:text-[72px]` = 52 px su smartphone, 72 px da 600 px in su. Cambia i numeri.
 
 **Cambiare il rosso.** In `design-system/colori.css` cambia `--color-rosso`. Si aggiorna ovunque: pulsanti, trame, card, linee.
 
