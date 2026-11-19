@@ -47,3 +47,13 @@
 /* Schermi bassi (telefono in orizzontale, fino a 500px di altezza):
    "basso:right-6" vale solo lì. Lo usa l'apertura della Home. */
 @custom-variant basso (@media (max-height: 31.25rem));
+
+/* "hover:" vale col mouse (solo dove c'è un puntatore, come fa Tailwind) E al tocco
+   sul telefono (:active): ogni elemento che col mouse diventa rosso si illumina
+   anche quando lo si tocca. Vale anche per group-hover: (es. le card). */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover { @slot; }
+  }
+  &:active { @slot; }
+}

@@ -29,6 +29,9 @@ function preparaLayout() {
   disegnaPiede();
   preparaComandiMenu();
   allineaTrame();
+  // Safari su iPhone applica lo stato active: (il colore al tocco) solo se la pagina
+  // "ascolta" i tocchi: basta un ascoltatore vuoto
+  document.addEventListener("touchstart", function () {}, { passive: true });
 }
 
 /* 1. MENU --------------------------------------------------------- */
