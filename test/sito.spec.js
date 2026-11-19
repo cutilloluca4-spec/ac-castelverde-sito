@@ -177,3 +177,19 @@ test.describe("apertura della Home", () => {
     });
   }
 });
+
+// Sicurezza: la Content Security Policy di ogni pagina non blocca niente del sito
+// (se compare un blocco, qualcosa carica codice o file da fuori, oppure lo script
+// nel <head> è cambiato e va ricalcolata la sua impronta sha256: vedi README)
+test("nessun blocco della Content Security Policy", async ({ page }) => {
+  const blocchi = [];
+  page.on("console", (m) => { if (/Content Security Policy/i.test(m.text())) blocchi.push(page.url() + " → " + m.text()); });
+  for (const pagina of PAGINE) {
+    await page.goto(pagina);
+    await page.waitForTimeout(800);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(400);
+  }
+  expect(blocchi).toEqual([]);
+});
+

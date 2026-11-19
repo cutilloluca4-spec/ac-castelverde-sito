@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Sicurezza (Content Security Policy): il browser esegue solo il codice del sito stesso.
+     Lo script qui sotto è ammesso con la sua impronta (sha256): se lo si modifica, va
+     ricalcolata (vedi README, "Sicurezza"). Il modulo contatti può parlare solo con Web3Forms. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-5zo/Vy4G3Y9Je41WbZghQMSYPdCP1ei4YGs6YH2MG7s='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'self'" />
 <title>Squadre — A.C. Castelverde</title>
 <meta name="description" content="Le quattro squadre dell'A.C. Castelverde nella stagione 2026/27: Prima squadra in Seconda Categoria, Juniores Under 19 regionale, Allievi Under 17 e Giovanissimi Under 15 provinciali cremonesi." />
 <link rel="icon" href="assets/logo/favicon-32.png" type="image/png" />
@@ -14,9 +18,10 @@
 <meta property="og:description" content="Le quattro squadre dell'A.C. Castelverde nella stagione 2026/27: Prima squadra in Seconda Categoria, Juniores Under 19 regionale, Allievi Under 17 e Giovanissimi Under 15 provinciali cremonesi." />
 <meta property="og:image" content="assets/og-image.jpg" />
 <script>if (!/[?&]statico/.test(location.search) && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-animazioni");</script>
-<!-- Tutto lo stile: generato da Tailwind (css/tailwind.css → npm run build) -->
+<!-- Carattere dei titoli caricato per primo: i titoli compaiono subito con D-DIN -->
 <link rel="preload" href="assets/font/D-DINCondensed-Bold.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/stile.min.css" />
+<!-- Tutto lo stile: generato da Tailwind (css/tailwind.css → npm run build) -->
+<link rel="stylesheet" href="css/stile.min.css" />
 </head>
 <body data-pagina="squadre" class="bg-acc-carta text-acc-inchiostro antialiased overflow-x-clip">
 

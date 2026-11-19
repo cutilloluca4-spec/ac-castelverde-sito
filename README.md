@@ -23,8 +23,9 @@ Stagione 2026/27: quattro squadre agonistiche (Prima squadra in Seconda Categori
 6. [Design system](#design-system) e [dove si trova lo stile](#dove-si-trova-lo-stile)
 7. [Convenzioni del codice](#convenzioni-del-codice) e [controlli automatici](#controlli-automatici)
 8. [Prima di pubblicare](#prima-di-pubblicare)
-9. [Pubblicare su GitHub Pages](#pubblicare-su-github-pages)
-10. [Sviluppi futuri](#sviluppi-futuri)
+9. [Sicurezza](#sicurezza)
+10. [Pubblicare su GitHub Pages](#pubblicare-su-github-pages)
+11. [Sviluppi futuri](#sviluppi-futuri)
 
 ---
 
@@ -294,6 +295,18 @@ Se un controllo fallisce, `npx playwright show-report` apre il rapporto con la f
 - [ ] **Dominio definitivo**: scriverlo in `package.json` → `homepage` (lo usano `sitemap.xml` e `robots.txt`) e come indirizzo completo in `og:image` di ogni pagina (anteprima dei link). `robots.txt` funziona solo alla radice di un dominio: con l'indirizzo `github.io/ac-castelverde-sito` i motori di ricerca non lo leggono, con un dominio proprio sì.
 
 **Cookie**: il sito non usa cookie né salva dati nel browser (niente `localStorage`), carica tutto da sé (font compresi) e Instagram e Google Maps sono semplici link, non incorporati: per le linee guida del Garante (2021) il banner non serve. Diventa necessario se si aggiungono Google Analytics, mappe o video **incorporati** nelle pagine: in quel caso aggiornare anche la sezione 6 della privacy.
+
+---
+
+## Sicurezza
+
+Il sito è **statico**: niente server, database o area di accesso, quindi niente da "bucare" sul sito stesso. Per modificarlo bisogna poter pubblicare sul repository GitHub: la protezione vera è l'**account GitHub con la verifica in due passaggi**, pochi collaboratori sul repository e, con il dominio definitivo, il dominio **verificato** su GitHub (*Settings → Pages → Verified domains*).
+
+Ogni pagina ha anche una **Content Security Policy** (il `<meta http-equiv="Content-Security-Policy">` nel `<head>`): il browser esegue solo il codice del sito, carica immagini e caratteri solo dal sito e lascia parlare il modulo contatti solo con Web3Forms. Se qualcuno riuscisse a inserire del codice estraneo nella pagina, il browser lo bloccherebbe.
+
+- Lo script nel `<head>` (quello delle animazioni) è ammesso con la sua impronta `sha256`. **Se lo si modifica, va ricalcolata** in tutte le pagine: `printf '%s' 'contenuto dello script' | openssl dgst -sha256 -binary | base64`.
+- Se un giorno si aggiunge un servizio esterno (mappa o video incorporati, statistiche), va aggiunto il suo indirizzo alla regola giusta (`img-src`, `script-src`, `frame-src`…), altrimenti il browser lo blocca.
+- `npm test` controlla che la regola non blocchi niente del sito.
 
 ---
 
