@@ -211,10 +211,10 @@ In `design-system/colori.css` ci sono anche due misure del carattere: `--scarto-
 
 **Regole di stile da rispettare.**
 
-- **Sopra la trama grigia il grigio non si vede**: niente linee, bordi o cornici grigie. Si usano il bianco, il rosso o il titolo con la parola a contorno; le foto delle squadre hanno gli angoli rossi (`angoli--rossi`).
+- **Sopra la trama grigia il grigio non si vede**: niente linee, bordi o cornici grigie. Si usano il bianco, il rosso o il titolo con la parola a contorno; le foto delle squadre hanno gli angoli rossi (`angoli--rossi`). Sulla trama la parte a contorno dei titoli diventa da sola rossa e più spessa, per restare leggibile.
 - **Le trame sono allineate alla pagina** (`allineaTrame` in `js/layout.js`): due sezioni a trama una sotto l'altra sembrano un fondo unico. Le texture `texture-*-continua.webp` sono fatte per ripetersi senza giunzioni.
 - **Un'etichetta (`pillola`) ha un'ombra a destra**: il testo accanto va staccato di almeno 24 px (`gap-x-6`).
-- **Titoli con una parte a contorno**: tutte le lettere, piene e a contorno, hanno la stessa spaziatura (`.03em`, così i contorni di lettere vicine non si toccano) e lo spessore del contorno è proporzionale alla grandezza del titolo (`.016em`, minimo 1px): stesso aspetto su telefono e computer. Nei titoli grandi la dimensione segue lo schermo (`text-[min(52px,13.5vw)]`) così restano su una riga anche sui telefoni stretti.
+- **Titoli con una parte a contorno**: tutte le lettere, piene e a contorno, hanno la stessa spaziatura (`.03em`, così i contorni di lettere vicine non si toccano) e lo spessore del contorno è sempre proporzionale alla grandezza del titolo (`.022em`, `.028em` sopra la trama), senza minimi in pixel: stesso aspetto su telefono e computer. Nei titoli grandi la dimensione segue lo schermo (`text-[min(52px,13.5vw)]`) così restano su una riga anche sui telefoni stretti.
 - **Pagina Squadre (da computer)**: la colonna della foto è più larga e cambia lato a ogni squadra; l'angolo in alto della foto è alla stessa altezza del nome; se la tabella dello staff ha 9 righe o più, il pulsante "Calendario e risultati" va sotto la foto, in linea con il fondo della tabella.
 
 ### Dove si trova lo stile
