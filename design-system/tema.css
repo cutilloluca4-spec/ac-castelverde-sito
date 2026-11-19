@@ -49,11 +49,14 @@
 @custom-variant basso (@media (max-height: 31.25rem));
 
 /* "hover:" vale col mouse (solo dove c'è un puntatore, come fa Tailwind) E al tocco
-   sul telefono (:active): ogni elemento che col mouse diventa rosso si illumina
-   anche quando lo si tocca. Vale anche per group-hover: (es. le card). */
+   sul telefono: quando si tocca un link o un pulsante, js/layout.js (segnaTocco) gli
+   aggiunge la classe is-premuto, che resta finché si apre la pagina nuova. Così ogni
+   link che col mouse diventa rosso si illumina anche al tocco. Gli elementi che non
+   portano da nessuna parte (es. le card dei giocatori) non si illuminano.
+   Vale anche per group-hover: (es. le card delle notizie). */
 @custom-variant hover {
   @media (hover: hover) {
     &:hover { @slot; }
   }
-  &:active { @slot; }
+  &.is-premuto { @slot; }
 }

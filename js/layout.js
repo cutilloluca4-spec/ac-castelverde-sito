@@ -29,9 +29,33 @@ function preparaLayout() {
   disegnaPiede();
   preparaComandiMenu();
   allineaTrame();
-  // Safari su iPhone applica lo stato active: (il colore al tocco) solo se la pagina
-  // "ascolta" i tocchi: basta un ascoltatore vuoto
-  document.addEventListener("touchstart", function () {}, { passive: true });
+  segnaTocco();
+}
+
+/* Al tocco su telefono e tablet il link o pulsante toccato prende la classe is-premuto
+   (stesso aspetto del passaggio del mouse, vedi "hover" in design-system/tema.css) e la
+   tiene finché si apre la pagina nuova. Se il dito scorre la pagina, la classe si toglie. */
+function segnaTocco() {
+  let premuto = null;
+  function togli() { if (premuto) { premuto.classList.remove("is-premuto"); premuto = null; } }
+  document.addEventListener("touchstart", function (e) {
+    togli();
+    premuto = e.target.closest("a, button, [role='tab']");
+    if (premuto) premuto.classList.add("is-premuto");
+  }, { passive: true });
+  document.addEventListener("touchmove", togli, { passive: true });
+  document.addEventListener("touchcancel", togli, { passive: true });
+  // se il tocco apre un'altra pagina il rosso resta fino al cambio; altrimenti (filtri,
+  // pulsanti, link a un punto della stessa pagina, link esterni) si spegne dopo un attimo
+  document.addEventListener("touchend", function () {
+    const el = premuto;
+    if (!el) return;
+    const cambiaPagina = el.tagName === "A" && el.target !== "_blank" && el.href &&
+      el.href.split("#")[0] !== location.href.split("#")[0];
+    if (!cambiaPagina) setTimeout(function () { if (premuto === el) togli(); }, 600);
+  }, { passive: true });
+  // tornando indietro con il browser la pagina può riapparire dalla memoria: niente resta acceso
+  window.addEventListener("pageshow", togli);
 }
 
 /* 1. MENU --------------------------------------------------------- */
