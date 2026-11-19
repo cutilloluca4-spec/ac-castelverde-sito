@@ -45,10 +45,14 @@ h1, h2, h3 { font-weight: 700; letter-spacing: .01em; line-height: .95; }
 .titolo-contorno {
   color: transparent;
   -webkit-text-stroke: 2px var(--color-nero);
-  /* spazio tra le lettere: senza, i contorni di lettere vicine (es. "ET", "TT")
-     si toccano e formano una linea doppia */
-  letter-spacing: .08em;
+  /* spessore del contorno proporzionale alla grandezza del titolo (1/60 dell'altezza
+     del carattere, mai sotto 1px): stesso aspetto su telefono e computer */
+  -webkit-text-stroke-width: max(1px, .016em);
 }
+/* Il titolo che contiene una parte a contorno ha la stessa spaziatura tra TUTTE le
+   lettere, piene e a contorno: un po' più larga del normale, così i contorni di
+   lettere vicine (es. "TT", "ET") non si toccano */
+:where(h1, h2, h3, p, span, div):has(> .titolo-contorno) { letter-spacing: .03em; }
 .titolo-contorno--bianco { -webkit-text-stroke-color: #fff; }
 .titolo-contorno--rosso  { -webkit-text-stroke-color: var(--color-rosso); }
 
